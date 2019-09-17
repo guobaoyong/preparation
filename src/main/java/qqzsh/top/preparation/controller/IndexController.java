@@ -3,6 +3,7 @@ package qqzsh.top.preparation.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
@@ -45,6 +46,11 @@ public class IndexController {
         mav.addObject("pageCode", PageUtil.genPagination("/article/list", total, 1, 20, ""));
         mav.setViewName("index");
         return mav;
+    }
+
+    @GetMapping("/toRegister")
+    public ModelAndView toRegister(){
+        return new ModelAndView("register");
     }
 
 }

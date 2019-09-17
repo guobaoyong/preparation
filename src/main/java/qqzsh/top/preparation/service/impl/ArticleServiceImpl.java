@@ -79,5 +79,10 @@ public class ArticleServiceImpl implements ArticleService {
         return count;
     }
 
+    @Override
+    public Article get(Integer id) {
+        return articleRepository.findOne(id);
+    }
+
 }
 

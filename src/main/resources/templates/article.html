@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title th:text="${title}+'-Java1234下载'"></title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+</head>
+<body onload="ResizeImages()">
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+
+<div class="w1170">
+
+	<div class="pLeft">
+	
+		<div class="data_list">
+    		<div class="data_list_title">
+    			<i class="layui-icon layui-icon-app"></i>
+				<span class="head">帖子信息</span>
+    		</div>
+	    	<div class="article">
+	    		<div class="title" th:text="${article.name}"></div>
+		    	<div class="info">
+		    		<a href="" target="_blank" th:text="${article.user.userName}"></a>&nbsp;&nbsp;
+		    		分享于&nbsp;&nbsp;<font th:text="${#dates.format(article.publishDate,'yyyy-MM-dd')}"></font>
+		    		&nbsp;&nbsp;查看次数：&nbsp;<font th:text="${article.view+' 次'}"></font>
+		    		&nbsp;&nbsp;所需：<font color="red" th:text="${article.points}"></font>&nbsp;积分
+		    	</div>
+		    	<div align="center">
+		    		<div class="bshare-custom"><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a><a title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span></div><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+		    	</div>
+		    	<div class="downloadBtn">
+	    			<button class="layui-btn layui-btn-radius" onclick="download()">&nbsp;&nbsp;立即下载&nbsp;&nbsp;</button>
+	    			<button class="layui-btn layui-btn-radius" onclick="vipDownload()" style="background-color: red">&nbsp;&nbsp;VIP免积分下载&nbsp;&nbsp;</button>
+	    		</div> 
+	    		 
+		    	<div id="content" class="content" th:utext="${article.content}"></div>
+	    	</div>
+    	</div>
+    	
+	</div>
+	
+	<div class="pRight">
+	
+	
+			<div class="data_list">
+	    		<div class="data_list_title">
+	    			<i class="layui-icon layui-icon-fire"></i>
+					<span class="head">热门资源</span>
+	    		</div>
+	    		<div class="datas">
+	    			<ul>
+	    				<li th:each="hotArticle:${hotArticleList}">
+					  	  	<a target="_blank" th:href="'/article/'+${hotArticle.id}" th:title="${hotArticle.name}" th:text="${#strings.length(hotArticle.name)>20} ? ${#strings.substring(hotArticle.name,0,21)} : ${hotArticle.name}"></a>
+					    </li>
+	    				
+	    			</ul>
+	    		</div>
+    	</div>
+	
+	</div>
+
+</div>
+
+
+<div class="w1170" th:include="common/link::#h"></div>
+
+<div class="w1170" th:include="common/foot::#h" style="padding-top: 40px"></div>
+
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/common.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/  
+	layui.use(['element'], function(){
+		  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		  var tMenu=[[${session.tMenu}]];
+		  $("#"+tMenu).css("color","red");
+	});
+	
+	/*]]>*/
+</script>
+</body>
+</html>

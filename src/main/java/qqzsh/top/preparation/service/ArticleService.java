@@ -30,4 +30,11 @@ public interface ArticleService {
      * @return
      */
     Long getTotal(Article s_article);
+
+    /**
+     * 根据id获取实体
+     * @param id
+     * @return
+     */
+    Article get(Integer id);
 }
