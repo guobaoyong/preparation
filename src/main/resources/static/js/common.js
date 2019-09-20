@@ -67,6 +67,15 @@ function showModifyPassword(){
     });
 }
 
+function showModifyUserImage(){
+    layer.open({
+        type: 2,
+        title: '修改用户头像',
+        area: ['480px', '600px'],
+        content: '/modifyUserImage' //iframe的url
+    });
+}
+
 function reloadPage(){
     window.location.reload();
 }

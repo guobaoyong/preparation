@@ -84,4 +84,13 @@ public class IndexController {
         return new ModelAndView("modifyPassword");
     }
 
+    /**
+     * 打开修改头像页面
+     * @return
+     */
+    @GetMapping("/modifyUserImage")
+    public ModelAndView modifyUserImage(){
+        return new ModelAndView("modifyUserImage");
+    }
+
 }

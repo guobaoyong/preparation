@@ -21,7 +21,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/upload/userImage")
-                .addResourceLocations("file:/upload/userImage/");
+        registry.addResourceHandler("/userImage/**")
+                .addResourceLocations("file:D://userImages/");
     }
 }
