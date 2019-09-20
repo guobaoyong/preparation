@@ -48,19 +48,40 @@ public class IndexController {
         return mav;
     }
 
+    /**
+     * 打开注册页面
+     * @return
+     */
     @GetMapping("/toRegister")
     public ModelAndView toRegister(){
         return new ModelAndView("register");
     }
 
+    /**
+     * 打开登陆页面
+     * @return
+     */
     @GetMapping("/toLogin")
     public ModelAndView toLogin(){
         return new ModelAndView("login");
     }
 
+    /**
+     * 打开找回密码页面
+     * @return
+     */
     @GetMapping("/findPassword")
     public ModelAndView findPassword(){
         return new ModelAndView("findPassword");
+    }
+
+    /**
+     * 打开修改密码页面
+     * @return
+     */
+    @GetMapping("/modifyPassword")
+    public ModelAndView modifyPassword(){
+        return new ModelAndView("modifyPassword");
     }
 
 }

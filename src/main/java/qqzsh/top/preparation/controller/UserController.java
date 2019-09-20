@@ -18,6 +18,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import qqzsh.top.preparation.entity.User;
@@ -195,6 +196,31 @@ public class UserController {
         //将session中的验证码清空
         session.removeAttribute("mailCode");
         session.removeAttribute("userId");
+        resulMap.put("success", true);
+        return resulMap;
+    }
+
+    /**
+     * 修改密码
+     * @param oldpassword
+     * @param password
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @PostMapping("/modifyPassword")
+    public Map<String,Object> modifyPassword(String oldpassword,String password,HttpSession session)throws Exception{
+        User user = (User) session.getAttribute("currentUser");
+        Map<String,Object> resulMap=new HashMap<>();
+        if(!user.getPassword().equals(CryptographyUtil.md5(oldpassword, CryptographyUtil.SALT))){
+            resulMap.put("success", false);
+            resulMap.put("errorInfo", "原密码错误！");
+            return resulMap;
+        }
+        User oldUser = userService.getById(user.getId());
+        oldUser.setPassword(CryptographyUtil.md5(password, CryptographyUtil.SALT));
+        userService.save(oldUser);
         resulMap.put("success", true);
         return resulMap;
     }
