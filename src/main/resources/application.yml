@@ -4,7 +4,7 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
-# Êı¾İÔ´ÅäÖÃ
+# æ•°æ®æºé…ç½®
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
