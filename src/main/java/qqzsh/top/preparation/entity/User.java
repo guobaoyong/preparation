@@ -2,6 +2,7 @@ package qqzsh.top.preparation.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class User {
 
     // 密码
     @NotEmpty(message="请输入密码！")
+    @Length(min = 6, message ="密码长度不能小于6位！")
     @Column(length=100)
     private String password;
 
@@ -138,4 +140,19 @@ public class User {
         this.registerDate = registerDate;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", points=" + points +
+                ", isVip=" + isVip +
+                ", isOff=" + isOff +
+                ", roleName='" + roleName + '\'' +
+                ", registerDate=" + registerDate +
+                '}';
+    }
 }
