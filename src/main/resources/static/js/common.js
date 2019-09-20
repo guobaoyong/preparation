@@ -39,6 +39,25 @@ function showRegister(){
     });
 }
 
+function showLogin(){
+    layer.open({
+        type: 2,
+        title: '用户登录',
+        area: ['480px', '400px'],
+        content: '/toLogin' //iframe的url
+    });
+}
+
+function showFindPassword(){
+    layer.closeAll('iframe');
+    layer.open({
+        type: 2,
+        title: '找回用户密码',
+        area: ['480px', '600px'],
+        content: '/findPassword' //iframe的url
+    });
+}
+
 function reloadPage(){
     window.location.reload();
 }

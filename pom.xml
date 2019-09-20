@@ -165,6 +165,13 @@
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
         </dependency>
+
+        <!--启用不严格检查html-->
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>1.9.22</version>
+        </dependency>
     </dependencies>
 
     <build>

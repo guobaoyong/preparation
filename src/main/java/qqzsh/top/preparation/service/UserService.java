@@ -30,4 +30,11 @@ public interface UserService {
      */
     User findByEmail(String email);
 
+    /**
+     * 根据id查找实体
+     * @param id
+     * @return
+     */
+    public User getById(Integer id);
+
 }

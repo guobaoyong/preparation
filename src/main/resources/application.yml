@@ -17,4 +17,10 @@ spring:
       ddl-auto: update
     show-sql: true
   thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: utf-8
+    servlet:
+      content-type: text/html
     cache: false
+    mode: LEGACYHTML5

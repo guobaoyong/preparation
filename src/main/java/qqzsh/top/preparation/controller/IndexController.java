@@ -53,4 +53,14 @@ public class IndexController {
         return new ModelAndView("register");
     }
 
+    @GetMapping("/toLogin")
+    public ModelAndView toLogin(){
+        return new ModelAndView("login");
+    }
+
+    @GetMapping("/findPassword")
+    public ModelAndView findPassword(){
+        return new ModelAndView("findPassword");
+    }
+
 }
