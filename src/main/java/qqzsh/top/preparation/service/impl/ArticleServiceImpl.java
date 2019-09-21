@@ -96,5 +96,9 @@ public class ArticleServiceImpl implements ArticleService {
         return articleRepository.findOne(id);
     }
 
+    @Override
+    public void save(Article article) {
+        articleRepository.save(article);
+    }
 }
 

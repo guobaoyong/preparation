@@ -37,4 +37,10 @@ public interface ArticleService {
      * @return
      */
     Article get(Integer id);
+
+    /**
+     * 添加或者修改帖子
+     * @param article
+     */
+    public void save(Article article);
 }
