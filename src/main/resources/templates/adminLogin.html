@@ -30,6 +30,11 @@
             margin-left: 20px;
             margin-right: 20px;
         }
+        body{
+            height: 100%;width: 100%;
+            background: url("/static/login/images/banner_slide_01.jpg");
+            background-size:cover;
+        }
     </style>
     <script>
         //window.setTimeout(showfh,3000);
@@ -69,6 +74,18 @@
             }
             fhi++;
         };
+
+        $(document).ready(function(){
+            var i = 1;
+            //设置定时器，每5s更换一次背景图片
+            setInterval(function(){
+                document.body.style.background = "url('/static/login/images/banner_slide_0"+i+".jpg')";
+                i++;
+                if (i == 6){
+                    i = 1;
+                }
+            }, 5000);
+        });
     </script>
 </head>
 <body>
@@ -138,17 +155,17 @@
 </div>
 
 </div>
-<div id="templatemo_banner_slide" class="container_wapper">
+<!--<div id="templatemo_banner_slide" class="container_wapper">
     <div class="camera_wrap camera_emboss" id="camera_slide">
-        <!-- 背景图片 -->
+        &lt;!&ndash; 背景图片 &ndash;&gt;
         <div data-src="/static/login/images/banner_slide_01.jpg"></div>
         <div data-src="/static/login/images/banner_slide_02.jpg"></div>
         <div data-src="/static/login/images/banner_slide_03.jpg"></div>
         <div data-src="/static/login/images/banner_slide_04.jpg"></div>
         <div data-src="/static/login/images/banner_slide_05.jpg"></div>
     </div>
-    <!-- #camera_wrap_3 -->
-</div>
+    &lt;!&ndash; #camera_wrap_3 &ndash;&gt;
+</div>-->
 
 <script type="text/javascript">
 
@@ -199,7 +216,7 @@
 
 <script src="/static/js/jquery-1.7.2.js"></script>
 <script src="/static/login/js/camera.min.js"></script>
-<script src="/static/login/js/templatemo_script.js"></script>
+<!--<script src="/static/login/js/templatemo_script.js"></script>-->
 <script src="/static/login/js/ban.js"></script>
 <script type="text/javascript" src="/static/js/jQuery.md5.js"></script>
 <script type="text/javascript" src="/static/js/jquery.tips.js"></script>
