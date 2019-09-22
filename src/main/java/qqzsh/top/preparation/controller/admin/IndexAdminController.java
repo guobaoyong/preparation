@@ -1,9 +1,13 @@
 package qqzsh.top.preparation.controller.admin;
+import	java.nio.file.attribute.UserPrincipal;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import qqzsh.top.preparation.entity.User;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author zsh
@@ -36,6 +40,22 @@ public class IndexAdminController {
         return mav;
     }
 
+    @RequiresPermissions(value={"资源类别页"})
+    @RequestMapping("/admin/arcTypeManage")
+    public ModelAndView toarcTypeManagePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "资源类别页面");
+        mav.setViewName("admin/arcTypeManage");
+        return mav;
+    }
 
+    @RequiresPermissions(value={"资源类别添加页"})
+    @RequestMapping("/admin/saveArcType")
+    public ModelAndView tosaveArcTypePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "资源类别添加页面");
+        mav.setViewName("admin/saveArcType");
+        return mav;
+    }
 }
 

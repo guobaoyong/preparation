@@ -60,6 +60,8 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("重置用户密码");
             info.addStringPermission("用户积分充值");
 
+            info.addStringPermission("资源类别页");
+            info.addStringPermission("资源类别添加页");
             info.addStringPermission("分页查询资源类别信息");
             info.addStringPermission("添加或者修改类别信息");
             info.addStringPermission("删除类别信息");

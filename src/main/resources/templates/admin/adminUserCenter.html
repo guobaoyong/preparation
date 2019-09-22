@@ -11,7 +11,7 @@
   <div class="layui-header">
     <div class="layui-logo"><a href="/toAdminUserCenterPage" style="color: gray">Java1234下载-后台管理</a></div>
     <ul class="layui-nav layui-layout-right">
-    	<li class="layui-nav-item"><a href="javascript:history.back(-1)"><i class="layui-icon layui-icon-return">&nbsp;&nbsp;返回上一页</i></a></li>
+    	<li class="layui-nav-item"><a href="/"><i class="layui-icon layui-icon-return">&nbsp;&nbsp;返回前台</i></a></li>
       <li class="layui-nav-item">
         <a href="javascript:;">
           <img src="http://t.cn/RCzsdCq" class="layui-nav-img" th:text="${session.currentUser.userName}"></img>
@@ -28,7 +28,7 @@
           <a class="" href="javascript:;">导航菜单</a>
           <dl class="layui-nav-child">
             <dd><a href="javascript:openPage('articleManage.html')">资源管理</a></dd>
-            <dd><a href="javascript:openPage('arcTypeManage.html')">资源类别管理</a></dd>
+            <dd><a href="javascript:openPage('arcTypeManage')">资源类别管理</a></dd>
             <dd><a href="javascript:openPage('userManage.html')">用户管理</a></dd>
             <dd><a href="javascript:openPage('commentManage.html')">评论管理</a></dd>
             <dd><a href="javascript:openPage('linkManage.html')">友情链接管理</a></dd>

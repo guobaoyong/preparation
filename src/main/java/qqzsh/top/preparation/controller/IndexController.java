@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
+import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.service.ArticleService;
 import qqzsh.top.preparation.util.PageUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -100,6 +102,27 @@ public class IndexController {
     @GetMapping("/adminLogin")
     public ModelAndView adminLogin(){
         return new ModelAndView("adminLogin");
+    }
+
+    /**
+     * 进入后台页面
+     * @param session
+     * @return
+     */
+    @RequestMapping("/toAdmin")
+    public ModelAndView toAdminPage(HttpSession session){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "进入后台");
+        //获取当前用户
+        User user=(User) session.getAttribute("currentUser");
+        if (user == null){
+            mav.setViewName("adminLogin");
+        }else if (user.getRoleName().equals("管理员")){
+            mav.setViewName("admin/adminUserCenter");
+        }else {
+            mav.setViewName("adminLogin");
+        }
+        return mav;
     }
 
 }
