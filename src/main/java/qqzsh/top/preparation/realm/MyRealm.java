@@ -38,6 +38,7 @@ public class MyRealm extends AuthorizingRealm {
         Set<String> roles=new HashSet<>();
         if("管理员".equals(user.getRoleName())){
             roles.add("管理员");
+            info.addStringPermission("管理员默认页");
             info.addStringPermission("进入管理员主页");
             info.addStringPermission("生成所有帖子索引");
             info.addStringPermission("分页查询资源帖子信息");

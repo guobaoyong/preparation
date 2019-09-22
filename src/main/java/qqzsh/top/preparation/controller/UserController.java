@@ -94,6 +94,7 @@ public class UserController {
                 } else {
                     request.getSession().setAttribute("currentUser", currentUser);
                     map.put("success", true);
+                    map.put("userRole", currentUser.getRoleName());
                 }
             } catch (Exception e) {
                 map.put("success", false);

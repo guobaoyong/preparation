@@ -93,4 +93,13 @@ public class IndexController {
         return new ModelAndView("modifyUserImage");
     }
 
+    /**
+     * 打开管理员登陆页面
+     * @return
+     */
+    @GetMapping("/adminLogin")
+    public ModelAndView adminLogin(){
+        return new ModelAndView("adminLogin");
+    }
+
 }
