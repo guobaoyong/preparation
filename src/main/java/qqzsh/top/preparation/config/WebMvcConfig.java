@@ -1,5 +1,6 @@
 package qqzsh.top.preparation.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -13,15 +14,25 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
+    @Value("${userImageFilePath}")
+    private String userImageFilePath;
+
+    @Value("${articleImageFilePath}")
+    private String articleImageFilePath;
+
     /**
      * 静态资源的加载和Swagger2配置
      * @param registry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //静态css、js、img
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
+        //用户头像
         registry.addResourceHandler("/userImage/**")
-                .addResourceLocations("file:D://userImages/");
+                .addResourceLocations("file:"+userImageFilePath);
+        registry.addResourceHandler("/image/**")
+                .addResourceLocations("file:"+articleImageFilePath);
     }
 }

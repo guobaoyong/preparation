@@ -31,4 +31,7 @@ spring:
       max-file-size: 20MB #设置单个文件最大长度
       file-size-threshold: 20MB #当文件达到多少时进行磁盘写入
 
+#头像路径
 userImageFilePath: D://userImages/
+#文章图片路径
+articleImageFilePath: D://articleImages/
