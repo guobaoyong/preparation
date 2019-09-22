@@ -42,5 +42,11 @@ public interface ArticleService {
      * 添加或者修改帖子
      * @param article
      */
-    public void save(Article article);
+    void save(Article article);
+
+    /**
+     * 根据id删除帖子
+     * @param id
+     */
+    void delete(Integer id);
 }
