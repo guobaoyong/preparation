@@ -1,13 +1,9 @@
 package qqzsh.top.preparation.controller.admin;
-import	java.nio.file.attribute.UserPrincipal;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import qqzsh.top.preparation.entity.User;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * @author zsh
@@ -57,5 +53,25 @@ public class IndexAdminController {
         mav.setViewName("admin/saveArcType");
         return mav;
     }
+
+    @RequiresPermissions(value={"友情链接页"})
+    @RequestMapping("/admin/linkManage")
+    public ModelAndView tolinkManagePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "友情链接管理页面");
+        mav.setViewName("admin/linkManage");
+        return mav;
+    }
+
+    @RequiresPermissions(value={"友情链接添加页"})
+    @RequestMapping("/admin/saveLink")
+    public ModelAndView tosaveLinkPage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "友情链接添加页面");
+        mav.setViewName("admin/saveLink");
+        return mav;
+    }
+
+
 }
 

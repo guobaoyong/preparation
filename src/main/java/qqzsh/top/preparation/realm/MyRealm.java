@@ -67,6 +67,8 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("删除类别信息");
             info.addStringPermission("根据id查询资源类别实体");
 
+            info.addStringPermission("友情链接页");
+            info.addStringPermission("友情链接添加页");
             info.addStringPermission("分页查询友情链接");
             info.addStringPermission("添加或者修改友情链接");
             info.addStringPermission("删除友情链接");
