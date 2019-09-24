@@ -3,7 +3,7 @@ function showLogin(){
 	  type: 2,
 	  title: '用户登录',
 	  area: ['480px', '500px'],
-	  content: '/login.html' //iframe的url
+	  content: '/toLogin' //iframe的url
 	}); 
 }
 
@@ -16,7 +16,7 @@ function showRegister(){
 		  type: 2,
 		  title: '用户注册',
 		  area: ['480px', '500px'],
-		  content: '/register.html' //iframe的url
+		  content: '/toRegister' //iframe的url
 		}); 
 }
 
@@ -25,7 +25,7 @@ function showModifyPassword(){
 		  type: 2,
 		  title: '修改用户密码',
 		  area: ['480px', '500px'],
-		  content: '/modifyPassword.html' //iframe的url
+		  content: '/modifyPassword' //iframe的url
 		}); 
 }
 
@@ -34,7 +34,7 @@ function showModifyUserImage(){
 		  type: 2,
 		  title: '修改用户头像',
 		  area: ['480px', '600px'],
-		  content: '/modifyUserImage.html' //iframe的url
+		  content: '/modifyUserImage' //iframe的url
 		}); 
 }
 
@@ -45,7 +45,7 @@ function showFindPassword(){
 		  type: 2,
 		  title: '找回用户密码',
 		  area: ['480px', '600px'],
-		  content: '/findPassword.html' //iframe的url
+		  content: '/findPassword' //iframe的url
 		}); 
 }
 
