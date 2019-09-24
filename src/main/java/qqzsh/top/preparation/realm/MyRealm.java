@@ -62,6 +62,7 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("积分充值页");
             info.addStringPermission("用户积分充值");
 
+            info.addStringPermission("资源管理页");
             info.addStringPermission("资源类别页");
             info.addStringPermission("资源类别添加页");
             info.addStringPermission("分页查询资源类别信息");

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.respository.ArticleRepository;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.util.StringUtil;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -57,6 +58,9 @@ public class ArticleServiceImpl implements ArticleService {
                     if(s_article.getUser()!=null && s_article.getUser().getId()!=null){
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_article.getUser().getId()));
                     }
+                    if(s_article.getUser()!=null && StringUtil.isNotEmpty(s_article.getUser().getUserName())){
+                        predicate.getExpressions().add(cb.like(root.get("user").get("userName"), "%"+s_article.getUser().getUserName()+"%"));
+                    }
                 }
                 return predicate;
             }
@@ -89,6 +93,9 @@ public class ArticleServiceImpl implements ArticleService {
                     }
                     if(s_article.getUser()!=null && s_article.getUser().getId()!=null){
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_article.getUser().getId()));
+                    }
+                    if(s_article.getUser()!=null && StringUtil.isNotEmpty(s_article.getUser().getUserName())){
+                        predicate.getExpressions().add(cb.like(root.get("user").get("userName"), "%"+s_article.getUser().getUserName()+"%"));
                     }
                 }
                 return predicate;

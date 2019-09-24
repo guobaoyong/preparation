@@ -92,5 +92,15 @@ public class IndexAdminController {
         return mav;
     }
 
+
+    @RequiresPermissions(value={"资源管理页"})
+    @RequestMapping("/admin/articleManage")
+    public ModelAndView toarticleManagePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "资源管理页面");
+        mav.setViewName("admin/articleManage");
+        return mav;
+    }
+
 }
 
