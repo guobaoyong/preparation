@@ -1,6 +1,9 @@
 package qqzsh.top.preparation.service;
 
+import org.springframework.data.domain.Sort;
 import qqzsh.top.preparation.entity.User;
+
+import java.util.List;
 
 /**
  * @author zsh
@@ -35,6 +38,24 @@ public interface UserService {
      * @param id
      * @return
      */
-    public User getById(Integer id);
+    User getById(Integer id);
+
+    /**
+     * 根据条件分页查询用户信息
+     * @param s_user
+     * @param page
+     * @param pageSize
+     * @param direction
+     * @param properties
+     * @return
+     */
+    List<User> list(User s_user, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
+
+    /**
+     * 根据条件查询总记录数
+     * @param s_user
+     * @return
+     */
+    Long getTotal(User s_user);
 
 }

@@ -73,5 +73,24 @@ public class IndexAdminController {
     }
 
 
+    @RequiresPermissions(value={"用户管理页"})
+    @RequestMapping("/admin/userManage")
+    public ModelAndView touserManagePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "用户管理页面");
+        mav.setViewName("admin/userManage");
+        return mav;
+    }
+
+    @RequiresPermissions(value={"积分充值页"})
+    @RequestMapping("/admin/addPoints")
+    public ModelAndView toaddPointsPage(Integer id){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "用户管理页面");
+        mav.addObject("id", id);
+        mav.setViewName("admin/addPoints");
+        return mav;
+    }
+
 }
 
