@@ -13,7 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.entity.User;
+import qqzsh.top.preparation.entity.UserDownload;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.service.UserDownloadService;
+import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.DateUtil;
 import qqzsh.top.preparation.util.StringUtil;
 
@@ -37,28 +40,35 @@ public class ArticleUserController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserDownloadService userDownloadService;
+
     @Value("${articleImageFilePath}")
     private String articleImageFilePath;
 
     /**
      * Layui编辑器图片上传处理
+     *
      * @param file 待上传文件
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/uploadImage")
-    public Map<String,Object> uploadImage(MultipartFile file)throws Exception{
-        Map<String,Object> map=new HashMap<>();
-        if(!file.isEmpty()){
-            String fileName=file.getOriginalFilename(); // 获取文件名
-            String suffixName=fileName.substring(fileName.lastIndexOf(".")); // 获取文件的后缀
-            String newFileName= DateUtil.getCurrentDateStr()+suffixName; // 新文件名
-            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(articleImageFilePath+DateUtil.getCurrentDatePath()+newFileName));
+    public Map<String, Object> uploadImage(MultipartFile file) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        if (!file.isEmpty()) {
+            String fileName = file.getOriginalFilename(); // 获取文件名
+            String suffixName = fileName.substring(fileName.lastIndexOf(".")); // 获取文件的后缀
+            String newFileName = DateUtil.getCurrentDateStr() + suffixName; // 新文件名
+            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(articleImageFilePath + DateUtil.getCurrentDatePath() + newFileName));
             map.put("code", 0);
             map.put("msg", "上传成功");
-            Map<String,Object> map2=new HashMap<>();
-            map2.put("src", "/image/"+DateUtil.getCurrentDatePath()+newFileName);
+            Map<String, Object> map2 = new HashMap<>();
+            map2.put("src", "/image/" + DateUtil.getCurrentDatePath() + newFileName);
             map2.put("title", newFileName);
             map.put("data", map2);
         }
@@ -67,6 +77,7 @@ public class ArticleUserController {
 
     /**
      * 根据条件分页查询资源帖子信息
+     *
      * @param s_article
      * @param page
      * @param limit
@@ -75,9 +86,9 @@ public class ArticleUserController {
      */
     @ResponseBody
     @RequestMapping("/list")
-    public Map<String,Object> list(Article s_article, HttpSession session, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="limit",required=false)Integer limit)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
-        User user=(User) session.getAttribute("currentUser");
+    public Map<String, Object> list(Article s_article, HttpSession session, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = (User) session.getAttribute("currentUser");
         s_article.setUser(user);
         List<Article> articleList = articleService.list(s_article, page, limit, Sort.Direction.DESC, "publishDate");
         Long count = articleService.getTotal(s_article);
@@ -89,11 +100,12 @@ public class ArticleUserController {
 
     /**
      * 跳转到发布帖子页面
+     *
      * @return
      */
     @RequestMapping("/toPublishArticlePage")
-    public ModelAndView toPublishArticlePage(){
-        ModelAndView mav=new ModelAndView();
+    public ModelAndView toPublishArticlePage() {
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "发布帖子页面");
         mav.setViewName("user/publishArticle");
         return mav;
@@ -101,11 +113,12 @@ public class ArticleUserController {
 
     /**
      * 跳转到帖子管理页面
+     *
      * @return
      */
     @RequestMapping("/toArticleManagePage")
-    public ModelAndView toArticleManagePage(){
-        ModelAndView mav=new ModelAndView();
+    public ModelAndView toArticleManagePage() {
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "帖子管理");
         mav.setViewName("user/articleManage");
         return mav;
@@ -113,11 +126,12 @@ public class ArticleUserController {
 
     /**
      * 跳转到帖子修改页面
+     *
      * @return
      */
     @RequestMapping("/toModifyArticlePage/{id}")
-    public ModelAndView toModifyArticlePage(@PathVariable("id")Integer id){
-        ModelAndView mav=new ModelAndView();
+    public ModelAndView toModifyArticlePage(@PathVariable("id") Integer id) {
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "帖子修改页面");
         mav.addObject("article", articleService.get(id));
         mav.setViewName("user/modifyArticle");
@@ -126,20 +140,21 @@ public class ArticleUserController {
 
     /**
      * 添加帖子
+     *
      * @param article
      * @param sesion
      * @return
      * @throws Exception
      */
     @RequestMapping("/add")
-    public ModelAndView add(Article article, HttpSession sesion)throws Exception{
-        User user=(User) sesion.getAttribute("currentUser");
+    public ModelAndView add(Article article, HttpSession sesion) throws Exception {
+        User user = (User) sesion.getAttribute("currentUser");
         article.setPublishDate(new Date());
         article.setUser(user);
         article.setState(1);
         article.setView(StringUtil.randomInteger());
         articleService.save(article);
-        ModelAndView mav=new ModelAndView();
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "发布帖子成功页面");
         mav.setViewName("user/publishArticleSuccess");
         return mav;
@@ -147,12 +162,13 @@ public class ArticleUserController {
 
     /**
      * 更新帖子
+     *
      * @param article
      * @return
      * @throws Exception
      */
     @RequestMapping("/update")
-    public ModelAndView update(Article article)throws Exception{
+    public ModelAndView update(Article article) throws Exception {
         Article oldArticle = articleService.get(article.getId());
         oldArticle.setName(article.getName());
         oldArticle.setArcType(article.getArcType());
@@ -160,15 +176,15 @@ public class ArticleUserController {
         oldArticle.setDownload1(article.getDownload1());
         oldArticle.setPassword1(article.getPassword1());
         oldArticle.setPoints(article.getPoints());
-        if(oldArticle.getState()==3){ // 假如审核未通过，用户点击修改的话 ，则重新审核
+        if (oldArticle.getState() == 3) { // 假如审核未通过，用户点击修改的话 ，则重新审核
             oldArticle.setState(1);
         }
         articleService.save(oldArticle);
-        if(oldArticle.getState()==2){
+        if (oldArticle.getState() == 2) {
             // todo 修改Lucene索引
             // redis缓存删除这个缓存
         }
-        ModelAndView mav=new ModelAndView();
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "修改帖子成功页面");
         mav.setViewName("user/modifyArticleSuccess");
         return mav;
@@ -176,14 +192,15 @@ public class ArticleUserController {
 
     /**
      * 根据id删除帖子
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/delete")
-    public Map<String,Object> delete(Integer id)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    public Map<String, Object> delete(Integer id) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         // todo 删除该帖子下的所有评论
         articleService.delete(id);
         // todo 删除索引
@@ -195,23 +212,119 @@ public class ArticleUserController {
 
     /**
      * 多选删除
+     *
      * @param ids
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/deleteSelected")
-    public Map<String,Object> deleteSelected(String ids)throws Exception{
+    public Map<String, Object> deleteSelected(String ids) throws Exception {
         String[] idsStr = ids.split(",");
-        for(int i=0;i<idsStr.length;i++){
+        for (int i = 0; i < idsStr.length; i++) {
             // todo 删除该帖子下的所有评论
             articleService.delete(Integer.parseInt(idsStr[i]));
             // todo 删除索引
             // todo 删除redis索引
         }
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
+    }
+
+    /**
+     * 跳转到资源下载页面
+     *
+     * @param id
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/toDownLoadPage/{id}")
+    public ModelAndView toDownLoadPage(@PathVariable("id") Integer id, HttpSession session) throws Exception {
+        UserDownload userDownload = new UserDownload();
+        Article article = articleService.get(id);
+
+        User user = (User) session.getAttribute("currentUser");
+        boolean isDownload = false; // 是否下载过
+        Integer count = userDownloadService.getCountByUserIdAndArticleId(user.getId(), id);
+        if (count > 0) {
+            isDownload = true;
+        } else {
+            isDownload = false;
+        }
+
+        if (!isDownload) {
+            // 用户积分是否够
+            if (user.getPoints() - article.getPoints() < 0) {
+                return null;
+            }
+
+            // 扣积分
+            user.setPoints(user.getPoints() - article.getPoints());
+            userService.save(user);
+
+            // 给分享人加积分
+            User articleUser = article.getUser();
+            articleUser.setPoints(articleUser.getPoints() + article.getPoints());
+            userService.save(articleUser);
+
+            // 保存用户下载信息
+            userDownload.setArticle(article);
+            userDownload.setUser(user);
+            userDownload.setDownloadDate(new Date());
+            userDownloadService.save(userDownload);
+
+        }
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("article", articleService.get(id));
+        mav.setViewName("user/downloadPage");
+        return mav;
+    }
+
+    /**
+     * 跳转到VIP资源下载页面
+     *
+     * @param id
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/toVipDownLoadPage/{id}")
+    public ModelAndView toVipDownLoadPage(@PathVariable("id") Integer id, HttpSession session) throws Exception {
+        UserDownload userDownload = new UserDownload();
+        Article article = articleService.get(id);
+
+        User user = (User) session.getAttribute("currentUser");
+
+        // 判断是否是vip
+        if (!user.isVip()) {
+            return null;
+        }
+
+        // 是否下载过
+        boolean isDownload = false;
+        Integer count = userDownloadService.getCountByUserIdAndArticleId(user.getId(), id);
+        if (count > 0) {
+            isDownload = true;
+        } else {
+            isDownload = false;
+        }
+
+        if (!isDownload) {
+            // 保存用户下载信息
+            userDownload.setArticle(article);
+            userDownload.setUser(user);
+            userDownload.setDownloadDate(new Date());
+            userDownloadService.save(userDownload);
+
+        }
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("article", articleService.get(id));
+        mav.setViewName("user/downloadPage");
+        return mav;
     }
 }
 

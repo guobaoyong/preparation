@@ -313,5 +313,17 @@ public class UserController {
         return map;
     }
 
+    /**
+     * 获取当前登录用户是否是VIP用户
+     * @param session
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/isVip")
+    public boolean isVip(HttpSession session){
+        User user = (User) session.getAttribute("currentUser");
+        return user.isVip();
+    }
+
 }
 
