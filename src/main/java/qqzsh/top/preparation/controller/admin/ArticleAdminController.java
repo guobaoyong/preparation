@@ -1,17 +1,22 @@
 package qqzsh.top.preparation.controller.admin;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.util.DateUtil;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +33,10 @@ public class ArticleAdminController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Value("${articleImageFilePath}")
+    private String articleImageFilePath;
+
 
     /**
      * 分页查询资源帖子信息
@@ -59,9 +68,78 @@ public class ArticleAdminController {
     @RequiresPermissions(value={"跳转到帖子审核页面"})
     public ModelAndView toReViewArticlePage(@PathVariable("id")Integer id){
         ModelAndView mav=new ModelAndView();
-        mav.addObject("title", "修改帖子页面");
+        mav.addObject("title", "审核帖子页面");
         mav.addObject("article", articleService.get(id));
         mav.setViewName("admin/reviewArticle");
+        return mav;
+    }
+
+    /**
+     * 跳转到修改帖子页面
+     * @param id
+     * @return
+     */
+    @RequestMapping("/toModifyArticlePage/{id}")
+    @RequiresPermissions(value={"跳转到修改帖子页面"})
+    public ModelAndView toModifyArticlePage(@PathVariable("id")Integer id){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "修改帖子页面");
+        mav.addObject("article", articleService.get(id));
+        mav.setViewName("admin/modifyArticle");
+        return mav;
+    }
+
+    /**
+     * Layui编辑器图片上传处理
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/uploadImage")
+    @RequiresPermissions(value={"图片上传"})
+    public Map<String,Object> uploadImage(MultipartFile file)throws Exception{
+        Map<String,Object> map=new HashMap<String,Object>();
+        if(!file.isEmpty()){
+            String fileName=file.getOriginalFilename(); // 获取文件名
+            String suffixName=fileName.substring(fileName.lastIndexOf(".")); // 获取文件的后缀
+            String newFileName= DateUtil.getCurrentDateStr()+suffixName; // 新文件名
+            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(articleImageFilePath+DateUtil.getCurrentDatePath()+newFileName));
+            map.put("code", 0);
+            map.put("msg", "上传成功");
+            Map<String,Object> map2=new HashMap<String,Object>();
+            map2.put("src", "/image/"+DateUtil.getCurrentDatePath()+newFileName);
+            map2.put("title", newFileName);
+            map.put("data", map2);
+        }
+        return map;
+    }
+
+    /**
+     * 修改帖子
+     * @param article
+     * @param sesion
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions(value={"修改帖子"})
+    public ModelAndView update(Article article)throws Exception{
+        Article oldArticle = articleService.get(article.getId());
+        oldArticle.setName(article.getName());
+        oldArticle.setArcType(article.getArcType());
+        oldArticle.setContent(article.getContent());
+        oldArticle.setDownload1(article.getDownload1());
+        oldArticle.setPassword1(article.getPassword1());
+        oldArticle.setPoints(article.getPoints());
+        if(oldArticle.getState()==2){ // 当审核通过的时候，需要更新下lucene索引
+            // todo更新lucene索引
+        }
+        articleService.save(oldArticle);
+        // todo删除该帖子的缓存
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "修改帖子成功页面");
+        mav.setViewName("admin/modifyArticleSuccess");
         return mav;
     }
 
@@ -89,5 +167,69 @@ public class ArticleAdminController {
         resultMap.put("success", true);
         return resultMap;
     }
+
+    /**
+     * 根据id删除帖子
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/delete")
+    @RequiresPermissions(value={"删除帖子"})
+    public Map<String,Object> delete(Integer id)throws Exception{
+        Map<String,Object> resultMap=new HashMap<>();
+        // 删除用户下载帖子信息
+        // todo 删除该帖子下的所有评论
+        articleService.delete(id);
+        // todo 删除索引
+        // todo 删除redis索引
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
+
+    /**
+     * 多选删除
+     * @param ids
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/deleteSelected")
+    @RequiresPermissions(value={"删除帖子"})
+    public Map<String,Object> deleteSelected(String ids)throws Exception{
+        String[] idsStr = ids.split(",");
+        for(int i=0;i<idsStr.length;i++){
+            // 删除用户下载帖子信息
+            // todo 删除该帖子下的所有评论
+            articleService.delete(Integer.parseInt(idsStr[i]));
+            // todo 删除索引
+            // todo 删除redis索引
+        }
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
+    /**
+     * 修改热门状态
+     * @param article
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/updateHotState")
+    @RequiresPermissions(value={"修改热门状态"})
+    public Map<String,Object> updateHotState(Article article)throws Exception{
+        Map<String,Object> resultMap=new HashMap<>();
+        Article oldArticle = articleService.get(article.getId());
+        oldArticle.setHot(article.isHot());
+        articleService.save(oldArticle);
+        // todo该帖子对应的redis索引
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
 }
 
