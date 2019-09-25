@@ -113,3 +113,14 @@ a {
 	padding-bottom: 30px;
 	padding-top: 50px;
 }
+
+.data_list .userComment{
+	margin: 10px;
+	margin-bottom: 40px;
+}
+
+.data_list .userComment button{
+	margin-top:8px;
+	margin-right:5px;
+	float: right;
+}
