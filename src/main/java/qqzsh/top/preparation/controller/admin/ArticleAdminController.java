@@ -4,9 +4,11 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.service.ArticleService;
 
@@ -45,6 +47,46 @@ public class ArticleAdminController {
         resultMap.put("code", 0);
         resultMap.put("count", total);
         resultMap.put("data", articleList);
+        return resultMap;
+    }
+
+    /**
+     * 跳转到帖子审核页面
+     * @param id
+     * @return
+     */
+    @RequestMapping("/toReViewArticlePage/{id}")
+    @RequiresPermissions(value={"跳转到帖子审核页面"})
+    public ModelAndView toReViewArticlePage(@PathVariable("id")Integer id){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "修改帖子页面");
+        mav.addObject("article", articleService.get(id));
+        mav.setViewName("admin/reviewArticle");
+        return mav;
+    }
+
+    /**
+     * 修改状态
+     * @param article
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequiresPermissions(value={"修改状态"})
+    @RequestMapping("/updateState")
+    public Map<String,Object> updateState(Article article)throws Exception{
+        Map<String,Object> resultMap=new HashMap<>();
+        Article oldArticle=articleService.get(article.getId());
+        // todo 消息模块添加一个
+        if(article.getState()==2){
+            oldArticle.setState(2);
+            // todo 删除redis 首页数据缓存
+        }else{
+            oldArticle.setState(3);
+            oldArticle.setReason(article.getReason());
+        }
+        articleService.save(oldArticle);
+        resultMap.put("success", true);
         return resultMap;
     }
 }

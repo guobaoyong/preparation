@@ -137,7 +137,11 @@
 			return d.user.userName;			
 		}
 	}
-	
+
+	function reviewArticle(id){
+		window.location.href="/admin/article/toReViewArticlePage/"+id;
+	}
+
 	function formatState(d){
 		if(d.state==1){
 			return "<button class='layui-btn layui-btn-danger layui-btn-xs' onclick='reviewArticle("+d.id+")'><i class='layui-icon layui-icon-edit'></i>待审核</button>";
