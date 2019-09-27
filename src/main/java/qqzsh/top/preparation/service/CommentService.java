@@ -36,5 +36,11 @@ public interface CommentService {
      * @return
      */
     Long getTotal(Comment s_comment);
+
+    /**
+     * 删除评论
+     * @param id
+     */
+    void delete(Integer id);
 }
 
