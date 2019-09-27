@@ -35,3 +35,6 @@ spring:
 userImageFilePath: D://userImages/
 #文章图片路径
 articleImageFilePath: D://articleImages/
+
+# lucene保存路径
+lucenePath: C://lucene

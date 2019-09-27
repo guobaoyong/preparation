@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
+import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
 import qqzsh.top.preparation.util.DateUtil;
 
@@ -36,6 +37,28 @@ public class ArticleAdminController {
 
     @Value("${articleImageFilePath}")
     private String articleImageFilePath;
+
+    @Autowired
+    private ArticleIndex articleIndex;
+
+
+    /**
+     * 生成所有帖子索引
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="genAllIndex")
+    @RequiresPermissions(value={"生成所有帖子索引"})
+    public boolean genAllIndex(){
+        List<Article> articleList = articleService.listAll();
+        for(Article article:articleList){
+            if(!articleIndex.addIndex(article)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
     /**

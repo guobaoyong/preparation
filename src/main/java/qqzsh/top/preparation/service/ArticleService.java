@@ -25,6 +25,12 @@ public interface ArticleService {
     List<Article> list(Article s_article, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
 
     /**
+     * 查询所有帖子
+     * @return
+     */
+    List<Article> listAll();
+
+    /**
      * 根据条件查询总记录数
      * @param s_article
      * @return
@@ -49,4 +55,6 @@ public interface ArticleService {
      * @param id
      */
     void delete(Integer id);
+
+
 }

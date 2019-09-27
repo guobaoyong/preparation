@@ -69,6 +69,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<Article> listAll() {
+        return articleRepository.findAll();
+    }
+
+    @Override
     public Long getTotal(Article s_article) {
         Long count=articleRepository.count(new Specification<Article>() {
 
