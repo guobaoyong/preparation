@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.ArcType;
 import qqzsh.top.preparation.entity.Article;
+import qqzsh.top.preparation.entity.Comment;
 import qqzsh.top.preparation.init.InitSystem;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.service.CommentService;
 import qqzsh.top.preparation.util.PageUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 根据条件分页查询资源帖子信息
@@ -79,6 +84,11 @@ public class ArticleController {
         s_article.setArcType(article.getArcType());
         List<Article> hotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC,"publishDate");
         mav.addObject("hotArticleList", hotArticleList);
+        Comment s_comment=new Comment();
+        s_comment.setArticle(article);
+        // 审核通过的评论信息
+        s_comment.setState(1);
+        mav.addObject("commentCount", commentService.getTotal(s_comment));
         mav.setViewName("article");
         return mav;
     }

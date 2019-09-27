@@ -1,6 +1,9 @@
 package qqzsh.top.preparation.service;
 
+import org.springframework.data.domain.Sort;
 import qqzsh.top.preparation.entity.Comment;
+
+import java.util.List;
 
 /**
  * @author zsh
@@ -10,15 +13,28 @@ import qqzsh.top.preparation.entity.Comment;
  */
 public interface CommentService {
 
-
     /**
      * 添加或者修改评论
      * @param comment
      */
-    public void save(Comment comment);
+    void save(Comment comment);
 
+    /**
+     * 根据条件分页查询评论信息
+     * @param s_comment
+     * @param page
+     * @param pageSize
+     * @param direction
+     * @param properties
+     * @return
+     */
+    List<Comment> list(Comment s_comment, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
 
-
-
+    /**
+     * 根据条件获取总记录数
+     * @param s_comment
+     * @return
+     */
+    Long getTotal(Comment s_comment);
 }
 

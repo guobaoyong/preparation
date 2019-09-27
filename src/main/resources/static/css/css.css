@@ -124,3 +124,38 @@ a {
 	margin-right:5px;
 	float: right;
 }
+
+.commentList{
+	margin: 10px;
+}
+
+.commentList  .comment{
+	margin-top:20px;
+	padding-bottom: 5px;
+	border-bottom: 1px #eee dashed;
+}
+
+.comment .left_img{
+	float: left;
+}
+
+.comment .right .top a{
+	font-weight: 700;
+
+}
+
+.comment .right .time{
+	color: #999;
+	margin: 12px 30px 0;
+	font-size: 12px;
+}
+
+.comment .right .bottom{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.left_img img{
+	width: 40px;
+	height: 40px;
+}
