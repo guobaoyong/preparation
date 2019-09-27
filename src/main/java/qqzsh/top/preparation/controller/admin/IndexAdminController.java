@@ -102,5 +102,14 @@ public class IndexAdminController {
         return mav;
     }
 
+    @RequiresPermissions(value={"评论管理页"})
+    @RequestMapping("/admin/commentManage")
+    public ModelAndView tocommentManagePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "评论管理页面");
+        mav.setViewName("admin/commentManage");
+        return mav;
+    }
+
 }
 

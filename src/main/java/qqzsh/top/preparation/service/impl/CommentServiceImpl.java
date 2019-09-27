@@ -88,4 +88,9 @@ public class CommentServiceImpl implements CommentService {
     public void delete(Integer id) {
         commentRepository.delete(id);
     }
+
+    @Override
+    public Comment get(Integer id) {
+        return commentRepository.findOne(id);
+    }
 }

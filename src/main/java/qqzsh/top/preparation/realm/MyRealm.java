@@ -50,6 +50,7 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("修改状态");
             info.addStringPermission("修改热门状态");
 
+            info.addStringPermission("评论管理页");
             info.addStringPermission("分页查询评论信息");
             info.addStringPermission("修改评论状态");
             info.addStringPermission("删除评论");
