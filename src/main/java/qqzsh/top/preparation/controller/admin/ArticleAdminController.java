@@ -141,7 +141,6 @@ public class ArticleAdminController {
     /**
      * 修改帖子
      * @param article
-     * @param sesion
      * @return
      * @throws Exception
      */
@@ -181,6 +180,7 @@ public class ArticleAdminController {
         // todo 消息模块添加一个
         if(article.getState()==2){
             oldArticle.setState(2);
+            articleIndex.addIndex(oldArticle);
             // todo 删除redis 首页数据缓存
         }else{
             oldArticle.setState(3);
