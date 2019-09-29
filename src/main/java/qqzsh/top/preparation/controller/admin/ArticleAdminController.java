@@ -38,6 +38,9 @@ public class ArticleAdminController {
     @Value("${articleImageFilePath}")
     private String articleImageFilePath;
 
+    @Value("${lucenePath}")
+    private String lucenePath;
+
     @Autowired
     private ArticleIndex articleIndex;
 
@@ -50,6 +53,21 @@ public class ArticleAdminController {
     @RequestMapping(value="genAllIndex")
     @RequiresPermissions(value={"生成所有帖子索引"})
     public boolean genAllIndex(){
+
+        //1.删除原有索引
+        try {
+            File file = new File(lucenePath);
+            if (file.isDirectory()) {
+                File[] files = file.listFiles();
+                for (File f : files) {
+                    f.delete();
+                }
+            }
+        }catch (Exception e){
+            return false;
+        }
+
+        //2.生成新的索引
         List<Article> articleList = articleService.listAll();
         for(Article article:articleList){
             if(!articleIndex.addIndex(article)){
