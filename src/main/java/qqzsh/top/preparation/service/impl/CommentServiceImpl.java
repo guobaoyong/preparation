@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ import java.util.List;
  * @Description 评论Service实现类
  */
 @Service("commentService")
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
@@ -92,5 +94,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment get(Integer id) {
         return commentRepository.findOne(id);
+    }
+
+    @Override
+    public void deleteByArticleId(Integer articleId) {
+        commentRepository.deleteByArticleId(articleId);
     }
 }

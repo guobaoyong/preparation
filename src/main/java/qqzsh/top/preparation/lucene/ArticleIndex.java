@@ -6,10 +6,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
@@ -79,6 +76,53 @@ public class ArticleIndex {
             lock.unlock();
         }
         return true;
+    }
+
+    /**
+     * 更新帖子索引
+     * @param article
+     */
+    public boolean updateIndex(Article article){
+        ReentrantLock lock=new ReentrantLock();
+        lock.lock();
+        try {
+            IndexWriter writer = getWriter();
+            Document doc=new Document();
+            doc.add(new StringField("id",String.valueOf(article.getId()),Field.Store.YES));
+            doc.add(new TextField("name",article.getName(),Field.Store.YES));
+            doc.add(new StringField("publishDate",DateUtil.formatDate(new Date(), "yyyy-MM-dd"),Field.Store.YES));
+            doc.add(new TextField("content",article.getContent(),Field.Store.YES));
+            writer.updateDocument(new Term("id",String.valueOf(article.getId())), doc);
+            writer.close();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }finally{
+            lock.unlock();
+        }
+        return true;
+    }
+
+    /**
+     * 删除帖子索引
+     * @param id
+     */
+    public void deleteIndex(String id){
+        ReentrantLock lock=new ReentrantLock();
+        lock.lock();
+        try{
+            IndexWriter writer = getWriter();
+            writer.deleteDocuments(new Term("id",id));
+            writer.forceMergeDeletes(); // 强制删除
+            writer.commit();
+            writer.close();
+        }catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            lock.unlock();
+        }
     }
 
     /**

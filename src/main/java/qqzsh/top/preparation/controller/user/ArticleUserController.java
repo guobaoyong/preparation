@@ -14,7 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.entity.UserDownload;
+import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.service.CommentService;
 import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.DateUtil;
@@ -48,6 +50,12 @@ public class ArticleUserController {
 
     @Value("${articleImageFilePath}")
     private String articleImageFilePath;
+
+    @Autowired
+    private ArticleIndex articleIndex;
+
+    @Autowired
+    private CommentService commentService;
 
     /**
      * Layui编辑器图片上传处理
@@ -181,7 +189,8 @@ public class ArticleUserController {
         }
         articleService.save(oldArticle);
         if (oldArticle.getState() == 2) {
-            // todo 修改Lucene索引
+            //修改Lucene索引
+            articleIndex.updateIndex(oldArticle);
             // redis缓存删除这个缓存
         }
         ModelAndView mav = new ModelAndView();
@@ -201,9 +210,14 @@ public class ArticleUserController {
     @RequestMapping("/delete")
     public Map<String, Object> delete(Integer id) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
-        // todo 删除该帖子下的所有评论
+        //删除该帖子的下载信息
+        userDownloadService.deleteByArticleId(id);
+        //删除该帖子下的所有评论
+        commentService.deleteByArticleId(id);
+        //删除帖子
         articleService.delete(id);
-        // todo 删除索引
+        //删除索引
+        articleIndex.deleteIndex(String.valueOf(id));
         // todo 删除redis索引
         resultMap.put("success", true);
         return resultMap;
@@ -222,9 +236,14 @@ public class ArticleUserController {
     public Map<String, Object> deleteSelected(String ids) throws Exception {
         String[] idsStr = ids.split(",");
         for (int i = 0; i < idsStr.length; i++) {
-            // todo 删除该帖子下的所有评论
+            //删除该帖子下的下载信息
+            userDownloadService.deleteByArticleId(Integer.parseInt(idsStr[i]));
+            //删除该帖子下的所有评论
+            commentService.deleteByArticleId(Integer.parseInt(idsStr[i]));
+            //删除帖子
             articleService.delete(Integer.parseInt(idsStr[i]));
-            // todo 删除索引
+            //删除索引
+            articleIndex.deleteIndex(idsStr[i]);
             // todo 删除redis索引
         }
         Map<String, Object> resultMap = new HashMap<>();

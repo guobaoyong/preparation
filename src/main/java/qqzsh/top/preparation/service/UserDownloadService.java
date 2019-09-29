@@ -24,5 +24,11 @@ public interface UserDownloadService {
      */
     void save(UserDownload userDownload);
 
+    /**
+     * 删除指定帖子的下载信息
+     * @param articleId
+     */
+    void deleteByArticleId(Integer articleId);
+
 }
 

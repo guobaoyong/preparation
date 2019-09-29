@@ -43,12 +43,17 @@ public interface CommentService {
      */
     void delete(Integer id);
 
-
     /**
      * 根据id获取实体
      * @param id
      * @return
      */
     Comment get(Integer id);
+
+    /**
+     * 删除指定帖子的评论信息
+     * @param articleId
+     */
+    void deleteByArticleId(Integer articleId);
 }
 

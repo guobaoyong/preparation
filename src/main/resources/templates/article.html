@@ -59,7 +59,7 @@
                 <button class="layui-btn layui-btn-radius  layui-btn-sm" onclick="submitData()">&nbsp;&nbsp;提交评论&nbsp;&nbsp;</button>
             </div>
             <div id="commentList" class="commentList"></div>
-            <div id="articlePage" class="articlePage"></div>
+            <div id="articlePage" class="articlePage" th:if="${commentCount>0}"></div>
         </div>
 
     </div>

@@ -185,3 +185,7 @@ a {
 .data_list .data_result{
 	padding: 15px;
 }
+
+.data_list .articlePage{
+	text-align: center;
+}

@@ -15,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.service.CommentService;
+import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.util.DateUtil;
 
 import java.io.File;
@@ -41,6 +43,15 @@ public class ArticleAdminController {
     @Autowired
     private ArticleIndex articleIndex;
 
+    @Value("${lucenePath}")
+    private String lucenePath;
+
+    @Autowired
+    private UserDownloadService userDownloadService;
+
+    @Autowired
+    private CommentService commentService;
+
 
     /**
      * 生成所有帖子索引
@@ -50,6 +61,18 @@ public class ArticleAdminController {
     @RequestMapping(value="genAllIndex")
     @RequiresPermissions(value={"生成所有帖子索引"})
     public boolean genAllIndex(){
+        //1.删除原来的索引
+        try {
+            File file = new File(lucenePath);
+            if (file.isDirectory()){
+                for (File f : file.listFiles()){
+                    f.delete();
+                }
+            }
+        }catch (Exception e){
+            return false;
+        }
+        //2.添加新的索引
         List<Article> articleList = articleService.listAll();
         for(Article article:articleList){
             if(!articleIndex.addIndex(article)){
@@ -155,7 +178,8 @@ public class ArticleAdminController {
         oldArticle.setPassword1(article.getPassword1());
         oldArticle.setPoints(article.getPoints());
         if(oldArticle.getState()==2){ // 当审核通过的时候，需要更新下lucene索引
-            // todo更新lucene索引
+            //更新lucene索引
+            articleIndex.updateIndex(oldArticle);
         }
         articleService.save(oldArticle);
         // todo删除该帖子的缓存
@@ -202,10 +226,14 @@ public class ArticleAdminController {
     @RequiresPermissions(value={"删除帖子"})
     public Map<String,Object> delete(Integer id)throws Exception{
         Map<String,Object> resultMap=new HashMap<>();
-        // 删除用户下载帖子信息
-        // todo 删除该帖子下的所有评论
+        //删除用户下载帖子信息
+        userDownloadService.deleteByArticleId(id);
+        //删除该帖子下的所有评论
+        commentService.deleteByArticleId(id);
+        //删除帖子
         articleService.delete(id);
-        // todo 删除索引
+        //删除索引
+        articleIndex.deleteIndex(String.valueOf(id));
         // todo 删除redis索引
         resultMap.put("success", true);
         return resultMap;
@@ -225,9 +253,13 @@ public class ArticleAdminController {
         String[] idsStr = ids.split(",");
         for(int i=0;i<idsStr.length;i++){
             // 删除用户下载帖子信息
-            // todo 删除该帖子下的所有评论
+            userDownloadService.deleteByArticleId(Integer.parseInt(idsStr[i]));
+            //删除该帖子下的所有评论
+            commentService.deleteByArticleId(Integer.parseInt(idsStr[i]));
+            //删除帖子
             articleService.delete(Integer.parseInt(idsStr[i]));
-            // todo 删除索引
+            //删除索引
+            articleIndex.deleteIndex(idsStr[i]);
             // todo 删除redis索引
         }
         Map<String,Object> resultMap=new HashMap<>();

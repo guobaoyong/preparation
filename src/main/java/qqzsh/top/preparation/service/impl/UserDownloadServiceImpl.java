@@ -31,4 +31,9 @@ public class UserDownloadServiceImpl implements UserDownloadService {
         userDownloadRepository.save(userDownload);
     }
 
+    @Override
+    public void deleteByArticleId(Integer articleId) {
+        userDownloadRepository.deleteByArticleId(articleId);
+    }
+
 }
