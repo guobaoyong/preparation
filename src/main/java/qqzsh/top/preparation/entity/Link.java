@@ -1,6 +1,7 @@
 package qqzsh.top.preparation.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author zsh
@@ -10,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="t_link")
-public class Link {
+public class Link implements Serializable {
 
     // 编号
     @Id

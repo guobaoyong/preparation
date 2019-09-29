@@ -16,6 +16,7 @@ import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
 import qqzsh.top.preparation.service.CommentService;
 import qqzsh.top.preparation.util.PageUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 import qqzsh.top.preparation.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleIndex articleIndex;
+
+    @Autowired
+    private RedisUtil<Article> redisUtil;
 
     /**
      * 根据条件分页查询资源帖子信息
@@ -82,17 +86,31 @@ public class ArticleController {
      */
     @RequestMapping("/{id}")
     public ModelAndView view(@PathVariable("id") Integer id) throws Exception {
-        ModelAndView mav = new ModelAndView();
-        Article article = articleService.get(id);
+        ModelAndView mav=new ModelAndView();
+        Article article=null;
+        String key="article_"+id;
+        if(redisUtil.hasKey(key)){
+            article=(Article) redisUtil.get(key);
+        }else{
+            article=articleService.get(id);
+            redisUtil.set(key, article, 60*60);
+        }
         mav.addObject("article", article);
         mav.addObject("title", article.getName());
 
-        Article s_article = new Article();
-        s_article.setHot(true);
-        s_article.setArcType(article.getArcType());
-        List<Article> hotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC, "publishDate");
+        List<Article> hotArticleList=null;
+        String hKey="hotArticleList_type_"+article.getArcType().getId();
+        if(redisUtil.hasKey(hKey)){
+            hotArticleList=redisUtil.lGet(hKey, 0, -1);
+        }else{
+            Article s_article=new Article();
+            s_article.setHot(true);
+            s_article.setArcType(article.getArcType());
+            hotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC,"publishDate");
+            redisUtil.lSet(hKey, hotArticleList, 60*60);
+        }
         mav.addObject("hotArticleList", hotArticleList);
-        Comment s_comment = new Comment();
+        Comment s_comment=new Comment();
         s_comment.setArticle(article);
         // 审核通过的评论信息
         s_comment.setState(1);

@@ -3,6 +3,7 @@ package qqzsh.top.preparation.entity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="t_comment")
-public class Comment {
+public class Comment implements Serializable {
 
     // 编号
     @Id

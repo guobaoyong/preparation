@@ -1,5 +1,7 @@
 package qqzsh.top.preparation.entity;
 
+import java.io.Serializable;
+
 /**
  * @author zsh
  * @site qqzsh.top
