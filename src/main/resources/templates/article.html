@@ -52,7 +52,8 @@
         <div class="data_list" style="margin-top: 10px">
             <div class="data_list_title">
                 <i class="layui-icon layui-icon-dialogue"></i>
-                <span class="head">评论信息</span>&nbsp;&nbsp;<font style="color: #999;" th:text="'共'+${commentCount}+'条'"></font>
+                <span class="head">评论信息</span>&nbsp;&nbsp;<font style="color: #999;"
+                                                                th:text="'共'+${commentCount}+'条'"></font>
             </div>
             <div id="userComment" class="userComment">
                 <textarea id="commentContent" placeholder="请输入评论信息" class="layui-textarea"></textarea>
@@ -60,6 +61,17 @@
             </div>
             <div id="commentList" class="commentList"></div>
             <div id="articlePage" class="articlePage" th:if="${commentCount>0}"></div>
+        </div>
+
+        <div class="data_list" style="margin-top: 10px">
+            <div class="data_list_title">
+                <i class="layui-icon layui-icon-component"></i>
+                <span class="head">相关资源</span>
+            </div>
+            <div class="datas" style="height: 250px">
+                <ul id="relateResource" class="relate">
+                </ul>
+            </div>
         </div>
 
     </div>
@@ -105,33 +117,50 @@
         //调用分页
         laypage.render({
             elem: 'articlePage'
-            ,limit:6
-            ,count: [[${commentCount}]]
-            ,jump: function(obj){
+            , limit: 6
+            , count: [[${commentCount}]]
+            , jump: function (obj) {
                 $("#commentList").empty();
-                $.post("/comment/list",{"article.id":[[${article.id}]],"page":obj.curr},function(result){
-                    var rows=result;
-                    if(rows.length==0){
+                $.post("/comment/list", {"article.id": [[${article.id}]], "page": obj.curr}, function (result) {
+                    var rows = result;
+                    if (rows.length == 0) {
                         $("#commentList").html("<p align='center'>暂无评论</p>");
                     }
-                    for(var i=0;i<rows.length;i++){
-                        var row=rows[i];
-                        $("#commentList").append("<div class='comment'>"+
-                            "<div class='left_img'>"+
-                            "<img src='/userImage/"+row.user.imageName+"' class='layui-nav-img'/>"+
-                            "</div>"+
-                            "<div class='right'>"+
-                            "<dt class='top'>"+
-                            row.user.userName+
-                            "<span class='time'>"+row.commentDate+"</span>"+
-                            "</dt>"+
-                            "<dd class='bottom'>"+row.content+"</dd>"+
-                            "</div>"+
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = rows[i];
+                        $("#commentList").append("<div class='comment'>" +
+                            "<div class='left_img'>" +
+                            "<img src='/userImage/" + row.user.imageName + "' class='layui-nav-img'/>" +
+                            "</div>" +
+                            "<div class='right'>" +
+                            "<dt class='top'>" +
+                            row.user.userName +
+                            "<span class='time'>" + row.commentDate + "</span>" +
+                            "</dt>" +
+                            "<dd class='bottom'>" + row.content + "</dd>" +
+                            "</div>" +
                             "</div>");
                     }
-                },"json");
+                }, "json");
             }
         });
+
+        // 相关资源加载
+        $.post("/article/loadRelatedResources", {"q": [[${article.name}]]}, function (result) {
+            var rows = result;
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var subName;
+                if (row.name.length > 30) {
+                    subName = row.name.substring(0, 30);
+                } else {
+                    subName = row.name;
+                }
+                $("#relateResource").append("<li>" +
+                    "<a target='_blank' href='/article/" + row.id + "' title='" + row.name + "'>" + subName + "</a>" +
+                    "</li>");
+            }
+        }, "json");
 
     });
 

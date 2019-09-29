@@ -126,7 +126,7 @@ public class ArticleIndex {
     }
 
     /**
-     * 查询帖子信息
+     * 分词搜索帖子信息 高亮 100条
      * @param q 查询关键字
      * @return
      * @throws Exception
@@ -179,6 +179,37 @@ public class ArticleIndex {
                     article.setContent(hContent);
                 }
             }
+            articleList.add(article);
+        }
+        return articleList;
+    }
+
+    /**
+     * 查询帖子信息无高亮 20条
+     * @param q 查询关键字
+     * @return
+     * @throws Exception
+     */
+    public List<Article> searchNoHighLighter(String q)throws Exception{
+        dir=FSDirectory.open(Paths.get(lucenePath));
+        IndexReader reader = DirectoryReader.open(dir);
+        IndexSearcher is=new IndexSearcher(reader);
+        BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
+        SmartChineseAnalyzer analyzer=new SmartChineseAnalyzer();
+        QueryParser parser=new QueryParser("name",analyzer);
+        Query query=parser.parse(q);
+        QueryParser parser2=new QueryParser("content",analyzer);
+        Query query2=parser2.parse(q);
+        booleanQuery.add(query,BooleanClause.Occur.SHOULD);
+        booleanQuery.add(query2,BooleanClause.Occur.SHOULD);
+        TopDocs hits=is.search(booleanQuery.build(), 20);
+        List<Article> articleList=new LinkedList<Article>();
+        for(ScoreDoc scoreDoc:hits.scoreDocs){
+            Document doc=is.doc(scoreDoc.doc);
+            Article article=new Article();
+            article.setId(Integer.parseInt(doc.get(("id"))));
+            String name=doc.get("name");
+            article.setName(name);
             articleList.add(article);
         }
         return articleList;

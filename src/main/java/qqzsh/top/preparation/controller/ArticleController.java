@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.ArcType;
 import qqzsh.top.preparation.entity.Article;
@@ -156,6 +157,22 @@ public class ArticleController {
             pageCode.append("</div>");
         }
         return pageCode.toString();
+    }
+
+    /**
+     * 加载相关资源
+     * @param q
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/loadRelatedResources")
+    public List<Article> loadRelatedResources(String q)throws Exception{
+        if(StringUtil.isEmpty(q)){
+            return null;
+        }
+        List<Article> articleList = articleIndex.searchNoHighLighter(q);
+        return articleList;
     }
 }
 
