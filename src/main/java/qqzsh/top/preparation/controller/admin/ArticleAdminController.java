@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
+import qqzsh.top.preparation.entity.Message;
 import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
 import qqzsh.top.preparation.service.CommentService;
+import qqzsh.top.preparation.service.MessageService;
 import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.util.DateUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +55,12 @@ public class ArticleAdminController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private RedisUtil<Article> redisUtil;
 
 
     /**
@@ -182,7 +192,8 @@ public class ArticleAdminController {
             articleIndex.updateIndex(oldArticle);
         }
         articleService.save(oldArticle);
-        // todo删除该帖子的缓存
+        //删除该帖子的缓存、待再次点击重新生成
+        redisUtil.del("article_"+article.getId());
         ModelAndView mav=new ModelAndView();
         mav.addObject("title", "修改帖子成功页面");
         mav.setViewName("admin/modifyArticleSuccess");
@@ -201,16 +212,23 @@ public class ArticleAdminController {
     public Map<String,Object> updateState(Article article)throws Exception{
         Map<String,Object> resultMap=new HashMap<>();
         Article oldArticle=articleService.get(article.getId());
-        // todo 消息模块添加一个
+        //消息模块添加
+        Message message=new Message();
+        message.setUser(oldArticle.getUser());
+        message.setPublishDate(new Date());
         if(article.getState()==2){
             oldArticle.setState(2);
             articleIndex.addIndex(oldArticle);
-            // todo 删除redis 首页数据缓存
+            message.setContent("【审核通过】您发布的【"+oldArticle.getName()+"】帖子审核成功！");
+            //删除redis 首页数据缓存
+            redisUtil.del("article_"+article.getId());
         }else{
             oldArticle.setState(3);
             oldArticle.setReason(article.getReason());
+            message.setContent("【审核失败】您发布的【"+oldArticle.getName()+"】帖子审核未成功，原因是："+article.getReason());
         }
         articleService.save(oldArticle);
+        messageService.save(message);
         resultMap.put("success", true);
         return resultMap;
     }
@@ -234,7 +252,8 @@ public class ArticleAdminController {
         articleService.delete(id);
         //删除索引
         articleIndex.deleteIndex(String.valueOf(id));
-        // todo 删除redis索引
+        //删除redis索引
+        redisUtil.del("article_"+id);
         resultMap.put("success", true);
         return resultMap;
     }
@@ -260,7 +279,8 @@ public class ArticleAdminController {
             articleService.delete(Integer.parseInt(idsStr[i]));
             //删除索引
             articleIndex.deleteIndex(idsStr[i]);
-            // todo 删除redis索引
+            //删除redis索引
+            redisUtil.del("article_"+idsStr[i]);
         }
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("success", true);
@@ -281,7 +301,8 @@ public class ArticleAdminController {
         Article oldArticle = articleService.get(article.getId());
         oldArticle.setHot(article.isHot());
         articleService.save(oldArticle);
-        // todo该帖子对应的redis索引
+        //删除该帖子对应的redis索引
+        redisUtil.del("article_"+oldArticle.getId());
         resultMap.put("success", true);
         return resultMap;
     }

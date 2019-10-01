@@ -29,7 +29,7 @@ public interface UserDownloadRepository extends JpaRepository<UserDownload, Inte
      */
     @Query(value="delete from t_user_download where article_id=?1",nativeQuery=true)
     @Modifying
-    public void deleteByArticleId(Integer articleId);
+    void deleteByArticleId(Integer articleId);
 
 }
 

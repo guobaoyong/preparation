@@ -20,5 +20,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, JpaS
      */
     @Query(value="delete from t_comment where article_id=?1",nativeQuery=true)
     @Modifying
-    public void deleteByArticleId(Integer articleId);
+    void deleteByArticleId(Integer articleId);
 }

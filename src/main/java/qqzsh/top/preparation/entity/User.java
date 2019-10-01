@@ -60,6 +60,10 @@ public class User implements Serializable {
     // 注册日期
     private Date registerDate;
 
+    // 未查看的消息记录数
+    @Transient
+    private Integer messageCount;
+
     public Integer getId() {
         return id;
     }
@@ -139,6 +143,14 @@ public class User implements Serializable {
 
     public void setRegisterDate(Date registerDate) {
         this.registerDate = registerDate;
+    }
+
+    public Integer getMessageCount() {
+        return messageCount;
+    }
+
+    public void setMessageCount(Integer messageCount) {
+        this.messageCount = messageCount;
     }
 
     @Override

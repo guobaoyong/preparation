@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.entity.VaptchaMessage;
+import qqzsh.top.preparation.service.MessageService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.CryptographyUtil;
 import qqzsh.top.preparation.util.DateUtil;
@@ -56,6 +57,9 @@ public class UserController {
 
     @Value("${userImageFilePath}")
     private String userImageFilePath;
+
+    @Autowired
+    private MessageService messageService;
 
 
     /**
@@ -92,6 +96,7 @@ public class UserController {
                     map.put("errorInfo", "该用户已经被封禁，请联系管理员！");
                     subject.logout();
                 } else {
+                    currentUser.setMessageCount(messageService.getCountByUserId(currentUser.getId()));
                     request.getSession().setAttribute("currentUser", currentUser);
                     map.put("success", true);
                     map.put("userRole", currentUser.getRoleName());

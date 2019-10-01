@@ -20,7 +20,7 @@ import qqzsh.top.preparation.service.CommentService;
 import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.DateUtil;
-import qqzsh.top.preparation.util.StringUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -56,6 +56,9 @@ public class ArticleUserController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private RedisUtil<Article> redisUtil;
 
     /**
      * Layui编辑器图片上传处理
@@ -184,7 +187,8 @@ public class ArticleUserController {
         oldArticle.setDownload1(article.getDownload1());
         oldArticle.setPassword1(article.getPassword1());
         oldArticle.setPoints(article.getPoints());
-        if (oldArticle.getState() == 3) { // 假如审核未通过，用户点击修改的话 ，则重新审核
+        // 假如审核未通过，用户点击修改的话 ，则重新审核
+        if (oldArticle.getState() == 3) {
             oldArticle.setState(1);
         }
         articleService.save(oldArticle);
@@ -192,6 +196,7 @@ public class ArticleUserController {
             //修改Lucene索引
             articleIndex.updateIndex(oldArticle);
             // redis缓存删除这个缓存
+            redisUtil.del("article_"+oldArticle.getId());
         }
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "修改帖子成功页面");
@@ -218,7 +223,8 @@ public class ArticleUserController {
         articleService.delete(id);
         //删除索引
         articleIndex.deleteIndex(String.valueOf(id));
-        // todo 删除redis索引
+        //删除redis索引
+        redisUtil.del("article_"+id);
         resultMap.put("success", true);
         return resultMap;
     }
@@ -244,7 +250,8 @@ public class ArticleUserController {
             articleService.delete(Integer.parseInt(idsStr[i]));
             //删除索引
             articleIndex.deleteIndex(idsStr[i]);
-            // todo 删除redis索引
+            //删除redis索引
+            redisUtil.del("article_"+idsStr[i]);
         }
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
