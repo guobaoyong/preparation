@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.entity.Message;
+import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
 import qqzsh.top.preparation.service.CommentService;
@@ -22,6 +23,7 @@ import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.util.DateUtil;
 import qqzsh.top.preparation.util.RedisUtil;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
@@ -209,7 +211,7 @@ public class ArticleAdminController {
     @ResponseBody
     @RequiresPermissions(value={"修改状态"})
     @RequestMapping("/updateState")
-    public Map<String,Object> updateState(Article article)throws Exception{
+    public Map<String,Object> updateState(Article article,HttpSession session)throws Exception{
         Map<String,Object> resultMap=new HashMap<>();
         Article oldArticle=articleService.get(article.getId());
         //消息模块添加
@@ -227,6 +229,13 @@ public class ArticleAdminController {
             oldArticle.setReason(article.getReason());
             message.setContent("【审核失败】您发布的【"+oldArticle.getName()+"】帖子审核未成功，原因是："+article.getReason());
         }
+        //如何当前用户是消息的接收者,修改未读条数
+        User user=(User)session.getAttribute("currentUser");
+        //设置未读条数+1
+        user.setMessageCount(user.getMessageCount()+1);
+        //更新session用户
+        session.setAttribute("currentUser", user);
+
         articleService.save(oldArticle);
         messageService.save(message);
         resultMap.put("success", true);

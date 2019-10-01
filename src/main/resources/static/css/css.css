@@ -194,3 +194,7 @@ a {
     padding-left: 40px;
     width: 380px;
 }
+
+.listMessage ul {
+    padding: 10px
+}

@@ -95,6 +95,8 @@ public class ArticleController {
             article=articleService.get(id);
             redisUtil.set(key, article, 60*60);
         }
+        //查看次数由数据库获取
+        article.setView(articleService.get(id).getView());
         mav.addObject("article", article);
         mav.addObject("title", article.getName());
 

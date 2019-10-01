@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${title}+'-Java1234下载'"></title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+</head>
+<body>
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+	<div class="w1170">
+		<div style="float: left;width: 200px" th:include="common/menu::#m"/>
+	</div>
+<div style="float: right;width: 960px">
+
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>系统消息列表</legend>
+	</fieldset>
+	<div class="listMessage">
+		<ul th:each="message:${messageList}">
+			<li th:text="'【'+${#dates.format(message.publishDate,'yyyy-MM-dd HH:mm')}+'】'+${message.content}"></li>
+		</ul>
+		<div align="center" style="padding-top: 20px" th:utext="${pageCode}"></div>
+	</div>
+
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script>
+/*<![CDATA[*/  
+layui.use(['element','form','table'], function(){
+      var form=layui.form;
+	  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+	 
+});
+
+/*]]>*/
+
+</script>
+</body>
+</html>

@@ -2,6 +2,7 @@ package qqzsh.top.preparation.respository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import qqzsh.top.preparation.entity.Message;
 
@@ -20,5 +21,13 @@ public interface MessageRepository extends JpaRepository<Message, Integer>, JpaS
      */
     @Query(value="select count(*) from t_message where is_see=false and user_id=?1",nativeQuery=true)
     Integer getCountByUserId(Integer userId);
+
+    /**
+     * 修改成已查看状态
+     * @param userId
+     */
+    @Query(value="update t_message set is_see=true where user_id=?1",nativeQuery=true)
+    @Modifying
+    void updateState(Integer userId);
 }
 
