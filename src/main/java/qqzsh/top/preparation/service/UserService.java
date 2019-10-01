@@ -58,4 +58,9 @@ public interface UserService {
      */
     Long getTotal(User s_user);
 
+    /**
+     * 重置所有签到信息
+     */
+    void updateAllSignInfo();
+
 }

@@ -94,4 +94,10 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public void updateAllSignInfo() {
+        userRepository.updateAllSignInfo();
+    }
+
+
 }

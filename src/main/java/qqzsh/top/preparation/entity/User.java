@@ -64,6 +64,15 @@ public class User implements Serializable {
     @Transient
     private Integer messageCount;
 
+    // 是否签到
+    private boolean isSign=false;
+
+    // 签到时间
+    private Date signTime;
+
+    // 签到排序
+    private Integer signSort;
+
     public Integer getId() {
         return id;
     }
@@ -153,19 +162,27 @@ public class User implements Serializable {
         this.messageCount = messageCount;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", imageName='" + imageName + '\'' +
-                ", points=" + points +
-                ", isVip=" + isVip +
-                ", isOff=" + isOff +
-                ", roleName='" + roleName + '\'' +
-                ", registerDate=" + registerDate +
-                '}';
+    public boolean isSign() {
+        return isSign;
+    }
+
+    public void setSign(boolean sign) {
+        isSign = sign;
+    }
+
+    public Date getSignTime() {
+        return signTime;
+    }
+
+    public void setSignTime(Date signTime) {
+        this.signTime = signTime;
+    }
+
+    public Integer getSignSort() {
+        return signSort;
+    }
+
+    public void setSignSort(Integer signSort) {
+        this.signSort = signSort;
     }
 }

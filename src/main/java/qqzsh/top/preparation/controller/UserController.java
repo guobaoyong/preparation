@@ -30,9 +30,11 @@ import qqzsh.top.preparation.service.MessageService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.CryptographyUtil;
 import qqzsh.top.preparation.util.DateUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 import qqzsh.top.preparation.util.StringUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -60,6 +62,9 @@ public class UserController {
 
     @Autowired
     private MessageService messageService;
+
+    @Resource
+    private RedisUtil<Integer> redisUtil;
 
 
     /**
@@ -328,6 +333,47 @@ public class UserController {
     public boolean isVip(HttpSession session){
         User user = (User) session.getAttribute("currentUser");
         return user.isVip();
+    }
+
+    /**
+     * 用户签到
+     * @param session
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/sign")
+    public Map<String,Object> sign(HttpSession session,HttpServletRequest request)throws Exception{
+        Map<String,Object> map=new HashMap<String,Object>();
+        if(session.getAttribute("currentUser")==null){
+            map.put("success", false);
+            map.put("errorInfo", "大佬，请先登录下，才能签到;");
+            return map;
+        }
+        User currentUser=(User) session.getAttribute("currentUser");
+        if(currentUser.isSign()){
+            map.put("success", false);
+            map.put("errorInfo", "大佬，你已经签到了，不能重复签到;");
+            return map;
+        }
+        ServletContext application=request.getServletContext();
+        Integer signTotal=(Integer) redisUtil.get("signTotal");
+        redisUtil.set("signTotal", signTotal+1);
+        application.setAttribute("signTotal", signTotal+1);
+
+        // 更新到数据库
+        User user = userService.getById(currentUser.getId());
+        user.setSign(true);
+        user.setSignTime(new Date());
+        user.setSignSort(signTotal+1);
+        user.setPoints(user.getPoints()+3);
+        userService.save(user);
+
+        //更新session
+        session.setAttribute("currentUser", user);
+        map.put("success", true);
+        return map;
     }
 
 }
