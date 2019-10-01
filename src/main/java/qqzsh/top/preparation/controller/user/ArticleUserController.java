@@ -160,7 +160,7 @@ public class ArticleUserController {
         article.setPublishDate(new Date());
         article.setUser(user);
         article.setState(1);
-        article.setView(StringUtil.randomInteger());
+        article.setView(0);
         articleService.save(article);
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "发布帖子成功页面");

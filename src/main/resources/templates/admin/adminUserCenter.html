@@ -90,7 +90,7 @@
             type: 2,
             title: '修改密码',
             area: ['480px', '400px'],
-            content: '/admin/modifyPassword.html' //iframe的url
+            content: '/modifyPassword' //iframe的url
         });
     }
 
@@ -99,7 +99,7 @@
             title: "系统提示"
             , btn: ['确定', '取消'] //按钮
         }, function () {
-            window.location.href = "/admin/user/logout";
+            window.location.href = "/logout";
         }, function () {
 
         });

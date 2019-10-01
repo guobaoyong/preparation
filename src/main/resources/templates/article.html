@@ -320,6 +320,12 @@
 
     }
 
+    //更新查看次数
+    $(document).ready(function () {
+        $.post("/article/updateView", {"id": [[${article.id}]]}, function (result) {
+        });
+    });
+
     /*]]>*/
 
 

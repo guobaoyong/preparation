@@ -192,5 +192,18 @@ public class ArticleController {
         List<Article> articleList = articleIndex.searchNoHighLighter(q);
         return articleList;
     }
+
+    /**
+     * 查看次数加1
+     * @param id
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/updateView")
+    public void updateView(Integer id)throws Exception{
+        Article article = articleService.get(id);
+        article.setView(article.getView()+1);
+        articleService.save(article);
+    }
 }
 
