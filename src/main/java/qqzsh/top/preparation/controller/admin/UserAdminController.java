@@ -11,6 +11,7 @@ import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.CryptographyUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,10 +78,19 @@ public class UserAdminController {
     @ResponseBody
     @RequiresPermissions(value={"用户积分充值"})
     @RequestMapping("/addPoints")
-    public Map<String,Object> addPoints(User user)throws Exception{
+    public Map<String,Object> addPoints(User user, HttpSession session)throws Exception{
+        //session用户
+        User currentUser = (User) session.getAttribute("currentUser");
+        //要更新用户
         User oldUser = userService.getById(user.getId());
         oldUser.setPoints(oldUser.getPoints()+user.getPoints());
         userService.save(oldUser);
+        //如何要更新用户就是session用户
+        if (currentUser.getId() == oldUser.getId()){
+            currentUser.setPoints(oldUser.getPoints()+user.getPoints());
+            //更新下session用户
+            session.setAttribute("currentUser", currentUser);
+        }
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
@@ -95,10 +105,19 @@ public class UserAdminController {
     @ResponseBody
     @RequiresPermissions(value={"修改用户VIP状态"})
     @RequestMapping("/updateVipState")
-    public Map<String,Object> updateVipState(User user)throws Exception{
+    public Map<String,Object> updateVipState(User user,HttpSession session)throws Exception{
+        //session用户
+        User currentUser = (User) session.getAttribute("currentUser");
+        //要更新用户
         User oldUser = userService.getById(user.getId());
         oldUser.setVip(user.isVip());
         userService.save(oldUser);
+        //如何要更新用户就是session用户
+        if (currentUser.getId() == oldUser.getId()){
+            currentUser.setVip(user.isVip());
+            //更新下session用户
+            session.setAttribute("currentUser", currentUser);
+        }
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("success", true);
         return resultMap;

@@ -1,6 +1,9 @@
 package qqzsh.top.preparation.service;
 
+import org.springframework.data.domain.Sort;
 import qqzsh.top.preparation.entity.UserDownload;
+
+import java.util.List;
 
 /**
  * @author zsh
@@ -29,6 +32,25 @@ public interface UserDownloadService {
      * @param articleId
      */
     void deleteByArticleId(Integer articleId);
+
+    /**
+     * 根据条件分页查询用户下载信息
+     * @param s_userDownload
+     * @param page
+     * @param pageSize
+     * @param direction
+     * @param properties
+     * @return
+     */
+    List<UserDownload> list(UserDownload s_userDownload, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
+
+
+    /**
+     * 根据条件查询总记录数
+     * @param s_userDownload
+     * @return
+     */
+    Long getTotal(UserDownload s_userDownload);
 
 }
 
