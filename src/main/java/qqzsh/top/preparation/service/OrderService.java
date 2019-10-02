@@ -44,5 +44,10 @@ public interface OrderService {
      * @return
      */
     Order findByorderNo(String orderNo);
+
+    /**
+     * 通过id查询
+     */
+    Order findById(Integer id);
 }
 

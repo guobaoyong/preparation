@@ -87,4 +87,9 @@ public class OrderServiceImpl implements OrderService {
     public Order findByorderNo(String orderNo) {
         return orderRepository.findByOrderNo(orderNo);
     }
+
+    @Override
+    public Order findById(Integer id) {
+        return orderRepository.findOne(id);
+    }
 }
