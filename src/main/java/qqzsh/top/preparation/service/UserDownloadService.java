@@ -52,5 +52,9 @@ public interface UserDownloadService {
      */
     Long getTotal(UserDownload s_userDownload);
 
+    /**
+     * 根据id删除
+     */
+    void delete(Integer id);
 }
 

@@ -84,4 +84,9 @@ public class UserDownloadServiceImpl implements UserDownloadService {
         return count;
     }
 
+    @Override
+    public void delete(Integer id) {
+        userDownloadRepository.delete(id);
+    }
+
 }

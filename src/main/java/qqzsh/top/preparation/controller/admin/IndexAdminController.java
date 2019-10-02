@@ -123,5 +123,14 @@ public class IndexAdminController {
         return mav;
     }
 
+    @RequiresPermissions(value={"已下载管理页"})
+    @RequestMapping("/admin/downloadManage")
+    public ModelAndView todownloadManagePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "已下载管理页面");
+        mav.setViewName("admin/downloadManage");
+        return mav;
+    }
+
 }
 
