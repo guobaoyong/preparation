@@ -49,6 +49,7 @@ public class ShiroConfig {
         // 配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/alipay/sy", "anon");
+        filterChainDefinitionMap.put("/tomzPage", "anon");
         filterChainDefinitionMap.put("/toAdmin", "anon");
         filterChainDefinitionMap.put("/toLogin", "anon");
         filterChainDefinitionMap.put("/adminLogin", "anon");

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8"/>
-<title th:text="${title}+'-Java1234下载'"></title>
+<title th:text="${title}+'-校园学习资源共享云平台'"></title>
 <link rel="stylesheet" href="/static/layui/css/layui.css" />
 <link rel="stylesheet" href="/static/css/css.css" />
 </head>
@@ -71,7 +71,7 @@
     				<li th:each="article:${articleList}" style="margin-bottom: 20px">
     					<span class="title"><a target="_blank" th:href="'/article/'+${article.id}" th:title="${article.name}" th:utext="${article.name}"></a></span>
 					  	<span class="summary" th:utext="'摘要:'+${article.content}+'...'"></span>
-					  	<span class="link"><a target="_blank" th:href="'/article/'+${article.id}" th:text="'http://download.java1234.com/articles/'+${article.id}"></a>&nbsp;&nbsp;&nbsp;&nbsp;<font class="publishDate" th:text="'发布日期：'+${article.publishDateStr}"></font></span>
+					  	<span class="link"><a target="_blank" th:href="'/article/'+${article.id}" th:text="'http://qqzsh.top:8080/articles/'+${article.id}"></a>&nbsp;&nbsp;&nbsp;&nbsp;<font class="publishDate" th:text="'发布日期：'+${article.publishDateStr}"></font></span>
     				</li>
     			</ul>
     		</div>

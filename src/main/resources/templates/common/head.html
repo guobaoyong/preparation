@@ -3,7 +3,6 @@
 	<ul class="layui-nav" lay-filter="">
 		<li class="layui-nav-item"><a href="/">首页</a></li>
 		<li class="layui-nav-item" th:if="${session.currentUser!=null and session.currentUser.roleName == '管理员'}"><a href="/toAdmin">进入后台</a></li>
-		<li class="layui-nav-item"><a href="/toVipPage">VIP购买</a></li>
 		<li th:if="${session.currentUser!=null}" class="layui-nav-item" style="float: right;">
 			<a href="/toUserCenterPage"><img class="layui-nav-img" th:src="${'/userImage/'+session.currentUser.imageName}" th:text="${session.currentUser.userName}"></img></a>
 			<dl class="layui-nav-child">
@@ -13,7 +12,7 @@
 			</dl>
 		</li>
 		<li th:if="${session.currentUser!=null}" class="layui-nav-item" style="float: right;">
-			<a href="/toUserCenterPage">个人中心<span class="layui-badge-dot"></span></a>
+			<a href="/toUserCenterPage">个人中心</a>
 		</li>
 		<li th:if="${session.currentUser!=null and session.currentUser.messageCount!=0}" class="layui-nav-item" style="float: right;">
 			<a href="/user/message/see">系统消息<span class="layui-badge" id="messageCount" th:text="${session.currentUser.messageCount}"></span></a>

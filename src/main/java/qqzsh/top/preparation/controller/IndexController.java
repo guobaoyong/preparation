@@ -125,4 +125,16 @@ public class IndexController {
         return mav;
     }
 
+    /**
+     * 免责声明页面
+     * @return
+     */
+    @GetMapping("/tomzPage")
+    public ModelAndView tomzPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("title","免责声明");
+        modelAndView.setViewName("mzPage");
+        return modelAndView;
+    }
+
 }
