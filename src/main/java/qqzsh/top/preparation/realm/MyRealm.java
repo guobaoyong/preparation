@@ -59,6 +59,7 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("分页查询用户信息");
             info.addStringPermission("修改用户VIP状态");
             info.addStringPermission("修改用户状态");
+            info.addStringPermission("修改用户角色");
             info.addStringPermission("重置用户密码");
             info.addStringPermission("积分充值页");
             info.addStringPermission("用户积分充值");

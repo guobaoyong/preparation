@@ -18,6 +18,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -168,6 +169,37 @@ public class UserAdminController implements ServletContextListener {
         application.setAttribute("signTotal", 0);
         redisUtil.set("signTotal", 0);
         userService.updateAllSignInfo();
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
+    /**
+     * 修改用户角色
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequiresPermissions(value={"修改用户角色"})
+    @RequestMapping("//updateRole")
+    public Map<String,Object> updateRole(User user,HttpSession session)throws Exception{
+        //session用户
+        User currentUser = (User) session.getAttribute("currentUser");
+        //要更新用户
+        User oldUser = userService.getById(user.getId());
+        if (user.getRoleName().equals("true")){
+            oldUser.setRoleName("管理员");
+        }else {
+            oldUser.setRoleName("会员");
+        }
+        userService.save(oldUser);
+        //如何要更新用户就是session用户
+        if (currentUser.getId() == oldUser.getId()){
+            currentUser.setRoleName(user.getRoleName());
+            //更新下session用户
+            session.setAttribute("currentUser", currentUser);
+        }
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
