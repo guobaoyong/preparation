@@ -90,8 +90,8 @@
                         return createTime(row.endtime);
                     }
                 }
-				, {field: 'roleName', width: 100, title: '管理员', align: 'center', templet:roleSwitchTpl}
-				, {field: 'off', width: 100, title: '封禁', align: 'center', templet: offSwitchTpl}
+                , {field: 'roleName', width: 100, title: '管理员', align: 'center', templet: roleSwitchTpl}
+                , {field: 'off', width: 100, title: '封禁', align: 'center', templet: offSwitchTpl}
                 , {field: 'action', width: 200, title: '操作', align: 'center', templet: formatAction}
             ]]
             , page: true
@@ -168,9 +168,20 @@
         });
     }
 
+    function sentMessage(id) {
+        layer.open({
+            type: 2,
+            title: '发送消息',
+            area: ['400px', '300px'],
+            content: '/admin/sentMessage?id=' + id //iframe的url
+        });
+    }
+
 
     function formatAction(d) {
-        return "<button class='layui-btn layui-btn-warm layui-btn-xs' onclick='resetPassword(" + d.id + ")'><i class='layui-icon layui-icon-edit' ></i>重置密码</button>&nbsp;&nbsp;<button class='layui-btn layui-btn-normal layui-btn-xs' onclick='addPoints(" + d.id + ")'><i class='layui-icon layui-icon-edit' ></i>充值积分</button>";
+        return "<button class='layui-btn layui-btn-warm layui-btn-xs' onclick='resetPassword(" + d.id + ")'><i class='layui-icon layui-icon-edit' ></i>重置密码</button>" +
+            "&nbsp;&nbsp;<button class='layui-btn layui-btn-normal layui-btn-xs' onclick='addPoints(" + d.id + ")'><i class='layui-icon layui-icon-edit' ></i>充值积分</button>" +
+            "&nbsp;&nbsp;<button class='layui-btn layui-btn-danger layui-btn-xs' onclick='sentMessage(" + d.id + ")'><i class='layui-icon layui-icon-edit' ></i>发送消息</button>";
     }
 
     function search() {

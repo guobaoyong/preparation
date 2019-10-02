@@ -4,10 +4,13 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import qqzsh.top.preparation.entity.Message;
 import qqzsh.top.preparation.entity.User;
+import qqzsh.top.preparation.service.MessageService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.task.SignResetTask;
 import qqzsh.top.preparation.util.CryptographyUtil;
@@ -18,10 +21,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zsh
@@ -40,6 +40,9 @@ public class UserAdminController implements ServletContextListener {
     private RedisUtil<Integer> redisUtil;
 
     private static ServletContext application;
+
+    @Autowired
+    private MessageService messageService;
 
 
     /**
@@ -197,6 +200,33 @@ public class UserAdminController implements ServletContextListener {
         //如何要更新用户就是session用户
         if (currentUser.getId() == oldUser.getId()){
             currentUser.setRoleName(user.getRoleName());
+            //更新下session用户
+            session.setAttribute("currentUser", currentUser);
+        }
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
+    @ResponseBody
+    @RequiresPermissions(value={"发送消息"})
+    @PostMapping("/sentMessage")
+    public Map<String,Object> sentMessage(Integer userId,String content, HttpSession session)throws Exception{
+        //session用户
+        User currentUser = (User) session.getAttribute("currentUser");
+        //封装消息实体
+        User user = new User();
+        user.setId(userId);
+        Message message = new Message();
+        message.setUser(user);
+        message.setContent(content);
+        message.setSee(false);
+        message.setPublishDate(new Date());
+        messageService.save(message);
+
+        //如何要更新用户就是session用户
+        if (currentUser.getId() == userId){
+            currentUser.setMessageCount(currentUser.getMessageCount()+1);
             //更新下session用户
             session.setAttribute("currentUser", currentUser);
         }

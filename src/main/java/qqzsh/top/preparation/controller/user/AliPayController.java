@@ -163,7 +163,7 @@ public class AliPayController {
     @RequestMapping("/success")
     public ModelAndView returnUrl(HttpServletRequest request)throws Exception{
         ModelAndView mav=new ModelAndView();
-        mav.addObject("title", "同步通知地址_Java知识分享网");
+        mav.addObject("title", "同步通知地址_校园学习资源共享云平台");
         //获取支付宝GET过来反馈信息
         Map<String,String> params = new HashMap<String,String>();
         Map<String,String[]> requestParams = request.getParameterMap();

@@ -2,6 +2,7 @@ package qqzsh.top.preparation.controller.admin;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -108,6 +109,17 @@ public class IndexAdminController {
         ModelAndView mav=new ModelAndView();
         mav.addObject("title", "评论管理页面");
         mav.setViewName("admin/commentManage");
+        return mav;
+    }
+
+
+    @RequiresPermissions(value={"发送消息页"})
+    @GetMapping("/admin/sentMessage")
+    public ModelAndView tosentMessagePage(Integer id){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "发送消息页面");
+        mav.addObject("id", id);
+        mav.setViewName("admin/sentMessage");
         return mav;
     }
 
