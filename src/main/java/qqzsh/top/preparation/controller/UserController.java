@@ -332,7 +332,18 @@ public class UserController {
     @PostMapping("/isVip")
     public boolean isVip(HttpSession session){
         User user = (User) session.getAttribute("currentUser");
-        return user.isVip();
+        //如果发现vip已过期，则修改用户状态
+        if (((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) <= new Date().getTime())){
+            User byId = userService.findById(user.getId());
+            byId.setVip(false);
+            byId.setEndtime(null);
+            userService.save(byId);
+        }
+        //VIP状态正常且在时间段内
+        if (user.isVip() && ((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) > new Date().getTime())){
+            return user.isVip();
+        }
+        return false;
     }
 
     /**

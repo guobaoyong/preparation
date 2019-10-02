@@ -63,4 +63,9 @@ public interface UserService {
      */
     void updateAllSignInfo();
 
+    /**
+     * 通过ID查找用户
+     */
+    User findById(Integer id);
+
 }

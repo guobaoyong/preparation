@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}+'-Java1234下载'"></title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/static/css/css.css"/>
+</head>
+<body>
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+<div class="w1170">
+    <div style="float: left;width: 200px" th:include="common/menu::#m"/>
+</div>
+<div style="float: right;width: 960px">
+
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>购买VIP</legend>
+    </fieldset>
+    <div style="padding-left: 10px">
+        VIP到期时间：<font th:text="${session.currentUser.endtime == null?'无':session.currentUser.getEndtime()}"></font><br/><br/>
+    </div>
+    <br>
+    <form class="layui-form" style="padding-left: 10px">
+        购买时长：
+        <input type="radio" name="time" value="10" title="一个月-10元" checked><br>
+        <input type="radio" name="time" value="30" title="三个月-30元"><br>
+        <input type="radio" name="time" value="60" title="半年-60元"><br>
+        <input type="radio" name="time" value="120" title="一年-120元"><br>
+        <input type="radio" name="time" value="360" title="三年-360元"><br>
+        <input type="radio" name="time" value="888" title="永久-888元">
+		<br><br>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			</div>
+		</div>
+    </form>
+
+
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script>
+    /*<![CDATA[*/
+    layui.use(['element', 'form', 'table'], function () {
+        var form = layui.form;
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+		//监听提交
+		form.on('submit(formDemo)', function(data){
+            data.form.action="/alipay/pay";
+			return true;
+		});
+
+    });
+
+    /*]]>*/
+
+</script>
+</body>
+</html>

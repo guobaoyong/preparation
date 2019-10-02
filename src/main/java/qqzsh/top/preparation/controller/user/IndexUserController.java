@@ -35,9 +35,15 @@ public class IndexUserController {
         Long total = articleService.getTotal(s_article);
         ModelAndView mav=new ModelAndView();
         mav.addObject("title", "用户中心页面");
-        //失效链接数目
-        session.setAttribute("unUserfulArticleCount", total);
         mav.setViewName("user/userCenter");
+        return mav;
+    }
+
+    @RequestMapping("/user/tobuyVipPage")
+    public ModelAndView tobuyVipPage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "购买VIP页面");
+        mav.setViewName("user/buyVip");
         return mav;
     }
 }

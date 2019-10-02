@@ -22,6 +22,7 @@
 			欢迎用户：<font th:text="${session.currentUser.userName}"></font><br /><br />
 			用户等级：<font th:text="${session.currentUser.vip==true?'VIP会员':'普通会员'}"></font><br /><br />
 			用户积分：<font th:text="${session.currentUser.points}"></font><br /><br />
+			VIP到期时间：<font th:text="${session.currentUser.endtime == null?'无':session.currentUser.getEndtime()}"></font><br /><br />
 		</div>
 	</div>
 </div>

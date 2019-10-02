@@ -51,6 +51,9 @@ public class User implements Serializable {
     // 是否是VIP
     private boolean isVip=false;
 
+    //vip到期时间
+    private Date endtime;
+
     // 是否被封禁
     private boolean isOff=false;
 
@@ -184,5 +187,35 @@ public class User implements Serializable {
 
     public void setSignSort(Integer signSort) {
         this.signSort = signSort;
+    }
+
+    @JsonSerialize(using=CustomDateSerializer.class)
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", points=" + points +
+                ", isVip=" + isVip +
+                ", endtime=" + endtime +
+                ", isOff=" + isOff +
+                ", roleName='" + roleName + '\'' +
+                ", registerDate=" + registerDate +
+                ", messageCount=" + messageCount +
+                ", isSign=" + isSign +
+                ", signTime=" + signTime +
+                ", signSort=" + signSort +
+                '}';
     }
 }

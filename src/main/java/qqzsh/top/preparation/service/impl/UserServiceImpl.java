@@ -99,5 +99,10 @@ public class UserServiceImpl implements UserService {
         userRepository.updateAllSignInfo();
     }
 
+    @Override
+    public User findById(Integer id) {
+        return userRepository.findOne(id);
+    }
+
 
 }
