@@ -7,6 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.service.MessageService;
+import qqzsh.top.preparation.service.UserService;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,7 +22,10 @@ import javax.servlet.http.HttpSession;
 public class IndexUserController {
 
     @Autowired
-    private ArticleService articleService;
+    private UserService userService;
+
+    @Autowired
+    private MessageService messageService;
 
     /**
      * 跳转用后中心页面
@@ -29,10 +34,12 @@ public class IndexUserController {
     @RequestMapping("/toUserCenterPage")
     public ModelAndView toUserCenterPage(HttpSession session){
         User user=(User) session.getAttribute("currentUser");
-        Article s_article=new Article();
-        s_article.setUser(user);
-        s_article.setUseful(false);;
-        Long total = articleService.getTotal(s_article);
+        //获取消息数量
+        Integer message = messageService.getCountByUserId(user.getId());
+        //更新下session信息
+        User byId = userService.findById(user.getId());
+        byId.setMessageCount(message);
+        session.setAttribute("currentUser",byId);
         ModelAndView mav=new ModelAndView();
         mav.addObject("title", "用户中心页面");
         mav.setViewName("user/userCenter");

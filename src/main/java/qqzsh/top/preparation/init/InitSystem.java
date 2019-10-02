@@ -1,6 +1,7 @@
 package qqzsh.top.preparation.init;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.domain.Sort;
@@ -9,6 +10,7 @@ import qqzsh.top.preparation.entity.ArcType;
 import qqzsh.top.preparation.entity.Link;
 import qqzsh.top.preparation.service.ArcTypeService;
 import qqzsh.top.preparation.service.LinkService;
+import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.RedisUtil;
 
 import javax.annotation.Resource;

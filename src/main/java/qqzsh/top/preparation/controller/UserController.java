@@ -382,6 +382,7 @@ public class UserController {
         userService.save(user);
 
         //更新session
+        user.setMessageCount(messageService.getCountByUserId(user.getId()));
         session.setAttribute("currentUser", user);
         map.put("success", true);
         return map;

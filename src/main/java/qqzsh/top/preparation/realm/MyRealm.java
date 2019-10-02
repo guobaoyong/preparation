@@ -78,6 +78,8 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("删除友情链接");
             info.addStringPermission("根据id查询友情链接实体");
 
+
+            info.addStringPermission("清除签到信息");
             info.addStringPermission("修改管理员密码");
             info.addStringPermission("安全退出");
         }

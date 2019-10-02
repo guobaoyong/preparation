@@ -41,6 +41,7 @@
                     <a href="javascript:;">系统管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:genAllIndex()">生成所有帖子索引</a></dd>
+                        <dd><a href="javascript:clearSign()">清除今日签到信息</a></dd>
                         <dd><a href="javascript:showModifyPasswordDialog();">修改密码</a></dd>
                         <dd><a href="javascript:logout();">安全退出</a></dd>
                     </dl>
@@ -120,6 +121,28 @@
                     layer.msg("生成成功！");
                 } else {
                     layer.msg("生成失败，请联系管理员！");
+                }
+            }, "json");
+        }, function () {
+
+        });
+    }
+
+    function clearSign() {
+        layer.confirm("您确定要清除今日的签到信息么吗？", {
+            title: "系统提示"
+            , btn: ['确定', '取消'] //按钮
+        }, function () {
+            layer.closeAll('dialog');
+            layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            $.post("/admin/user/clearSign", {}, function (result) {
+                if (result) {
+                    layer.closeAll('loading');
+                    layer.msg("清除成功！");
+                } else {
+                    layer.msg("清除失败，请联系管理员！");
                 }
             }, "json");
         }, function () {

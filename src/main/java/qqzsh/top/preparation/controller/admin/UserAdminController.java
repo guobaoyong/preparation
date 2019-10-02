@@ -1,6 +1,7 @@
 package qqzsh.top.preparation.controller.admin;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,9 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.service.UserService;
+import qqzsh.top.preparation.task.SignResetTask;
 import qqzsh.top.preparation.util.CryptographyUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +30,15 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/admin/user")
-public class UserAdminController {
+public class UserAdminController implements ServletContextListener {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private RedisUtil<Integer> redisUtil;
+
+    private static ServletContext application;
 
 
     /**
@@ -141,5 +152,25 @@ public class UserAdminController {
         return resultMap;
     }
 
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        application = sce.getServletContext();
+    }
+
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) { }
+
+    @ResponseBody
+    @RequiresPermissions(value={"清除签到信息"})
+    @RequestMapping("/clearSign")
+    public Map<String,Object> clearSign()throws Exception{
+        application.setAttribute("signTotal", 0);
+        redisUtil.set("signTotal", 0);
+        userService.updateAllSignInfo();
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("success", true);
+        return resultMap;
+    }
 }
 
