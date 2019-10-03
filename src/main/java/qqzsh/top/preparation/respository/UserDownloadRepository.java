@@ -33,5 +33,13 @@ public interface UserDownloadRepository extends JpaRepository<UserDownload, Inte
     @Modifying
     void deleteByArticleId(Integer articleId);
 
+    /**
+     * 根据userId删除
+     * @param userId
+     */
+    @Query(value = "delete from t_user_download where user_id=?1", nativeQuery = true)
+    @Modifying
+    void deleteByUserId(Integer userId);
+
 }
 

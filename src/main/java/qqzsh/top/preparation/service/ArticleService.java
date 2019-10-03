@@ -70,5 +70,10 @@ public interface ArticleService {
      */
     List<Article> findByNameLike(String name);
 
+    /**
+     * 根据用户id找
+     */
+    List<Article> findByUserId(Integer userId);
+
 
 }

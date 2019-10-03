@@ -100,4 +100,9 @@ public class CommentServiceImpl implements CommentService {
     public void deleteByArticleId(Integer articleId) {
         commentRepository.deleteByArticleId(articleId);
     }
+
+    @Override
+    public void deleteByUserId(Integer userId) {
+        commentRepository.deleteByUserId(userId);
+    }
 }

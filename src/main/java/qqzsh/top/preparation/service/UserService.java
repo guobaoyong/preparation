@@ -74,4 +74,10 @@ public interface UserService {
      */
     User findById(Integer id);
 
+    /**
+     * 删除
+     * @param id
+     */
+    void delete(Integer id);
+
 }

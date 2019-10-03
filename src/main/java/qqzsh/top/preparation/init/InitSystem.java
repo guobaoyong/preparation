@@ -60,6 +60,12 @@ public class InitSystem implements ServletContextListener, ApplicationContextAwa
             redisUtil.set("signTotal", 0);
             application.setAttribute("signTotal", 0);
         }
+        //清空数量索引
+        redisUtil.del("userNum");
+        redisUtil.del("articleNums");
+        redisUtil.del("downloadNums");
+        redisUtil.del("orderNums");
+
     }
 
     @Override

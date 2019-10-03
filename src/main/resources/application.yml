@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 10086
   context-path: /
   tomcat:
     uri-encoding: UTF-8
@@ -32,12 +32,19 @@ spring:
       file-size-threshold: 20MB #当文件达到多少时进行磁盘写入
 
 #头像路径
-userImageFilePath: D://userImages/
+userImageFilePath: /opt/preparation/userImages/
+# D://userImages/
+# /opt/preparation/userImages
+
 #文章图片路径
-articleImageFilePath: D://articleImages/
+articleImageFilePath: /opt/preparation/articleImages/
+# D://articleImages/
+# /opt/preparation/articleImages
 
 # lucene保存路径
-lucenePath: C://lucene
+lucenePath: /opt/preparation/lucene/
+# C://lucene
+# /opt/preparation/lucene
 
 # redis
 redis:
@@ -68,8 +75,8 @@ redis:
 alipay:
   appid: 2016091100484467
   rsa_private_key: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCAracHQXMrtRukMQIRwlLl4D9CzSFnHllgWrQRkX50401jsyadMq0+hdiVUlif8SeNpb+zu24nnzSeUe9YC5O+zrgfzT9fb4UciP2pAIzTbQZjg6P2mZF/Io+UKsONhbSwBg2DP5OYyCIy1PtbrE/daGL98HEC3qLT4fPuVRrwYZetpQCU84X4k4ezUU/zjvbF7ARwFkhWVh9Y0MhlbGyc+FRbr2WisjI6VQIc3VzF4R430e9gMIz5k8wpjrYxuKgDq9npni2S0caBbKG1wI7vjhIfhvBqkXWSQkDLnn8mYw55ajwo/lfDuEbcN66i26eOStlVL4UPxtJAmGiwyLpLAgMBAAECggEAQ70mpIcr3eJlPrYd5MNraF/4bW4XG3W6jyKwkF8LNvVBlC6HMVGwKa3EKjdDOE93BvYuSKtufaUtyfpQCQVvLY8dFoCxz8ehRzhGcGU9vT8zkceG1RZapZbIBrPMZf/w8oj9LA6X4GHavu+nssau9FszYYLluyEAjpHwG5Lpr4ivMCBkMOVPXSAvlQqiT/MTA1U6vJJ0grRlTH0/Ydh0WWaAXX84a4P+I0uaEf6TS3yCAaPRal3pIBFH/a4vQmDo1cTuLEh2PTLF2+4fwaK0qXb3oSdE4tri7ftG1mjUgIuahNi73ShB0Vc8L8Imz8KI598zAze8JMpkBu3bvsg0AQKBgQDT7OtJxiwzTVuOhMLh2kJh3vxO34wbXc9r+XBgcqmgpbHnmYG9dKlA9wjQ1WowkyWRTmppBWw7k649zcUEhs9hVS/8hZA2NHuntOLCfHueq/M22t7PZr7odjea+JX0OaviuMbsyEw4D0Xsi6G8/HZM+8dDD+vpk9LxBQhLLCyQywKBgQCbcJblTv11nXrHyIaZWtMp6dBKjPgbTUnxfRkkfV+G0yHJAe/B7DqOm6VBae9Cj/4GcK117LbRGfRWPTrU5R1fU6V6bMLiSFXNAeAv5h01RYHbWzj80V2+G1AYeFwiBXBq/+x4BuE0rXa7+ShIXTjMJO4uKSpS4VMe3uJmvJbMgQKBgDWqhVrFSGQlbs4EaKVw8+Z85T/D9GLpuqEJJaAG6VW5H/gaM3SamlHNPPpFUQLEAHtvdBrsOKBNoY4dEYs36EQpomE8IWzYlYe+kr3VcCiaOpjljA7RYf7UEPi5gp+6CwD68cT8Y/C+TWK9aVPGSt7r02X0HjWkLYLDV3pR0WdJAoGASWNI+w7mQAeQFo8obXMiS6Gmw+v2n/1HsgpcOowu89rvEpYleqtrojT+OvonCogtaSD95LVUQzk70ROrmSRrT7yQXlLHWErKp7YBANxmYeZlPwm8yDCZT85ZbJQ2+6ERyJL4NFsbLOHRM0KZsEDDNi8hfQ3We7cCpYqZ3eOgVwECgYBIwB45eDHMYIoPf89vo7u1WcjeWzrSmDDPMHeHDKwtvbfMuSvmDDZ+VoZmS10SyKoNSKROf1xf1BNTEZ99429vHnM9OSnwWylWvoRE+VNm0lXo6TQnjMI65aFjYidu/CHrMxt0xc7nNRjEChHHsACVqDN4tNFFuWVJ1Ihvv1RPgQ==
-  notify_url: http://zloveh.iok.la/alipay/sy
-  return_url: http://zloveh.iok.la/alipay/success
+  notify_url: https://qqzsh.top:9999/alipay/sy
+  return_url: https://qqzsh.top:9999/alipay/success
   url: https://openapi.alipaydev.com/gateway.do
   charset: UTF-8
   format: json

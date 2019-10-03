@@ -99,4 +99,9 @@ public class OrderServiceImpl implements OrderService {
     public void delete(Integer id) {
         orderRepository.delete(id);
     }
+
+    @Override
+    public void deleteByUserId(Integer userId) {
+        orderRepository.deleteByUserId(userId);
+    }
 }

@@ -95,4 +95,9 @@ public class UserDownloadServiceImpl implements UserDownloadService {
         userDownloadRepository.delete(id);
     }
 
+    @Override
+    public void deleteByUserId(Integer userId) {
+        userDownloadRepository.deleteByUserId(userId);
+    }
+
 }

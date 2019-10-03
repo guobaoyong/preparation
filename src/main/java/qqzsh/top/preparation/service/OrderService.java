@@ -57,5 +57,10 @@ public interface OrderService {
      * 删除订单信息
      */
     void delete(Integer id);
+
+    /**
+     * 根据用户id删除订单
+     */
+    void deleteByUserId(Integer userId);
 }
 

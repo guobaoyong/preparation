@@ -65,6 +65,7 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("发送消息页");
             info.addStringPermission("用户积分充值");
             info.addStringPermission("发送消息");
+            info.addStringPermission("删除用户信息");
 
             info.addStringPermission("资源管理页");
             info.addStringPermission("资源类别页");

@@ -128,5 +128,10 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> findByNameLike(String name) {
         return articleRepository.findByNameLike("%" + name + "%");
     }
+
+    @Override
+    public List<Article> findByUserId(Integer userId) {
+        return articleRepository.findByUserId(userId);
+    }
 }
 

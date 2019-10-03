@@ -100,4 +100,9 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.findOne(id);
     }
 
+    @Override
+    public void deleteByUserId(Integer userId) {
+        messageRepository.deleteByUserId(userId);
+    }
+
 }

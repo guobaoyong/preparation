@@ -61,5 +61,10 @@ public interface UserDownloadService {
      * 根据id删除
      */
     void delete(Integer id);
+
+    /**
+     * 根据用户id删除
+     */
+    void deleteByUserId(Integer userId);
 }
 

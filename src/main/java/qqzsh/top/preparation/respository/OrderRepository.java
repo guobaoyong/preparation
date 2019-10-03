@@ -2,6 +2,7 @@ package qqzsh.top.preparation.respository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import qqzsh.top.preparation.entity.Order;
 
@@ -21,4 +22,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpeci
      */
     @Query(value = "select * from t_order where order_no=?1", nativeQuery = true)
     Order findByOrderNo(String orderNo);
+
+    /**
+     * 根据userId删除
+     * @param userId
+     */
+    @Query(value = "delete from t_order where user_id=?1", nativeQuery = true)
+    @Modifying
+    void deleteByUserId(Integer userId);
 }

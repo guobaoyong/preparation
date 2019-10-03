@@ -61,5 +61,10 @@ public interface CommentService {
      * @param articleId
      */
     void deleteByArticleId(Integer articleId);
+
+    /**
+     * 根据用户id删除
+     */
+    void deleteByUserId(Integer userId);
 }
 

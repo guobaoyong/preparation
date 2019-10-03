@@ -31,5 +31,13 @@ public interface MessageRepository extends JpaRepository<Message, Integer>, JpaS
     @Query(value = "update t_message set is_see=true where user_id=?1", nativeQuery = true)
     @Modifying
     void updateState(Integer userId);
+
+    /**
+     * 通过userId删除消息
+     */
+    @Query(value = "delete from t_message where user_id=?1", nativeQuery = true)
+    @Modifying
+    void deleteByUserId(Integer userId);
+
 }
 

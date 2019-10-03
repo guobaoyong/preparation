@@ -68,5 +68,10 @@ public interface MessageService {
      * @return
      */
     Message findById(Integer id);
+
+    /**
+     * 根据用户id删除
+     */
+    void deleteByUserId(Integer userId);
 }
 
