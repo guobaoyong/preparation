@@ -15,6 +15,7 @@ public interface MessageService {
 
     /**
      * 查询某个用户下的所有消息
+     *
      * @param userId
      * @return
      */
@@ -22,18 +23,21 @@ public interface MessageService {
 
     /**
      * 添加或者修改用户消息
+     *
      * @param message
      */
     void save(Message message);
 
     /**
      * 修改成已查看状态
+     *
      * @param userId
      */
     void updateState(Integer userId);
 
     /**
      * 根据条件分页查询用户消息信息
+     *
      * @param s_message
      * @param page
      * @param pageSize
@@ -41,15 +45,16 @@ public interface MessageService {
      * @param properties
      * @return
      */
-    List<Message> list(String status,Message s_message, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
+    List<Message> list(String status, Message s_message, Integer page, Integer pageSize, Sort.Direction direction, String... properties);
 
 
     /**
      * 根据条件查询总记录数
+     *
      * @param s_message
      * @return
      */
-    Long getTotal(String status,Message s_message);
+    Long getTotal(String status, Message s_message);
 
     /**
      * 删除消息
@@ -58,6 +63,7 @@ public interface MessageService {
 
     /**
      * 根据id查找
+     *
      * @param id
      * @return
      */

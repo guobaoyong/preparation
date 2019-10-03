@@ -47,40 +47,40 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> list(String status,Message s_message, Integer page, Integer pageSize, Sort.Direction direction,
+    public List<Message> list(String status, Message s_message, Integer page, Integer pageSize, Sort.Direction direction,
                               String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<Message> pageMessage = messageRepository.findAll(new Specification<Message>() {
 
             @Override
             public Predicate toPredicate(Root<Message> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_message!=null){
-                    if(s_message.getUser()!=null && s_message.getUser().getId()!=null){
+                if (s_message != null) {
+                    if (s_message.getUser() != null && s_message.getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_message.getUser().getId()));
                     }
-                    if (status != null && status != ""){
+                    if (status != null && status != "") {
                         predicate.getExpressions().add(cb.equal(root.get("isSee"), s_message.isSee()));
                     }
                 }
                 return predicate;
             }
-        },pageable);
+        }, pageable);
         return pageMessage.getContent();
     }
 
     @Override
-    public Long getTotal(String status,Message s_message) {
-        Long count=messageRepository.count(new Specification<Message>() {
+    public Long getTotal(String status, Message s_message) {
+        Long count = messageRepository.count(new Specification<Message>() {
 
             @Override
             public Predicate toPredicate(Root<Message> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_message!=null){
-                    if(s_message.getUser()!=null && s_message.getUser().getId()!=null){
+                if (s_message != null) {
+                    if (s_message.getUser() != null && s_message.getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_message.getUser().getId()));
                     }
-                    if (status != null && status != ""){
+                    if (status != null && status != "") {
                         predicate.getExpressions().add(cb.equal(root.get("isSee"), s_message.isSee()));
                     }
                 }

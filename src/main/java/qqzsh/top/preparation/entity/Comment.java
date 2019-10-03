@@ -13,7 +13,7 @@ import java.util.Date;
  * @Description 评论实体
  */
 @Entity
-@Table(name="t_comment")
+@Table(name = "t_comment")
 public class Comment implements Serializable {
 
     // 编号
@@ -23,16 +23,16 @@ public class Comment implements Serializable {
 
     // 帖子
     @ManyToOne
-    @JoinColumn(name="articleId")
+    @JoinColumn(name = "articleId")
     private Article article;
 
     // 评论人
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User user;
 
     // 评论内容
-    @Column(length=1000)
+    @Column(length = 1000)
     private String content;
 
     // 评论日期
@@ -74,7 +74,7 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    @JsonSerialize(using=CustomDateTimeSerializer.class)
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getCommentDate() {
         return commentDate;
     }

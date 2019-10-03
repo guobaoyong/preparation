@@ -16,7 +16,7 @@ import java.util.Date;
  * @description 用户实体
  */
 @Entity
-@Table(name="t_user")
+@Table(name = "t_user")
 public class User implements Serializable {
 
     // 编号
@@ -25,40 +25,40 @@ public class User implements Serializable {
     private Integer id;
 
     // 用户名
-    @NotEmpty(message="请输入用户名！")
-    @Column(length=100)
+    @NotEmpty(message = "请输入用户名！")
+    @Column(length = 100)
     private String userName;
 
     // 密码
-    @NotEmpty(message="请输入密码！")
-    @Length(min = 6, message ="密码长度不能小于6位！")
-    @Column(length=100)
+    @NotEmpty(message = "请输入密码！")
+    @Length(min = 6, message = "密码长度不能小于6位！")
+    @Column(length = 100)
     private String password;
 
     // 验证邮箱地址
-    @Email(message="邮箱地址格式有误！")
-    @NotEmpty(message="请输入邮箱地址！")
-    @Column(length=100)
+    @Email(message = "邮箱地址格式有误！")
+    @NotEmpty(message = "请输入邮箱地址！")
+    @Column(length = 100)
     private String email;
 
     // 用户头像
-    @Column(length=100)
+    @Column(length = 100)
     private String imageName;
 
     // 用户积分
-    private Integer points=0;
+    private Integer points = 0;
 
     // 是否是VIP
-    private boolean isVip=false;
+    private boolean isVip = false;
 
     //vip到期时间
     private Date endtime;
 
     // 是否被封禁
-    private boolean isOff=false;
+    private boolean isOff = false;
 
     // 角色名称 会员  管理员 两种 默认 会员
-    private String roleName="会员";
+    private String roleName = "会员";
 
     // 注册日期
     private Date registerDate;
@@ -68,7 +68,7 @@ public class User implements Serializable {
     private Integer messageCount;
 
     // 是否签到
-    private boolean isSign=false;
+    private boolean isSign = false;
 
     // 签到时间
     private Date signTime;
@@ -148,7 +148,7 @@ public class User implements Serializable {
         this.roleName = roleName;
     }
 
-    @JsonSerialize(using=CustomDateSerializer.class)
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date getRegisterDate() {
         return registerDate;
     }
@@ -189,7 +189,7 @@ public class User implements Serializable {
         this.signSort = signSort;
     }
 
-    @JsonSerialize(using=CustomDateSerializer.class)
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date getEndtime() {
         return endtime;
     }

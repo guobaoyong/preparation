@@ -15,26 +15,30 @@ public interface UserDownloadService {
 
     /**
      * 查询某个用户下载某个资源的次数
+     *
      * @param userId
      * @param articleId
      * @return
      */
-    Integer getCountByUserIdAndArticleId(Integer userId,Integer articleId);
+    Integer getCountByUserIdAndArticleId(Integer userId, Integer articleId);
 
     /**
      * 添加或者修改用户下载信息
+     *
      * @param userDownload
      */
     void save(UserDownload userDownload);
 
     /**
      * 删除指定帖子的下载信息
+     *
      * @param articleId
      */
     void deleteByArticleId(Integer articleId);
 
     /**
      * 根据条件分页查询用户下载信息
+     *
      * @param s_userDownload
      * @param page
      * @param pageSize
@@ -42,11 +46,12 @@ public interface UserDownloadService {
      * @param properties
      * @return
      */
-    List<UserDownload> list(UserDownload s_userDownload, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
+    List<UserDownload> list(UserDownload s_userDownload, Integer page, Integer pageSize, Sort.Direction direction, String... properties);
 
 
     /**
      * 根据条件查询总记录数
+     *
      * @param s_userDownload
      * @return
      */

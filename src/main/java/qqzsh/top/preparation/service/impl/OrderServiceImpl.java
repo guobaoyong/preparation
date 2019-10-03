@@ -7,11 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import qqzsh.top.preparation.entity.Comment;
 import qqzsh.top.preparation.entity.Order;
-import qqzsh.top.preparation.respository.CommentRepository;
 import qqzsh.top.preparation.respository.OrderRepository;
-import qqzsh.top.preparation.service.CommentService;
 import qqzsh.top.preparation.service.OrderService;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -33,7 +30,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
-
 
     @Override
     public void save(Order order) {

@@ -32,11 +32,11 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String userName=(String) SecurityUtils.getSubject().getPrincipal();
-        User user=userService.findByUserName(userName);
-        SimpleAuthorizationInfo info=new SimpleAuthorizationInfo();
-        Set<String> roles=new HashSet<>();
-        if("管理员".equals(user.getRoleName())){
+        String userName = (String) SecurityUtils.getSubject().getPrincipal();
+        User user = userService.findByUserName(userName);
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        Set<String> roles = new HashSet<>();
+        if ("管理员".equals(user.getRoleName())) {
             roles.add("管理员");
             info.addStringPermission("管理员默认页");
             info.addStringPermission("进入管理员主页");
@@ -108,12 +108,12 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        String userName=(String)token.getPrincipal();
-        User user=userService.findByUserName(userName);
-        if(user!=null){
-            AuthenticationInfo authcInfo=new SimpleAuthenticationInfo(user.getUserName(),user.getPassword(),"xx");
+        String userName = (String) token.getPrincipal();
+        User user = userService.findByUserName(userName);
+        if (user != null) {
+            AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(), "xx");
             return authcInfo;
-        }else{
+        } else {
             return null;
         }
     }

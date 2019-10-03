@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @description 友情链接实体
  */
 @Entity
-@Table(name="t_link")
+@Table(name = "t_link")
 public class Link implements Serializable {
 
     // 编号
@@ -19,11 +19,11 @@ public class Link implements Serializable {
     private Integer id;
 
     // 名称
-    @Column(length=500)
+    @Column(length = 500)
     private String name;
 
     // 链接地址
-    @Column(length=500)
+    @Column(length = 500)
     private String url;
 
     // 排序

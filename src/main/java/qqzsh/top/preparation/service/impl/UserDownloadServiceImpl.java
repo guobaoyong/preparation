@@ -49,38 +49,38 @@ public class UserDownloadServiceImpl implements UserDownloadService {
     @Override
     public List<UserDownload> list(UserDownload s_userDownload, Integer page, Integer pageSize, Sort.Direction direction,
                                    String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<UserDownload> pageUserDownload = userDownloadRepository.findAll(new Specification<UserDownload>() {
 
             @Override
             public Predicate toPredicate(Root<UserDownload> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_userDownload!=null){
-                    if(s_userDownload.getUser()!=null && s_userDownload.getUser().getId()!=null){
+                if (s_userDownload != null) {
+                    if (s_userDownload.getUser() != null && s_userDownload.getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_userDownload.getUser().getId()));
                     }
-                    if(s_userDownload.getArticle()!=null && s_userDownload.getArticle().getId()!=null){
+                    if (s_userDownload.getArticle() != null && s_userDownload.getArticle().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("article").get("id"), s_userDownload.getArticle().getId()));
                     }
                 }
                 return predicate;
             }
-        },pageable);
+        }, pageable);
         return pageUserDownload.getContent();
     }
 
     @Override
     public Long getTotal(UserDownload s_userDownload) {
-        Long count=userDownloadRepository.count(new Specification<UserDownload>() {
+        Long count = userDownloadRepository.count(new Specification<UserDownload>() {
 
             @Override
             public Predicate toPredicate(Root<UserDownload> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_userDownload!=null){
-                    if(s_userDownload.getUser()!=null && s_userDownload.getUser().getId()!=null){
+                if (s_userDownload != null) {
+                    if (s_userDownload.getUser() != null && s_userDownload.getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_userDownload.getUser().getId()));
                     }
-                    if(s_userDownload.getArticle()!=null && s_userDownload.getArticle().getId()!=null){
+                    if (s_userDownload.getArticle() != null && s_userDownload.getArticle().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("article").get("id"), s_userDownload.getArticle().getId()));
                     }
                 }

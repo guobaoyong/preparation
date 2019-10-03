@@ -33,38 +33,38 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> list(Article s_article, Integer page, Integer pageSize, Sort.Direction direction,
                               String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<Article> pageArticle = articleRepository.findAll(new Specification<Article>() {
 
             @Override
             public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_article!=null){
-                    if(s_article.getName()!=null){
-                        predicate.getExpressions().add(cb.like(root.get("name"), "%"+s_article.getName().trim()+"%"));
+                if (s_article != null) {
+                    if (s_article.getName() != null) {
+                        predicate.getExpressions().add(cb.like(root.get("name"), "%" + s_article.getName().trim() + "%"));
                     }
-                    if(s_article.getState()!=null){
+                    if (s_article.getState() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("state"), s_article.getState()));
                     }
-                    if(s_article.isHot()){
+                    if (s_article.isHot()) {
                         predicate.getExpressions().add(cb.equal(root.get("isHot"), 1));
                     }
-                    if(s_article.getArcType()!=null && s_article.getArcType().getId()!=null){
+                    if (s_article.getArcType() != null && s_article.getArcType().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("arcType").get("id"), s_article.getArcType().getId()));
                     }
-                    if(!s_article.isUseful()){
-                        predicate.getExpressions().add(cb.equal(root.get("isUseful"),false));
+                    if (!s_article.isUseful()) {
+                        predicate.getExpressions().add(cb.equal(root.get("isUseful"), false));
                     }
-                    if(s_article.getUser()!=null && s_article.getUser().getId()!=null){
+                    if (s_article.getUser() != null && s_article.getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_article.getUser().getId()));
                     }
-                    if(s_article.getUser()!=null && StringUtil.isNotEmpty(s_article.getUser().getUserName())){
-                        predicate.getExpressions().add(cb.like(root.get("user").get("userName"), "%"+s_article.getUser().getUserName()+"%"));
+                    if (s_article.getUser() != null && StringUtil.isNotEmpty(s_article.getUser().getUserName())) {
+                        predicate.getExpressions().add(cb.like(root.get("user").get("userName"), "%" + s_article.getUser().getUserName() + "%"));
                     }
                 }
                 return predicate;
             }
-        },pageable);
+        }, pageable);
         return pageArticle.getContent();
     }
 
@@ -75,32 +75,32 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Long getTotal(Article s_article) {
-        Long count=articleRepository.count(new Specification<Article>() {
+        Long count = articleRepository.count(new Specification<Article>() {
 
             @Override
             public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_article!=null){
-                    if(s_article.getName()!=null){
-                        predicate.getExpressions().add(cb.like(root.get("name"), "%"+s_article.getName().trim()+"%"));
+                if (s_article != null) {
+                    if (s_article.getName() != null) {
+                        predicate.getExpressions().add(cb.like(root.get("name"), "%" + s_article.getName().trim() + "%"));
                     }
-                    if(s_article.getState()!=null){
+                    if (s_article.getState() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("state"), s_article.getState()));
                     }
-                    if(s_article.isHot()){
+                    if (s_article.isHot()) {
                         predicate.getExpressions().add(cb.equal(root.get("isHot"), 1));
                     }
-                    if(s_article.getArcType()!=null && s_article.getArcType().getId()!=null){
+                    if (s_article.getArcType() != null && s_article.getArcType().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("arcType").get("id"), s_article.getArcType().getId()));
                     }
-                    if(!s_article.isUseful()){
-                        predicate.getExpressions().add(cb.equal(root.get("isUseful"),false));
+                    if (!s_article.isUseful()) {
+                        predicate.getExpressions().add(cb.equal(root.get("isUseful"), false));
                     }
-                    if(s_article.getUser()!=null && s_article.getUser().getId()!=null){
+                    if (s_article.getUser() != null && s_article.getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_article.getUser().getId()));
                     }
-                    if(s_article.getUser()!=null && StringUtil.isNotEmpty(s_article.getUser().getUserName())){
-                        predicate.getExpressions().add(cb.like(root.get("user").get("userName"), "%"+s_article.getUser().getUserName()+"%"));
+                    if (s_article.getUser() != null && StringUtil.isNotEmpty(s_article.getUser().getUserName())) {
+                        predicate.getExpressions().add(cb.like(root.get("user").get("userName"), "%" + s_article.getUser().getUserName() + "%"));
                     }
                 }
                 return predicate;
@@ -125,8 +125,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findByNameLike(String name){
-        return articleRepository.findByNameLike("%"+name+"%");
+    public List<Article> findByNameLike(String name) {
+        return articleRepository.findByNameLike("%" + name + "%");
     }
 }
 

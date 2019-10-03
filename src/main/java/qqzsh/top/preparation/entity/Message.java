@@ -13,7 +13,7 @@ import java.util.Date;
  * @Description 用户消息实体
  */
 @Entity
-@Table(name="t_message")
+@Table(name = "t_message")
 public class Message implements Serializable {
 
     // 编号
@@ -22,7 +22,7 @@ public class Message implements Serializable {
     private Integer id;
 
     // 消息内容
-    @Column(length=100)
+    @Column(length = 100)
     private String content;
 
     // 发布日期
@@ -31,11 +31,11 @@ public class Message implements Serializable {
 
     // 所属用户
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User user;
 
     // 消息是否被查看 true是 false 否
-    private boolean isSee=false;
+    private boolean isSee = false;
 
     public Integer getId() {
         return id;
@@ -53,7 +53,7 @@ public class Message implements Serializable {
         this.content = content;
     }
 
-    @JsonSerialize(using=CustomDateTimeSerializer.class)
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getPublishDate() {
         return publishDate;
     }

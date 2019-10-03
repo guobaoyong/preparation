@@ -16,17 +16,19 @@ public interface MessageRepository extends JpaRepository<Message, Integer>, JpaS
 
     /**
      * 查询某个用户下的所有消息
+     *
      * @param userId
      * @return
      */
-    @Query(value="select count(*) from t_message where is_see=false and user_id=?1",nativeQuery=true)
+    @Query(value = "select count(*) from t_message where is_see=false and user_id=?1", nativeQuery = true)
     Integer getCountByUserId(Integer userId);
 
     /**
      * 修改成已查看状态
+     *
      * @param userId
      */
-    @Query(value="update t_message set is_see=true where user_id=?1",nativeQuery=true)
+    @Query(value = "update t_message set is_see=true where user_id=?1", nativeQuery = true)
     @Modifying
     void updateState(Integer userId);
 }

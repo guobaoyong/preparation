@@ -26,13 +26,13 @@ public class ArcTypeServiceImpl implements ArcTypeService {
 
     @Override
     public List<ArcType> listAll(Sort.Direction direction, String... properties) {
-        Sort sort=new Sort(direction, properties);
+        Sort sort = new Sort(direction, properties);
         return arcTypeRespository.findAll(sort);
     }
 
     @Override
     public List<ArcType> list(Integer page, Integer pageSize, Sort.Direction direction, String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<ArcType> pageArcType = arcTypeRespository.findAll(pageable);
         return pageArcType.getContent();
     }

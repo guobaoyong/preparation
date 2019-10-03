@@ -12,7 +12,6 @@ import qqzsh.top.preparation.entity.Message;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.service.MessageService;
 import qqzsh.top.preparation.service.UserService;
-import qqzsh.top.preparation.task.SignResetTask;
 import qqzsh.top.preparation.util.CryptographyUtil;
 import qqzsh.top.preparation.util.RedisUtil;
 
@@ -47,6 +46,7 @@ public class UserAdminController implements ServletContextListener {
 
     /**
      * 根据条件分页查询用户信息
+     *
      * @param s_user
      * @param page
      * @param limit
@@ -54,11 +54,11 @@ public class UserAdminController implements ServletContextListener {
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"分页查询用户信息"})
+    @RequiresPermissions(value = {"分页查询用户信息"})
     @RequestMapping("/list")
-    public Map<String,Object> list(User s_user, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="limit",required=false)Integer limit)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
-        List<User> userList = userService.list(s_user,page, limit, Sort.Direction.DESC, "registerDate");
+    public Map<String, Object> list(User s_user, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        List<User> userList = userService.list(s_user, page, limit, Sort.Direction.DESC, "registerDate");
         Long total = userService.getTotal(s_user);
         resultMap.put("code", 0);
         resultMap.put("count", total);
@@ -68,59 +68,62 @@ public class UserAdminController implements ServletContextListener {
 
     /**
      * 重置用户密码
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"重置用户密码"})
+    @RequiresPermissions(value = {"重置用户密码"})
     @RequestMapping("/resetPassword")
-    public Map<String,Object> resetPassword(Integer id)throws Exception{
+    public Map<String, Object> resetPassword(Integer id) throws Exception {
         User oldUser = userService.getById(id);
         oldUser.setPassword(CryptographyUtil.md5("123456", CryptographyUtil.SALT));
         userService.save(oldUser);
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     /**
      * 用户积分充值
+     *
      * @param user
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"用户积分充值"})
+    @RequiresPermissions(value = {"用户积分充值"})
     @RequestMapping("/addPoints")
-    public Map<String,Object> addPoints(User user, HttpSession session)throws Exception{
+    public Map<String, Object> addPoints(User user, HttpSession session) throws Exception {
         //session用户
         User currentUser = (User) session.getAttribute("currentUser");
         //要更新用户
         User oldUser = userService.getById(user.getId());
-        oldUser.setPoints(oldUser.getPoints()+user.getPoints());
+        oldUser.setPoints(oldUser.getPoints() + user.getPoints());
         userService.save(oldUser);
         //如何要更新用户就是session用户
-        if (currentUser.getId() == oldUser.getId()){
-            currentUser.setPoints(oldUser.getPoints()+user.getPoints());
+        if (currentUser.getId() == oldUser.getId()) {
+            currentUser.setPoints(oldUser.getPoints() + user.getPoints());
             //更新下session用户
             session.setAttribute("currentUser", currentUser);
         }
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     /**
      * 修改用户VIP状态
+     *
      * @param user
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"修改用户VIP状态"})
+    @RequiresPermissions(value = {"修改用户VIP状态"})
     @RequestMapping("/updateVipState")
-    public Map<String,Object> updateVipState(User user,HttpSession session)throws Exception{
+    public Map<String, Object> updateVipState(User user, HttpSession session) throws Exception {
         //session用户
         User currentUser = (User) session.getAttribute("currentUser");
         //要更新用户
@@ -128,30 +131,31 @@ public class UserAdminController implements ServletContextListener {
         oldUser.setVip(user.isVip());
         userService.save(oldUser);
         //如何要更新用户就是session用户
-        if (currentUser.getId() == oldUser.getId()){
+        if (currentUser.getId() == oldUser.getId()) {
             currentUser.setVip(user.isVip());
             //更新下session用户
             session.setAttribute("currentUser", currentUser);
         }
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     /**
      * 修改用户状态
+     *
      * @param user
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"修改用户状态"})
+    @RequiresPermissions(value = {"修改用户状态"})
     @RequestMapping("/updateUserState")
-    public Map<String,Object> updateUserState(User user)throws Exception{
+    public Map<String, Object> updateUserState(User user) throws Exception {
         User oldUser = userService.getById(user.getId());
         oldUser.setOff(user.isOff());
         userService.save(oldUser);
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
@@ -163,55 +167,57 @@ public class UserAdminController implements ServletContextListener {
 
 
     @Override
-    public void contextDestroyed(ServletContextEvent sce) { }
+    public void contextDestroyed(ServletContextEvent sce) {
+    }
 
     @ResponseBody
-    @RequiresPermissions(value={"清除签到信息"})
+    @RequiresPermissions(value = {"清除签到信息"})
     @RequestMapping("/clearSign")
-    public Map<String,Object> clearSign()throws Exception{
+    public Map<String, Object> clearSign() throws Exception {
         application.setAttribute("signTotal", 0);
         redisUtil.set("signTotal", 0);
         userService.updateAllSignInfo();
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     /**
      * 修改用户角色
+     *
      * @param user
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"修改用户角色"})
+    @RequiresPermissions(value = {"修改用户角色"})
     @RequestMapping("//updateRole")
-    public Map<String,Object> updateRole(User user,HttpSession session)throws Exception{
+    public Map<String, Object> updateRole(User user, HttpSession session) throws Exception {
         //session用户
         User currentUser = (User) session.getAttribute("currentUser");
         //要更新用户
         User oldUser = userService.getById(user.getId());
-        if (user.getRoleName().equals("true")){
+        if (user.getRoleName().equals("true")) {
             oldUser.setRoleName("管理员");
-        }else {
+        } else {
             oldUser.setRoleName("会员");
         }
         userService.save(oldUser);
         //如何要更新用户就是session用户
-        if (currentUser.getId() == oldUser.getId()){
+        if (currentUser.getId() == oldUser.getId()) {
             currentUser.setRoleName(user.getRoleName());
             //更新下session用户
             session.setAttribute("currentUser", currentUser);
         }
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     @ResponseBody
-    @RequiresPermissions(value={"发送消息"})
+    @RequiresPermissions(value = {"发送消息"})
     @PostMapping("/sentMessage")
-    public Map<String,Object> sentMessage(Integer userId,String content, HttpSession session)throws Exception{
+    public Map<String, Object> sentMessage(Integer userId, String content, HttpSession session) throws Exception {
         //session用户
         User currentUser = (User) session.getAttribute("currentUser");
         //封装消息实体
@@ -225,12 +231,12 @@ public class UserAdminController implements ServletContextListener {
         messageService.save(message);
 
         //如何要更新用户就是session用户
-        if (currentUser.getId() == userId){
-            currentUser.setMessageCount(currentUser.getMessageCount()+1);
+        if (currentUser.getId() == userId) {
+            currentUser.setMessageCount(currentUser.getMessageCount() + 1);
             //更新下session用户
             session.setAttribute("currentUser", currentUser);
         }
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }

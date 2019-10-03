@@ -28,13 +28,13 @@
         <input type="radio" name="time" value="120" title="一年-120元"><br>
         <input type="radio" name="time" value="360" title="三年-360元"><br>
         <input type="radio" name="time" value="888" title="永久-888元">
-		<br><br>
-		<div class="layui-form-item">
-			<div class="layui-input-block">
-				<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
-			</div>
-		</div>
+        <br><br>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
     </form>
 
 
@@ -47,11 +47,11 @@
         var form = layui.form;
         var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
 
-		//监听提交
-		form.on('submit(formDemo)', function(data){
-            data.form.action="/alipay/pay";
-			return true;
-		});
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            data.form.action = "/alipay/pay";
+            return true;
+        });
 
     });
 

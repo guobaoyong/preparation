@@ -14,18 +14,19 @@
 </div>
 <!--右侧栏内容-->
 <div style="float: right;width: 960px">
-	<fieldset class="layui-elem-field layui-field-title">
-		<legend>首页</legend>
-	</fieldset>
-	<div>
-		<div style="padding-left: 10px">
-			欢迎用户：<font th:text="${session.currentUser.userName}"></font><br /><br />
-			用户等级：<font th:text="${session.currentUser.vip==true?'VIP会员':'普通会员'}"></font><br /><br />
-			用户积分：<font th:text="${session.currentUser.points}"></font><br /><br />
-			用户角色：<font th:text="${session.currentUser.roleName}"></font><br /><br />
-			VIP到期时间：<font th:text="${session.currentUser.endtime == null?'无':session.currentUser.getEndtime()}"></font><br /><br />
-		</div>
-	</div>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>首页</legend>
+    </fieldset>
+    <div>
+        <div style="padding-left: 10px">
+            欢迎用户：<font th:text="${session.currentUser.userName}"></font><br/><br/>
+            用户等级：<font th:text="${session.currentUser.vip==true?'VIP会员':'普通会员'}"></font><br/><br/>
+            用户积分：<font th:text="${session.currentUser.points}"></font><br/><br/>
+            用户角色：<font th:text="${session.currentUser.roleName}"></font><br/><br/>
+            VIP到期时间：<font
+                th:text="${session.currentUser.endtime == null?'无':session.currentUser.getEndtime()}"></font><br/><br/>
+        </div>
+    </div>
 </div>
 <script src="/static/layui/layui.js"></script>
 <script src="/static/js/common.js"></script>

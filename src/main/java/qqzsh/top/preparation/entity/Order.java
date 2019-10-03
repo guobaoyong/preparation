@@ -1,7 +1,5 @@
 package qqzsh.top.preparation.entity;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +11,7 @@ import java.util.Date;
  * @Description 订单
  */
 @Entity
-@Table(name="t_order")
+@Table(name = "t_order")
 public class Order implements Serializable {
 
     // 编号
@@ -29,7 +27,7 @@ public class Order implements Serializable {
 
     // 用户ID
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User user;
 
     // 金额

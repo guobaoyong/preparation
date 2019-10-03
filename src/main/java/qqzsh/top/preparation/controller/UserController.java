@@ -143,12 +143,12 @@ public class UserController {
             user.setImageName("default.jpg");
             userService.save(user);
             //更新redis
-            if (redisUtil.hasKey("userNum")){
+            if (redisUtil.hasKey("userNum")) {
                 int sum = (int) redisUtil.get("userNum");
                 redisUtil.del("userNum");
-                redisUtil.set("userNum",sum+1);
-            }else {
-                redisUtil.set("userNum",userService.getTotal(null).intValue());
+                redisUtil.set("userNum", sum + 1);
+            } else {
+                redisUtil.set("userNum", userService.getTotal(null).intValue());
             }
             map.put("success", true);
         }
@@ -333,22 +333,23 @@ public class UserController {
 
     /**
      * 获取当前登录用户是否是VIP用户
+     *
      * @param session
      * @return
      */
     @ResponseBody
     @PostMapping("/isVip")
-    public boolean isVip(HttpSession session){
+    public boolean isVip(HttpSession session) {
         User user = (User) session.getAttribute("currentUser");
         //如果发现vip已过期，则修改用户状态
-        if (((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) <= new Date().getTime())){
+        if (((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) <= new Date().getTime())) {
             User byId = userService.findById(user.getId());
             byId.setVip(false);
             byId.setEndtime(null);
             userService.save(byId);
         }
         //VIP状态正常且在时间段内
-        if (user.isVip() && ((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) > new Date().getTime())){
+        if (user.isVip() && ((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) > new Date().getTime())) {
             return user.isVip();
         }
         return false;
@@ -356,6 +357,7 @@ public class UserController {
 
     /**
      * 用户签到
+     *
      * @param session
      * @param request
      * @return
@@ -363,30 +365,30 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/sign")
-    public Map<String,Object> sign(HttpSession session,HttpServletRequest request)throws Exception{
-        Map<String,Object> map=new HashMap<String,Object>();
-        if(session.getAttribute("currentUser")==null){
+    public Map<String, Object> sign(HttpSession session, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (session.getAttribute("currentUser") == null) {
             map.put("success", false);
-            map.put("errorInfo", "大佬，请先登录下，才能签到;");
+            map.put("errorInfo", "请先登录，才能签到;");
             return map;
         }
-        User currentUser=(User) session.getAttribute("currentUser");
-        if(currentUser.isSign()){
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser.isSign()) {
             map.put("success", false);
-            map.put("errorInfo", "大佬，你已经签到了，不能重复签到;");
+            map.put("errorInfo", "尊敬的会员，你已经签到了，不能重复签到;");
             return map;
         }
-        ServletContext application=request.getServletContext();
-        Integer signTotal=(Integer) redisUtil.get("signTotal");
-        redisUtil.set("signTotal", signTotal+1);
-        application.setAttribute("signTotal", signTotal+1);
+        ServletContext application = request.getServletContext();
+        Integer signTotal = (Integer) redisUtil.get("signTotal");
+        redisUtil.set("signTotal", signTotal + 1);
+        application.setAttribute("signTotal", signTotal + 1);
 
         // 更新到数据库
         User user = userService.getById(currentUser.getId());
         user.setSign(true);
         user.setSignTime(new Date());
-        user.setSignSort(signTotal+1);
-        user.setPoints(user.getPoints()+3);
+        user.setSignSort(signTotal + 1);
+        user.setPoints(user.getPoints() + 3);
         userService.save(user);
 
         //更新session

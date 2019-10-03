@@ -15,12 +15,14 @@ public interface UserService {
 
     /**
      * 添加或者修改用户信息
+     *
      * @param user
      */
     void save(User user);
 
     /**
      * 根据用户名查找用户实体
+     *
      * @param userName
      * @return
      */
@@ -28,6 +30,7 @@ public interface UserService {
 
     /**
      * 根据邮箱查找用户实体
+     *
      * @param email
      * @return
      */
@@ -35,6 +38,7 @@ public interface UserService {
 
     /**
      * 根据id查找实体
+     *
      * @param id
      * @return
      */
@@ -42,6 +46,7 @@ public interface UserService {
 
     /**
      * 根据条件分页查询用户信息
+     *
      * @param s_user
      * @param page
      * @param pageSize
@@ -49,10 +54,11 @@ public interface UserService {
      * @param properties
      * @return
      */
-    List<User> list(User s_user, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
+    List<User> list(User s_user, Integer page, Integer pageSize, Sort.Direction direction, String... properties);
 
     /**
      * 根据条件查询总记录数
+     *
      * @param s_user
      * @return
      */

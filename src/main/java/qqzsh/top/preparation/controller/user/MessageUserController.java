@@ -29,14 +29,15 @@ public class MessageUserController {
 
     /**
      * 查看系统消息 状态都改成已经查看
+     *
      * @param session
      * @return
      * @throws Exception
      */
     @RequestMapping("/see")
-    public ModelAndView see(HttpSession session)throws Exception{
-        User user=(User)session.getAttribute("currentUser");
-        Message s_message=new Message();
+    public ModelAndView see(HttpSession session) throws Exception {
+        User user = (User) session.getAttribute("currentUser");
+        Message s_message = new Message();
         s_message.setUser(user);
         messageService.updateState(user.getId());
         //设置未读条数为0
@@ -44,9 +45,9 @@ public class MessageUserController {
         //更新session用户
         session.setAttribute("currentUser", user);
 
-        List<Message> messageList = messageService.list(null,s_message, 1, 10, Sort.Direction.DESC, "publishDate");
-        Long total = messageService.getTotal(null,s_message);
-        ModelAndView mav=new ModelAndView();
+        List<Message> messageList = messageService.list(null, s_message, 1, 10, Sort.Direction.DESC, "publishDate");
+        Long total = messageService.getTotal(null, s_message);
+        ModelAndView mav = new ModelAndView();
         mav.addObject("messageList", messageList);
         mav.addObject("pageCode", PageUtil.genPagination("/user/message/list", total, 1, 10, ""));
         mav.addObject("title", "系统消息页面");
@@ -56,19 +57,20 @@ public class MessageUserController {
 
     /**
      * 分页查询消息帖子
+     *
      * @param session
      * @param page
      * @return
      * @throws Exception
      */
     @RequestMapping("/list/{id}")
-    public ModelAndView list(HttpSession session, @PathVariable(value="id",required=false)Integer page)throws Exception{
-        ModelAndView mav=new ModelAndView();
-        User user=(User)session.getAttribute("currentUser");
-        Message s_message=new Message();
+    public ModelAndView list(HttpSession session, @PathVariable(value = "id", required = false) Integer page) throws Exception {
+        ModelAndView mav = new ModelAndView();
+        User user = (User) session.getAttribute("currentUser");
+        Message s_message = new Message();
         s_message.setUser(user);
-        List<Message> messageList = messageService.list(null,s_message, page, 10, Sort.Direction.DESC, "publishDate");
-        Long total = messageService.getTotal(null,s_message);
+        List<Message> messageList = messageService.list(null, s_message, page, 10, Sort.Direction.DESC, "publishDate");
+        Long total = messageService.getTotal(null, s_message);
         mav.addObject("messageList", messageList);
         mav.addObject("pageCode", PageUtil.genPagination("/user/message/list", total, page, 10, ""));
         mav.addObject("title", "系统消息页面");

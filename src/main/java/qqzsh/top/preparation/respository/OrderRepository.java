@@ -15,9 +15,10 @@ public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpeci
 
     /**
      * 根据订单号查找订单实体
+     *
      * @param orderNo
      * @return
      */
-    @Query(value="select * from t_order where order_no=?1",nativeQuery=true)
+    @Query(value = "select * from t_order where order_no=?1", nativeQuery = true)
     Order findByOrderNo(String orderNo);
 }

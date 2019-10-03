@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @Description 支付宝配置
  */
 @Component
-@ConfigurationProperties(prefix="alipay")
+@ConfigurationProperties(prefix = "alipay")
 @Data
 public class AliPayConfig {
 

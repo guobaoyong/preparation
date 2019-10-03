@@ -22,6 +22,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     /**
      * 静态资源的加载和Swagger2配置
+     *
      * @param registry
      */
     @Override
@@ -31,8 +32,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
                 .addResourceLocations("classpath:/static/");
         //用户头像
         registry.addResourceHandler("/userImage/**")
-                .addResourceLocations("file:"+userImageFilePath);
+                .addResourceLocations("file:" + userImageFilePath);
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:"+articleImageFilePath);
+                .addResourceLocations("file:" + articleImageFilePath);
     }
 }

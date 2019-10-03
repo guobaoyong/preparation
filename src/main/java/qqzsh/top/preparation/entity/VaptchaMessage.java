@@ -1,7 +1,5 @@
 package qqzsh.top.preparation.entity;
 
-import java.io.Serializable;
-
 /**
  * @author zsh
  * @site qqzsh.top
@@ -10,11 +8,14 @@ import java.io.Serializable;
  */
 public class VaptchaMessage {
 
-    private Integer success; //验证结果，1为通过，0为失败
+    //验证结果，1为通过，0为失败
+    private Integer success;
 
-    private Integer score; //可信度，区间[0, 100]
+    //可信度，区间[0, 100]
+    private Integer score;
 
-    private String msg; //信息描述
+    //信息描述
+    private String msg;
 
     public Integer getSuccess() {
         return success;

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/static/login/bootstrap-responsive.min.css"/>
     <link rel="stylesheet" href="/static/login/matrix-login.css"/>
     <link rel="stylesheet" href="/static/login/font-awesome.css"/>
-    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/static/login/js/jquery-1.5.1.min.js"></script>
     <!-- 软键盘控件start -->
     <link href="/static/login/keypad/css/framework/form.css" rel="stylesheet" type="text/css"/>
@@ -31,10 +31,12 @@
             margin-left: 20px;
             margin-right: 20px;
         }
-        body{
-            height: 100%;width: 100%;
+
+        body {
+            height: 100%;
+            width: 100%;
             background: url("/static/login/images/banner_slide_01.jpg");
-            background-size:cover;
+            background-size: cover;
         }
     </style>
     <script>
@@ -76,13 +78,13 @@
             fhi++;
         };
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             var i = 1;
             //设置定时器，每5s更换一次背景图片
-            setInterval(function(){
-                document.body.style.background = "url('/static/login/images/banner_slide_0"+i+".jpg')";
+            setInterval(function () {
+                document.body.style.background = "url('/static/login/images/banner_slide_0" + i + ".jpg')";
                 i++;
-                if (i == 6){
+                if (i == 6) {
                     i = 1;
                 }
             }, 5000);
@@ -196,9 +198,9 @@
             vaptcha_token: myForm.vaptcha_token.value
         }, function (result) {
             if (result.success) {
-                if (result.userRole == '管理员'){
+                if (result.userRole == '管理员') {
                     window.location.href = "/toAdminUserCenterPage";
-                }else {
+                } else {
                     alert("您不是管理员，不能登录后台");
                     window.location.href = "/logout";
                 }

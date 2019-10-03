@@ -13,7 +13,7 @@ import java.util.Date;
  * @Description 用户下载实体
  */
 @Entity
-@Table(name="t_userDownload")
+@Table(name = "t_userDownload")
 public class UserDownload implements Serializable {
 
     // 编号
@@ -23,12 +23,12 @@ public class UserDownload implements Serializable {
 
     // 下载资源
     @ManyToOne
-    @JoinColumn(name="articleId")
+    @JoinColumn(name = "articleId")
     private Article article;
 
     // 下载用户
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User user;
 
     // 下载日期
@@ -59,7 +59,7 @@ public class UserDownload implements Serializable {
         this.user = user;
     }
 
-    @JsonSerialize(using=CustomDateTimeSerializer.class)
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getDownloadDate() {
         return downloadDate;
     }

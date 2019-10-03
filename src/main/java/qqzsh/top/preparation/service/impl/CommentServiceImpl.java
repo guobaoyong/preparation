@@ -39,44 +39,44 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> list(Comment s_comment, Integer page, Integer pageSize, Sort.Direction direction,
                               String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<Comment> pageArticle = commentRepository.findAll(new Specification<Comment>() {
 
             @Override
             public Predicate toPredicate(Root<Comment> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_comment!=null){
-                    if(s_comment.getState()!=null){
+                if (s_comment != null) {
+                    if (s_comment.getState() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("state"), s_comment.getState()));
                     }
-                    if(s_comment.getArticle()!=null && s_comment.getArticle().getId()!=null){
+                    if (s_comment.getArticle() != null && s_comment.getArticle().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("article").get("id"), s_comment.getArticle().getId()));
                     }
-                    if(s_comment.getArticle()!=null && s_comment.getArticle().getUser()!=null && s_comment.getArticle().getUser().getId()!=null){
+                    if (s_comment.getArticle() != null && s_comment.getArticle().getUser() != null && s_comment.getArticle().getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("article").get("user").get("id"), s_comment.getArticle().getUser().getId()));
                     }
                 }
                 return predicate;
             }
-        },pageable);
+        }, pageable);
         return pageArticle.getContent();
     }
 
     @Override
     public Long getTotal(Comment s_comment) {
-        Long count=commentRepository.count(new Specification<Comment>() {
+        Long count = commentRepository.count(new Specification<Comment>() {
 
             @Override
             public Predicate toPredicate(Root<Comment> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_comment!=null){
-                    if(s_comment.getState()!=null){
+                if (s_comment != null) {
+                    if (s_comment.getState() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("state"), s_comment.getState()));
                     }
-                    if(s_comment.getArticle()!=null && s_comment.getArticle().getId()!=null){
+                    if (s_comment.getArticle() != null && s_comment.getArticle().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("article").get("id"), s_comment.getArticle().getId()));
                     }
-                    if(s_comment.getArticle()!=null && s_comment.getArticle().getUser()!=null && s_comment.getArticle().getUser().getId()!=null){
+                    if (s_comment.getArticle() != null && s_comment.getArticle().getUser() != null && s_comment.getArticle().getUser().getId() != null) {
                         predicate.getExpressions().add(cb.equal(root.get("article").get("user").get("id"), s_comment.getArticle().getUser().getId()));
                     }
                 }

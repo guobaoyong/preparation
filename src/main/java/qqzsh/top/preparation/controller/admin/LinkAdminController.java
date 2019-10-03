@@ -34,16 +34,17 @@ public class LinkAdminController {
 
     /**
      * 分页查询友情链接信息
+     *
      * @param page
      * @param limit
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"分页查询友情链接"})
+    @RequiresPermissions(value = {"分页查询友情链接"})
     @RequestMapping("/list")
-    public Map<String,Object> list(@RequestParam(value="page",required=false)Integer page, @RequestParam(value="limit",required=false)Integer limit)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    public Map<String, Object> list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         List<Link> linkList = linkService.list(page, limit, Sort.Direction.ASC, "sort");
         Long total = linkService.getTotal();
         resultMap.put("code", 0);
@@ -54,17 +55,18 @@ public class LinkAdminController {
 
     /**
      * 添加或者修改类别信息
+     *
      * @param link
      * @param request
      * @return
      */
     @ResponseBody
-    @RequiresPermissions(value={"添加或者修改友情链接"})
+    @RequiresPermissions(value = {"添加或者修改友情链接"})
     @RequestMapping("/save")
-    public Map<String,Object> save(Link link,HttpServletRequest request){
+    public Map<String, Object> save(Link link, HttpServletRequest request) {
         linkService.save(link);
         initSystem.loadData(request.getServletContext());
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
@@ -73,27 +75,28 @@ public class LinkAdminController {
      * 删除类别信息
      */
     @ResponseBody
-    @RequiresPermissions(value={"删除友情链接"})
+    @RequiresPermissions(value = {"删除友情链接"})
     @RequestMapping("/delete")
-    public Map<String,Object> delete(Integer id, HttpServletRequest request){
+    public Map<String, Object> delete(Integer id, HttpServletRequest request) {
         linkService.delete(id);
         initSystem.loadData(request.getServletContext());
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     /**
      * 根据id查询友情链接实体
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"根据id查询友情链接实体"})
+    @RequiresPermissions(value = {"根据id查询友情链接实体"})
     @RequestMapping("/findById")
-    public Map<String,Object> findById(Integer id)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    public Map<String, Object> findById(Integer id) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         Link link = linkService.get(id);
         resultMap.put("link", link);
         resultMap.put("success", true);

@@ -26,13 +26,14 @@ public class CommentController {
 
     /**
      * 分页查询某个帖子的评论信息
+     *
      * @param s_comment
      * @param page
      * @return
      */
     @ResponseBody
-    @RequestMapping(value="/list")
-    public List<Comment> list(Comment s_comment, @RequestParam(value="page",required=false)Integer page){
+    @RequestMapping(value = "/list")
+    public List<Comment> list(Comment s_comment, @RequestParam(value = "page", required = false) Integer page) {
         s_comment.setState(1);
         return commentService.list(s_comment, page, 6, Sort.Direction.DESC, "commentDate");
     }

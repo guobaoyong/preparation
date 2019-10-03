@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @description 资源类型
  */
 @Entity
-@Table(name="t_arcType")
+@Table(name = "t_arcType")
 public class ArcType implements Serializable {
 
     // 编号
@@ -19,11 +19,11 @@ public class ArcType implements Serializable {
     private Integer id;
 
     // 资源类型名称
-    @Column(length=100)
+    @Column(length = 100)
     private String name;
 
     // 描述
-    @Column(length=1000)
+    @Column(length = 1000)
     private String remark;
 
     // 排序（从小到大排序）

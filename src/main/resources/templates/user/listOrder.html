@@ -44,36 +44,36 @@
                     width: 150,
                     title: '下单时间',
                     align: 'center',
-                    templet: function (row){
-						return createTime(row.createTime);
-					}
-				}
-                ,{field:'action', width:100, title: '操作',align:'center',templet:formatAction}
+                    templet: function (row) {
+                        return createTime(row.createTime);
+                    }
+                }
+                , {field: 'action', width: 100, title: '操作', align: 'center', templet: formatAction}
             ]]
             , page: true
         });
 
     });
 
-    function formatAction(d){
-        return "<button class='layui-btn layui-btn-warm layui-btn-xs' onclick='checkOne("+d.id+")'><i class='layui-icon layui-icon-refresh-3' ></i>复议</button>";
+    function formatAction(d) {
+        return "<button class='layui-btn layui-btn-warm layui-btn-xs' onclick='checkOne(" + d.id + ")'><i class='layui-icon layui-icon-refresh-3' ></i>复议</button>";
     }
 
-    function checkOne(id){
+    function checkOne(id) {
         layer.confirm('您确定要复议这条记录吗？', {
-            title:"系统提示"
-            ,btn: ['确定','取消'] //按钮
-        }, function(){
+            title: "系统提示"
+            , btn: ['确定', '取消'] //按钮
+        }, function () {
             layer.closeAll('dialog');
-            $.post("/user/order/check",{"id":id},function(result){
-                if(result.success){
+            $.post("/user/order/check", {"id": id}, function (result) {
+                if (result.success) {
                     layer.msg("复议成功！");
-                    table.reload("orderListTable",{});
-                }else{
+                    table.reload("orderListTable", {});
+                } else {
                     layer.msg("该条记录无异议！");
                 }
-            },"json");
-        }, function(){
+            }, "json");
+        }, function () {
 
         });
     }
@@ -82,20 +82,20 @@
     /*]]>*/
 
 
-	function createTime(v){
-		var date = new Date(v);
-		var y = date.getFullYear();
-		var m = date.getMonth()+1;
-		m = m<10?'0'+m:m;
-		var d = date.getDate();
-		d = d<10?("0"+d):d;
-		var h = date.getHours();
-		h = h<10?("0"+h):h;
-		var M = date.getMinutes();
-		M = M<10?("0"+M):M;
-		var str = y+"-"+m+"-"+d+" "+h+":"+M;
-		return str;
-	}
+    function createTime(v) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var str = y + "-" + m + "-" + d + " " + h + ":" + M;
+        return str;
+    }
 
 </script>
 </body>

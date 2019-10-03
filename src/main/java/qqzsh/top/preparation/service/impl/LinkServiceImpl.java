@@ -27,13 +27,13 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     public List<Link> listAll(Direction direction, String... properties) {
-        Sort sort=new Sort(direction,properties);
+        Sort sort = new Sort(direction, properties);
         return linkRepository.findAll(sort);
     }
 
     @Override
     public List<Link> list(Integer page, Integer pageSize, Direction direction, String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<Link> pageLink = linkRepository.findAll(pageable);
         return pageLink.getContent();
     }

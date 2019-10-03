@@ -2,9 +2,7 @@ package qqzsh.top.preparation.respository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
 import qqzsh.top.preparation.entity.Article;
-import qqzsh.top.preparation.entity.User;
 
 import java.util.List;
 

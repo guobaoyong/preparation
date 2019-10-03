@@ -30,6 +30,7 @@ public class UserDownloadUserController {
 
     /**
      * 判断资源是否下载过
+     *
      * @param id
      * @param session
      * @return
@@ -37,18 +38,19 @@ public class UserDownloadUserController {
      */
     @ResponseBody
     @RequestMapping("/exist")
-    public boolean exist(Integer id,HttpSession session)throws Exception{
+    public boolean exist(Integer id, HttpSession session) throws Exception {
         User user = (User) session.getAttribute("currentUser");
         Integer count = userDownloadService.getCountByUserIdAndArticleId(user.getId(), id);
-        if(count>0){
+        if (count > 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
      * 判断用户积分是否足够下载这个资源
+     *
      * @param points
      * @param session
      * @return
@@ -56,27 +58,28 @@ public class UserDownloadUserController {
      */
     @ResponseBody
     @RequestMapping("/enough")
-    public boolean enough(Integer points, HttpSession session)throws Exception{
+    public boolean enough(Integer points, HttpSession session) throws Exception {
         User user = (User) session.getAttribute("currentUser");
-        if(user.getPoints()>=points){
+        if (user.getPoints() >= points) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
      * 分页查询用户下载资源信息
+     *
      * @param session
      * @param page
      * @return
      * @throws Exception
      */
     @RequestMapping("/list/{id}")
-    public ModelAndView list(HttpSession session, @PathVariable(value="id",required=false)Integer page)throws Exception{
-        ModelAndView mav=new ModelAndView();
-        User user=(User)session.getAttribute("currentUser");
-        UserDownload s_userDownload=new UserDownload();
+    public ModelAndView list(HttpSession session, @PathVariable(value = "id", required = false) Integer page) throws Exception {
+        ModelAndView mav = new ModelAndView();
+        User user = (User) session.getAttribute("currentUser");
+        UserDownload s_userDownload = new UserDownload();
         s_userDownload.setUser(user);
         List<UserDownload> userDownloadList = userDownloadService.list(s_userDownload, page, 10, Sort.Direction.DESC, "downloadDate");
         Long total = userDownloadService.getTotal(s_userDownload);

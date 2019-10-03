@@ -1,7 +1,6 @@
 package qqzsh.top.preparation.service;
 
 import org.springframework.data.domain.Sort;
-import qqzsh.top.preparation.entity.Comment;
 import qqzsh.top.preparation.entity.Order;
 
 import java.util.List;
@@ -16,12 +15,14 @@ public interface OrderService {
 
     /**
      * 添加或者修改订单
+     *
      * @param order
      */
     void save(Order order);
 
     /**
      * 根据条件分页查询评论订单
+     *
      * @param order
      * @param page
      * @param pageSize
@@ -33,6 +34,7 @@ public interface OrderService {
 
     /**
      * 根据条件获取总记录数
+     *
      * @param order
      * @return
      */
@@ -40,6 +42,7 @@ public interface OrderService {
 
     /**
      * 通过订单号查询信息
+     *
      * @param orderNo
      * @return
      */

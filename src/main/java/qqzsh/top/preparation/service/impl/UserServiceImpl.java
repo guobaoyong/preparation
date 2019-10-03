@@ -54,39 +54,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> list(User s_user, Integer page, Integer pageSize, Sort.Direction direction, String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<User> pageUser = userRepository.findAll(new Specification<User>() {
 
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_user!=null){
-                    if(StringUtil.isNotEmpty(s_user.getUserName())){
-                        predicate.getExpressions().add(cb.like(root.get("userName"), "%"+s_user.getUserName().trim()+"%"));
+                if (s_user != null) {
+                    if (StringUtil.isNotEmpty(s_user.getUserName())) {
+                        predicate.getExpressions().add(cb.like(root.get("userName"), "%" + s_user.getUserName().trim() + "%"));
                     }
-                    if(StringUtil.isNotEmpty(s_user.getEmail())){
-                        predicate.getExpressions().add(cb.like(root.get("email"), "%"+s_user.getEmail()+"%"));
+                    if (StringUtil.isNotEmpty(s_user.getEmail())) {
+                        predicate.getExpressions().add(cb.like(root.get("email"), "%" + s_user.getEmail() + "%"));
                     }
                 }
                 return predicate;
             }
-        },pageable);
+        }, pageable);
         return pageUser.getContent();
     }
 
     @Override
     public Long getTotal(User s_user) {
-        Long count=userRepository.count(new Specification<User>() {
+        Long count = userRepository.count(new Specification<User>() {
 
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_user!=null){
-                    if(StringUtil.isNotEmpty(s_user.getUserName())){
-                        predicate.getExpressions().add(cb.like(root.get("userName"), "%"+s_user.getUserName().trim()+"%"));
+                if (s_user != null) {
+                    if (StringUtil.isNotEmpty(s_user.getUserName())) {
+                        predicate.getExpressions().add(cb.like(root.get("userName"), "%" + s_user.getUserName().trim() + "%"));
                     }
-                    if(StringUtil.isNotEmpty(s_user.getEmail())){
-                        predicate.getExpressions().add(cb.like(root.get("email"), "%"+s_user.getEmail()+"%"));
+                    if (StringUtil.isNotEmpty(s_user.getEmail())) {
+                        predicate.getExpressions().add(cb.like(root.get("email"), "%" + s_user.getEmail() + "%"));
                     }
                 }
                 return predicate;
@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public void updateAllSignInfo() {
         userRepository.updateAllSignInfo();
     }
