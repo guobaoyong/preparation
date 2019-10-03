@@ -23,6 +23,7 @@ import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.util.DateUtil;
 import qqzsh.top.preparation.util.RedisUtil;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.Date;
@@ -63,6 +64,9 @@ public class ArticleAdminController {
 
     @Autowired
     private RedisUtil<Article> redisUtil;
+
+    @Resource
+    private RedisUtil<Integer> redisNum;
 
 
     /**
@@ -263,6 +267,14 @@ public class ArticleAdminController {
         articleIndex.deleteIndex(String.valueOf(id));
         //删除redis索引
         redisUtil.del("article_"+id);
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num - 1);
+        }
         resultMap.put("success", true);
         return resultMap;
     }
@@ -290,6 +302,14 @@ public class ArticleAdminController {
             articleIndex.deleteIndex(idsStr[i]);
             //删除redis索引
             redisUtil.del("article_"+idsStr[i]);
+        }
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num - idsStr.length);
         }
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("success", true);

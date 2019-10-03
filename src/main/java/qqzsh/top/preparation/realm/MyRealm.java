@@ -90,6 +90,11 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("删除消息信息");
             info.addStringPermission("更新消息状态");
 
+            info.addStringPermission("订单管理页");
+            info.addStringPermission("分页查询订单信息");
+            info.addStringPermission("删除订单信息");
+            info.addStringPermission("复议订单");
+
             info.addStringPermission("清除签到信息");
             info.addStringPermission("修改管理员密码");
             info.addStringPermission("安全退出");

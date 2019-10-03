@@ -18,6 +18,7 @@ import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.service.OrderService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.DateUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 import qqzsh.top.preparation.util.StringUtil;
 
 import javax.annotation.Resource;
@@ -46,14 +47,17 @@ public class AliPayController {
     @Autowired
     private UserService userService;
 
+    @Resource
+    private RedisUtil<Integer> redisNum;
+
     /**
      * 支付请求
      */
     @RequestMapping("/pay")
-    public void pay(String time, HttpSession session,HttpServletResponse response) {
-        User user=(User) session.getAttribute("currentUser");
+    public void pay(String time, HttpSession session, HttpServletResponse response) {
+        User user = (User) session.getAttribute("currentUser");
         // 生成订单号
-        String orderNo= null;
+        String orderNo = null;
         try {
             orderNo = DateUtil.getCurrentDateStr();
         } catch (Exception e) {
@@ -61,55 +65,55 @@ public class AliPayController {
         }
 
         // 支付总金额
-        String totalAmount="";
+        String totalAmount = "";
         // 订单名称
-        String subject="";
+        String subject = "";
         // 商品描述
-        String body="";
-        switch(Integer.parseInt(time)){
+        String body = "";
+        switch (Integer.parseInt(time)) {
             case 10:
-                totalAmount="10";
-                subject="购买VIP";
-                body="一个月-10元";
+                totalAmount = "10";
+                subject = "购买VIP";
+                body = "一个月-10元";
                 break;
             case 30:
-                totalAmount="30";
-                subject="购买VIP";
-                body="三个月-30元";
+                totalAmount = "30";
+                subject = "购买VIP";
+                body = "三个月-30元";
                 break;
             case 60:
-                totalAmount="60";
-                subject="购买VIP";
-                body="半年-60元";
+                totalAmount = "60";
+                subject = "购买VIP";
+                body = "半年-60元";
                 break;
             case 120:
-                totalAmount="120";
-                subject="购买VIP";
-                body="一年-120元";
+                totalAmount = "120";
+                subject = "购买VIP";
+                body = "一年-120元";
                 break;
             case 360:
-                totalAmount="360";
-                subject="购买VIP";
-                body="三年-360元";
+                totalAmount = "360";
+                subject = "购买VIP";
+                body = "三年-360元";
                 break;
             case 888:
-                totalAmount="888";
-                subject="购买VIP";
-                body="永久-888元";
+                totalAmount = "888";
+                subject = "购买VIP";
+                body = "永久-888元";
                 break;
             default:
-                totalAmount="0.01";
-                subject="出错金额";
-                body="请哥吃顿饭";
+                totalAmount = "0.01";
+                subject = "出错金额";
+                body = "请哥吃顿饭";
         }
 
         Order order = new Order();
         //用户Id
-        order.setUserId(user.getId());
+        order.setUser(user);
         //订单号
         order.setOrderNo(orderNo);
         //订单详情
-        order.setDetail(subject+";"+body);
+        order.setDetail(subject + ";" + body);
         //支付金额
         order.setMoney(Double.parseDouble(totalAmount));
         //订单状态
@@ -122,16 +126,25 @@ public class AliPayController {
         // 保存订单信息
         orderService.save(order);
 
-        String form=""; // 生成支付表单
+        //更新索redis
+        if (!redisNum.hasKey("orderNums")) {
+            redisNum.set("orderNums", orderService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("orderNums");
+            redisNum.del("orderNums");
+            redisNum.set("orderNums", num + 1);
+        }
+
+        String form = ""; // 生成支付表单
 
         // 封装请求客户端
-        AlipayClient client=new DefaultAlipayClient(aliPayConfig.getUrl(), aliPayConfig.getAppid(), aliPayConfig.getRsa_private_key(), aliPayConfig.getFormat(), aliPayConfig.getCharset(), aliPayConfig.getAlipay_public_key(), aliPayConfig.getSigntype());
+        AlipayClient client = new DefaultAlipayClient(aliPayConfig.getUrl(), aliPayConfig.getAppid(), aliPayConfig.getRsa_private_key(), aliPayConfig.getFormat(), aliPayConfig.getCharset(), aliPayConfig.getAlipay_public_key(), aliPayConfig.getSigntype());
 
         // 支付请求
-        AlipayTradePagePayRequest alipayRequest=new AlipayTradePagePayRequest();
+        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         alipayRequest.setReturnUrl(aliPayConfig.getReturn_url());
         alipayRequest.setNotifyUrl(aliPayConfig.getNotify_url());
-        AlipayTradePayModel model=new AlipayTradePayModel();
+        AlipayTradePayModel model = new AlipayTradePayModel();
         model.setProductCode("FAST_INSTANT_TRADE_PAY"); // 设置销售产品码
         model.setOutTradeNo(orderNo); // 设置订单号
         model.setSubject(subject); // 订单名称
@@ -140,7 +153,7 @@ public class AliPayController {
         alipayRequest.setBizModel(model);
 
         try {
-            form=client.pageExecute(alipayRequest).getBody(); // 生成表单
+            form = client.pageExecute(alipayRequest).getBody(); // 生成表单
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
@@ -157,17 +170,18 @@ public class AliPayController {
 
     /**
      * 支付宝服务器同步通知页面
+     *
      * @param request
      * @return
      */
     @RequestMapping("/success")
-    public ModelAndView returnUrl(HttpServletRequest request)throws Exception{
-        ModelAndView mav=new ModelAndView();
+    public ModelAndView returnUrl(HttpServletRequest request) throws Exception {
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "同步通知地址_校园学习资源共享云平台");
         //获取支付宝GET过来反馈信息
-        Map<String,String> params = new HashMap<String,String>();
-        Map<String,String[]> requestParams = request.getParameterMap();
-        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
+        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String[]> requestParams = request.getParameterMap();
+        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
             String name = (String) iter.next();
             String[] values = (String[]) requestParams.get(name);
             String valueStr = "";
@@ -176,17 +190,17 @@ public class AliPayController {
                         : valueStr + values[i] + ",";
             }
             params.put(name, valueStr);
-            System.out.println("name:"+name+",valueStr:"+valueStr);
+            System.out.println("name:" + name + ",valueStr:" + valueStr);
         }
 
         boolean signVerified = AlipaySignature.rsaCheckV1(params, aliPayConfig.getAlipay_public_key(), aliPayConfig.getCharset(), aliPayConfig.getSigntype()); //调用SDK验证签名
 
         //——请在这里编写您的程序（以下代码仅作参考）——
-        if(signVerified) {
-            mav.addObject("title","支付成功");
+        if (signVerified) {
+            mav.addObject("title", "支付成功");
             mav.setViewName("user/paySuccess");
-        }else {
-            mav.addObject("title","支付失败");
+        } else {
+            mav.addObject("title", "支付失败");
             mav.setViewName("user/payError");
         }
         return mav;
@@ -194,16 +208,17 @@ public class AliPayController {
 
     /**
      * 支付宝服务器异步通知
+     *
      * @param request
      * @return
      */
     @PostMapping("/sy")
     @ResponseBody
-    public void notifyUrl(HttpServletRequest request,HttpSession session,HttpServletResponse response)throws Exception{
+    public void notifyUrl(HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
         //获取支付宝GET过来反馈信息
-        Map<String,String> params = new HashMap<>();
-        Map<String,String[]> requestParams = request.getParameterMap();
-        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
+        Map<String, String> params = new HashMap<>();
+        Map<String, String[]> requestParams = request.getParameterMap();
+        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
             String name = (String) iter.next();
             String[] values = (String[]) requestParams.get(name);
             String valueStr = "";
@@ -212,7 +227,7 @@ public class AliPayController {
                         : valueStr + values[i] + ",";
             }
             params.put(name, valueStr);
-            System.out.println("name:"+name+",valueStr:"+valueStr);
+            System.out.println("name:" + name + ",valueStr:" + valueStr);
         }
 
         boolean signVerified = AlipaySignature.rsaCheckV1(params, aliPayConfig.getAlipay_public_key(), aliPayConfig.getCharset(), aliPayConfig.getSigntype()); //调用SDK验证签名
@@ -226,25 +241,25 @@ public class AliPayController {
         String trade_no = request.getParameter("trade_no");
 
         // 验证成功 更新订单信息
-        if(signVerified){
-            if(trade_status.equals("TRADE_SUCCESS")){
-                if(StringUtil.isNotEmpty(out_trade_no)
-                && StringUtil.isNotEmpty(trade_no) ){
-                    Order order=orderService.findByorderNo(out_trade_no); // 获取订单
-                    if(order!=null){
+        if (signVerified) {
+            if (trade_status.equals("TRADE_SUCCESS")) {
+                if (StringUtil.isNotEmpty(out_trade_no)
+                        && StringUtil.isNotEmpty(trade_no)) {
+                    Order order = orderService.findByorderNo(out_trade_no); // 获取订单
+                    if (order != null) {
                         // 设置支付状态已经支付
                         order.setStatus("已支付");
                         //设置支付宝订单号
                         order.setAliNo(trade_no);
                         orderService.save(order);
-                        User byId = userService.findById(order.getUserId());
+                        User byId = userService.findById(order.getUser().getId());
                         Calendar rightNow = Calendar.getInstance();
-                        Date date = byId.getEndtime() == null?new Date():byId.getEndtime();
+                        Date date = byId.getEndtime() == null ? new Date() : byId.getEndtime();
                         rightNow.setTime(date);
                         //设置VIP状态为true
                         byId.setVip(true);
                         //更新用户的VIP过期时间
-                        switch (total_amount){
+                        switch (total_amount) {
                             case "10.00":
                                 //在原来时间基础上增加一个月
                                 rightNow.add(Calendar.MONTH, 1);
@@ -279,7 +294,7 @@ public class AliPayController {
                 }
             }
             response.getWriter().write("success");
-        }else{
+        } else {
             //验证失败
             response.getWriter().write("fail");
         }

@@ -142,6 +142,14 @@ public class UserController {
             user.setRegisterDate(new Date());
             user.setImageName("default.jpg");
             userService.save(user);
+            //更新redis
+            if (redisUtil.hasKey("userNum")){
+                int sum = (int) redisUtil.get("userNum");
+                redisUtil.del("userNum");
+                redisUtil.set("userNum",sum+1);
+            }else {
+                redisUtil.set("userNum",userService.getTotal(null).intValue());
+            }
             map.put("success", true);
         }
         return map;

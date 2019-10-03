@@ -1,26 +1,24 @@
-package qqzsh.top.preparation.controller.user;
+package qqzsh.top.preparation.controller.admin;
 
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePayModel;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.config.AliPayConfig;
-import qqzsh.top.preparation.entity.Article;
-import qqzsh.top.preparation.entity.Comment;
+import qqzsh.top.preparation.entity.Message;
 import qqzsh.top.preparation.entity.Order;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.service.OrderService;
 import qqzsh.top.preparation.service.UserService;
-import qqzsh.top.preparation.util.PageUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -29,59 +27,115 @@ import java.util.*;
 /**
  * @author zsh
  * @site https://qqzsh.top
- * @create 2019-10-01 21:45
- * @Description 订单查询
+ * @create 2019-10-03 13:15
+ * @Description 订单控制器
  */
 @Controller
-@RequestMapping("/user/order")
-public class OrderUserController {
+@RequestMapping("/admin/order")
+public class OrderAdminController {
 
     @Autowired
     private OrderService orderService;
 
-    @Resource
-    private AliPayConfig aliPayConfig;
-
     @Autowired
     private UserService userService;
 
-    /**
-     * 跳转到订单查询页面
-     * @return
-     */
-    @RequestMapping("/toOrderPage")
-    public ModelAndView toOrderPage(){
-        ModelAndView mav=new ModelAndView();
-        mav.addObject("title", "订单查询");
-        mav.setViewName("user/listOrder");
-        return mav;
+    @Resource
+    private AliPayConfig aliPayConfig;
+
+    @Resource
+    private RedisUtil<Integer> redisNum;
+
+    @ResponseBody
+    @RequiresPermissions(value={"分页查询订单信息"})
+    @RequestMapping("/list")
+    public Map<String,Object> list(Order order,
+                                   @RequestParam(value="page",required=false)Integer page,
+                                   @RequestParam(value="limit",required=false)Integer limit,
+                                   @RequestParam(value="userName",required=false)String userName)throws Exception{
+        Map<String,Object> resultMap=new HashMap<>();
+        if (userName != null && userName != ""){
+            User user = userService.findByUserName(userName);
+            if (user != null){
+                order.setUser(user);
+            }else {
+                resultMap.put("code", 0);
+                resultMap.put("count", 0L);
+                resultMap.put("data", new ArrayList<>());
+                return resultMap;
+            }
+        }
+        List<Order> orderList = orderService.list(order,page, limit, Sort.Direction.DESC, "createTime");
+        List<Order> newList = new ArrayList<>();
+        orderList.forEach( order1 -> {
+            order1.setUser(userService.getById(order1.getUser().getId()));
+            newList.add(order1);
+        });
+        Long total = orderService.getTotal(order);
+        resultMap.put("code", 0);
+        resultMap.put("count", total);
+        resultMap.put("data", newList);
+        return resultMap;
     }
 
     /**
-     * 根据条件分页查询订单信息
-     * @param order
-     * @param page
-     * @param limit
+     * 根据id删除消息
+     * @param id
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping("/list")
-    public Map<String,Object> list(HttpSession session,Order order, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="limit",required=false)Integer limit)throws Exception{
-        User user=(User)session.getAttribute("currentUser");
-        order.setUser(user);
-        Map<String,Object> resultMap=new HashMap<String,Object>();
-        List<Order> orderList = orderService.list(order, page, limit, Sort.Direction.DESC, "createTime");
-        Long count = orderService.getTotal(order);
-        resultMap.put("code", 0);
-        resultMap.put("count", count);
-        resultMap.put("data", orderList);
+    @RequestMapping("/delete")
+    @RequiresPermissions(value={"删除订单信息"})
+    public Map<String,Object> delete(Integer id)throws Exception{
+        Map<String,Object> resultMap=new HashMap<>();
+        //删除订单信息
+        orderService.delete(id);
+        //更新索redis
+        if (!redisNum.hasKey("orderNums")) {
+            redisNum.set("orderNums", orderService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("orderNums");
+            redisNum.del("orderNums");
+            redisNum.set("orderNums", num - 1);
+        }
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
+
+    /**
+     * 多选删除
+     * @param ids
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/deleteSelected")
+    @RequiresPermissions(value={"删除消息信息"})
+    public Map<String,Object> deleteSelected(String ids)throws Exception{
+        String[] idsStr = ids.split(",");
+        for(int i=0;i<idsStr.length;i++){
+            // 删除订单信息
+            orderService.delete(Integer.parseInt(idsStr[i]));
+        }
+        //更新索redis
+        if (!redisNum.hasKey("orderNums")) {
+            redisNum.set("orderNums", orderService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("orderNums");
+            redisNum.del("orderNums");
+            redisNum.set("orderNums", num - idsStr.length);
+        }
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("success", true);
         return resultMap;
     }
 
     @ResponseBody
     @RequestMapping("/check")
-    public Map<String,Object> delete(Integer id,HttpSession session)throws Exception{
+    @RequiresPermissions(value={"复议订单"})
+    public Map<String,Object> updateStatus(Integer id, HttpSession session)throws Exception{
         Map<String,Object> resultMap=new HashMap<>();
         //根据id查询信息
         Order byId = orderService.findById(id);
@@ -145,7 +199,10 @@ public class OrderUserController {
                 user.setEndtime(rightNow.getTime());
                 userService.save(user);
                 //更新session
-                session.setAttribute("currentUser",user);
+                if (user.getId() == byId.getUser().getId()){
+                    session.setAttribute("currentUser",user);
+                }
+
                 resultMap.put("success", true);
             }else {
                 resultMap.put("success", false);
@@ -153,5 +210,7 @@ public class OrderUserController {
         }
         return resultMap;
     }
+
+
 
 }

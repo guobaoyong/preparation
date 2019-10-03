@@ -28,7 +28,9 @@ public class Order implements Serializable {
     private String aliNo;
 
     // 用户ID
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name="userId")
+    private User user;
 
     // 金额
     private Double money;
@@ -53,12 +55,12 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Double getMoney() {

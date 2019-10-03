@@ -13,7 +13,9 @@ import qqzsh.top.preparation.entity.UserDownload;
 import qqzsh.top.preparation.service.ArticleService;
 import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.service.UserService;
+import qqzsh.top.preparation.util.RedisUtil;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,9 @@ public class DownloadAdminController {
 
     @Autowired
     private UserService userService;
+
+    @Resource
+    private RedisUtil<Integer> redisNum;
 
     @ResponseBody
     @RequiresPermissions(value = {"分页查询用户下载信息"})
@@ -122,6 +127,14 @@ public class DownloadAdminController {
         Map<String, Object> resultMap = new HashMap<>();
         //删除用户下载帖子信息
         userDownloadService.delete(id);
+        //更新redis
+        if (!redisNum.hasKey("downloadNums")) {
+            redisNum.set("downloadNums", userDownloadService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("downloadNums");
+            redisNum.del("downloadNums");
+            redisNum.set("downloadNums", num - 1);
+        }
         resultMap.put("success", true);
         return resultMap;
     }
@@ -142,6 +155,14 @@ public class DownloadAdminController {
         for (int i = 0; i < idsStr.length; i++) {
             // 删除用户下载帖子信息
             userDownloadService.delete(Integer.parseInt(idsStr[i]));
+        }
+        //更新redis
+        if (!redisNum.hasKey("downloadNums")) {
+            redisNum.set("downloadNums", userDownloadService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("downloadNums");
+            redisNum.del("downloadNums");
+            redisNum.set("downloadNums", num - idsStr.length);
         }
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);

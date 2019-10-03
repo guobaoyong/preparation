@@ -33,9 +33,6 @@ public class MessageAdminController {
     private MessageService messageService;
 
     @Autowired
-    private ArticleService articleService;
-
-    @Autowired
     private UserService userService;
 
     @ResponseBody

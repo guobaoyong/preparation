@@ -49,5 +49,10 @@ public interface OrderService {
      * 通过id查询
      */
     Order findById(Integer id);
+
+    /**
+     * 删除订单信息
+     */
+    void delete(Integer id);
 }
 

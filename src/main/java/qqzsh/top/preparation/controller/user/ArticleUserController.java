@@ -22,6 +22,7 @@ import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.DateUtil;
 import qqzsh.top.preparation.util.RedisUtil;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.Date;
@@ -59,6 +60,12 @@ public class ArticleUserController {
 
     @Autowired
     private RedisUtil<Article> redisUtil;
+
+    @Resource
+    private RedisUtil<Integer> redisNum;
+
+    @Autowired
+    private UserDownloadService downloadService;
 
     /**
      * Layui编辑器图片上传处理
@@ -165,6 +172,14 @@ public class ArticleUserController {
         article.setState(1);
         article.setView(0);
         articleService.save(article);
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num + 1);
+        }
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "发布帖子成功页面");
         mav.setViewName("user/publishArticleSuccess");
@@ -196,7 +211,7 @@ public class ArticleUserController {
             //修改Lucene索引
             articleIndex.updateIndex(oldArticle);
             // redis缓存删除这个缓存
-            redisUtil.del("article_"+oldArticle.getId());
+            redisUtil.del("article_" + oldArticle.getId());
         }
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "修改帖子成功页面");
@@ -224,7 +239,15 @@ public class ArticleUserController {
         //删除索引
         articleIndex.deleteIndex(String.valueOf(id));
         //删除redis索引
-        redisUtil.del("article_"+id);
+        redisUtil.del("article_" + id);
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num - 1);
+        }
         resultMap.put("success", true);
         return resultMap;
     }
@@ -251,7 +274,15 @@ public class ArticleUserController {
             //删除索引
             articleIndex.deleteIndex(idsStr[i]);
             //删除redis索引
-            redisUtil.del("article_"+idsStr[i]);
+            redisUtil.del("article_" + idsStr[i]);
+        }
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num - idsStr.length);
         }
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
@@ -300,6 +331,15 @@ public class ArticleUserController {
             userDownload.setUser(user);
             userDownload.setDownloadDate(new Date());
             userDownloadService.save(userDownload);
+
+            //更新redis
+            if (!redisNum.hasKey("downloadNums")) {
+                redisNum.set("downloadNums", downloadService.getTotal(null).intValue());
+            } else {
+                int num = (int) redisNum.get("downloadNums");
+                redisNum.del("downloadNums");
+                redisNum.set("downloadNums", num + 1);
+            }
 
         }
 

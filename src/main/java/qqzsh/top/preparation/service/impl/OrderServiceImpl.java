@@ -49,11 +49,14 @@ public class OrderServiceImpl implements OrderService {
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
                 if (order != null) {
-                    if (order.getStatus() != null) {
-                        predicate.getExpressions().add(cb.equal(root.get("state"), order.getStatus()));
+                    if (order.getStatus() != null && order.getStatus() != "") {
+                        predicate.getExpressions().add(cb.equal(root.get("status"), order.getStatus()));
                     }
-                    if (order.getUserId() != null) {
-                        predicate.getExpressions().add(cb.equal(root.get("userId"), order.getUserId()));
+                    if (order.getUser() != null && order.getUser().getId() != null) {
+                        predicate.getExpressions().add(cb.equal(root.get("user").get("id"), order.getUser().getId()));
+                    }
+                    if (order.getOrderNo() != null && order.getOrderNo() != "") {
+                        predicate.getExpressions().add(cb.equal(root.get("orderNo"), order.getOrderNo()));
                     }
                 }
                 return predicate;
@@ -70,11 +73,14 @@ public class OrderServiceImpl implements OrderService {
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
                 if (order != null) {
-                    if (order.getStatus() != null) {
-                        predicate.getExpressions().add(cb.equal(root.get("state"), order.getStatus()));
+                    if (order.getStatus() != null && order.getStatus() != "") {
+                        predicate.getExpressions().add(cb.equal(root.get("status"), order.getStatus()));
                     }
-                    if (order.getUserId() != null) {
-                        predicate.getExpressions().add(cb.equal(root.get("userId"), order.getUserId()));
+                    if (order.getUser() != null && order.getUser().getId() != null) {
+                        predicate.getExpressions().add(cb.equal(root.get("user").get("id"), order.getUser().getId()));
+                    }
+                    if (order.getOrderNo() != null && order.getOrderNo() != "") {
+                        predicate.getExpressions().add(cb.equal(root.get("orderNo"), order.getOrderNo()));
                     }
                 }
                 return predicate;
@@ -91,5 +97,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(Integer id) {
         return orderRepository.findOne(id);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        orderRepository.delete(id);
     }
 }
