@@ -51,6 +51,11 @@ public class MessageAdminController {
             User user = userService.findByUserName(userName);
             if (user != null){
                 message.setUser(user);
+            }else {
+                resultMap.put("code", 0);
+                resultMap.put("count", 0L);
+                resultMap.put("data", new ArrayList<>());
+                return resultMap;
             }
         }
         if (status != null && status != ""){
