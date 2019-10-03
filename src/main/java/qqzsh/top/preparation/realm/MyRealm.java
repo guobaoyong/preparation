@@ -85,6 +85,11 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("分页查询用户下载信息");
             info.addStringPermission("删除下载信息");
 
+            info.addStringPermission("消息管理页");
+            info.addStringPermission("分页查询消息信息");
+            info.addStringPermission("删除消息信息");
+            info.addStringPermission("更新消息状态");
+
             info.addStringPermission("清除签到信息");
             info.addStringPermission("修改管理员密码");
             info.addStringPermission("安全退出");

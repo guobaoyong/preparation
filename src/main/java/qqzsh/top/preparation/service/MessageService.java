@@ -41,7 +41,7 @@ public interface MessageService {
      * @param properties
      * @return
      */
-    List<Message> list(Message s_message, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
+    List<Message> list(String status,Message s_message, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
 
 
     /**
@@ -49,6 +49,18 @@ public interface MessageService {
      * @param s_message
      * @return
      */
-    Long getTotal(Message s_message);
+    Long getTotal(String status,Message s_message);
+
+    /**
+     * 删除消息
+     */
+    void delete(Integer id);
+
+    /**
+     * 根据id查找
+     * @param id
+     * @return
+     */
+    Message findById(Integer id);
 }
 

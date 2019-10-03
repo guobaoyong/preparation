@@ -132,5 +132,14 @@ public class IndexAdminController {
         return mav;
     }
 
+    @RequiresPermissions(value={"消息管理页"})
+    @GetMapping("/admin/messageManage")
+    public ModelAndView tomessageManagePage(){
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("title", "消息管理页面");
+        mav.setViewName("admin/messageManage");
+        return mav;
+    }
+
 }
 

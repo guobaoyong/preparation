@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> list(Message s_message, Integer page, Integer pageSize, Sort.Direction direction,
+    public List<Message> list(String status,Message s_message, Integer page, Integer pageSize, Sort.Direction direction,
                               String... properties) {
         Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
         Page<Message> pageMessage = messageRepository.findAll(new Specification<Message>() {
@@ -59,6 +59,9 @@ public class MessageServiceImpl implements MessageService {
                     if(s_message.getUser()!=null && s_message.getUser().getId()!=null){
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_message.getUser().getId()));
                     }
+                    if (status != null && status != ""){
+                        predicate.getExpressions().add(cb.equal(root.get("isSee"), s_message.isSee()));
+                    }
                 }
                 return predicate;
             }
@@ -67,7 +70,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Long getTotal(Message s_message) {
+    public Long getTotal(String status,Message s_message) {
         Long count=messageRepository.count(new Specification<Message>() {
 
             @Override
@@ -77,11 +80,24 @@ public class MessageServiceImpl implements MessageService {
                     if(s_message.getUser()!=null && s_message.getUser().getId()!=null){
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_message.getUser().getId()));
                     }
+                    if (status != null && status != ""){
+                        predicate.getExpressions().add(cb.equal(root.get("isSee"), s_message.isSee()));
+                    }
                 }
                 return predicate;
             }
         });
         return count;
+    }
+
+    @Override
+    public void delete(Integer id) {
+        messageRepository.delete(id);
+    }
+
+    @Override
+    public Message findById(Integer id) {
+        return messageRepository.findOne(id);
     }
 
 }

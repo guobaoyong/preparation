@@ -44,8 +44,8 @@ public class MessageUserController {
         //更新session用户
         session.setAttribute("currentUser", user);
 
-        List<Message> messageList = messageService.list(s_message, 1, 10, Sort.Direction.DESC, "publishDate");
-        Long total = messageService.getTotal(s_message);
+        List<Message> messageList = messageService.list(null,s_message, 1, 10, Sort.Direction.DESC, "publishDate");
+        Long total = messageService.getTotal(null,s_message);
         ModelAndView mav=new ModelAndView();
         mav.addObject("messageList", messageList);
         mav.addObject("pageCode", PageUtil.genPagination("/user/message/list", total, 1, 10, ""));
@@ -67,8 +67,8 @@ public class MessageUserController {
         User user=(User)session.getAttribute("currentUser");
         Message s_message=new Message();
         s_message.setUser(user);
-        List<Message> messageList = messageService.list(s_message, page, 10, Sort.Direction.DESC, "publishDate");
-        Long total = messageService.getTotal(s_message);
+        List<Message> messageList = messageService.list(null,s_message, page, 10, Sort.Direction.DESC, "publishDate");
+        Long total = messageService.getTotal(null,s_message);
         mav.addObject("messageList", messageList);
         mav.addObject("pageCode", PageUtil.genPagination("/user/message/list", total, page, 10, ""));
         mav.addObject("title", "系统消息页面");
