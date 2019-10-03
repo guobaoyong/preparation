@@ -59,6 +59,9 @@ public class UserDownloadServiceImpl implements UserDownloadService {
                     if(s_userDownload.getUser()!=null && s_userDownload.getUser().getId()!=null){
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_userDownload.getUser().getId()));
                     }
+                    if(s_userDownload.getArticle()!=null && s_userDownload.getArticle().getId()!=null){
+                        predicate.getExpressions().add(cb.equal(root.get("article").get("id"), s_userDownload.getArticle().getId()));
+                    }
                 }
                 return predicate;
             }
@@ -76,6 +79,9 @@ public class UserDownloadServiceImpl implements UserDownloadService {
                 if(s_userDownload!=null){
                     if(s_userDownload.getUser()!=null && s_userDownload.getUser().getId()!=null){
                         predicate.getExpressions().add(cb.equal(root.get("user").get("id"), s_userDownload.getUser().getId()));
+                    }
+                    if(s_userDownload.getArticle()!=null && s_userDownload.getArticle().getId()!=null){
+                        predicate.getExpressions().add(cb.equal(root.get("article").get("id"), s_userDownload.getArticle().getId()));
                     }
                 }
                 return predicate;

@@ -56,5 +56,12 @@ public interface ArticleService {
      */
     void delete(Integer id);
 
+    /**
+     * 根据标题查找帖子
+     * @param name
+     * @return
+     */
+    List<Article> findByNameLike(String name);
+
 
 }

@@ -43,8 +43,49 @@ public class DownloadAdminController {
     @RequestMapping("/list")
     public Map<String,Object> list(UserDownload userDownload,
                                    @RequestParam(value="page",required=false)Integer page,
-                                   @RequestParam(value="limit",required=false)Integer limit)throws Exception{
+                                   @RequestParam(value="limit",required=false)Integer limit,
+                                   @RequestParam(value="userName",required=false)String userName,
+                                   @RequestParam(value="articleName",required=false)String articleName)throws Exception{
         Map<String,Object> resultMap=new HashMap<>();
+        if (articleName != null){
+            List<Article> name = articleService.findByNameLike(articleName);
+            List<UserDownload> finalList = new ArrayList<>();
+            Long finalTotal = 0L;
+            if (name.size() != 0){
+                for (int i = 0; i < name.size(); i++) {
+                    userDownload.setArticle(name.get(i));
+                    if (userName != null){
+                        User user = userService.findByUserName(userName);
+                        if (user != null){
+                            userDownload.setUser(user);
+                        }
+                    }
+
+                    List<UserDownload> userList = userDownloadService.list(userDownload,page, limit, Sort.Direction.DESC, "downloadDate");
+                    List<UserDownload> newList = new ArrayList<>();
+                    userList.forEach( userDownload1 -> {
+                        userDownload1.setUser(userService.getById(userDownload1.getUser().getId()));
+                        userDownload1.setArticle(articleService.get(userDownload1.getArticle().getId()));
+                        newList.add(userDownload1);
+                    });
+                    Long total = userDownloadService.getTotal(userDownload);
+                    finalList.addAll(newList);
+                    finalTotal += total;
+                }
+            }
+
+            resultMap.put("code", 0);
+            resultMap.put("count", finalTotal);
+            resultMap.put("data", finalList);
+            return resultMap;
+
+        }
+        if (userName != null){
+            User user = userService.findByUserName(userName);
+            if (user != null){
+                userDownload.setUser(user);
+            }
+        }
         List<UserDownload> userList = userDownloadService.list(userDownload,page, limit, Sort.Direction.DESC, "downloadDate");
         List<UserDownload> newList = new ArrayList<>();
         userList.forEach( userDownload1 -> {

@@ -123,5 +123,10 @@ public class ArticleServiceImpl implements ArticleService {
     public void delete(Integer id) {
         articleRepository.delete(id);
     }
+
+    @Override
+    public List<Article> findByNameLike(String name){
+        return articleRepository.findByNameLike("%"+name+"%");
+    }
 }
 

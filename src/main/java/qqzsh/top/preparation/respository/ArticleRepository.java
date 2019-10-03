@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.entity.User;
 
+import java.util.List;
+
 /**
  * @author zsh
  * @site qqzsh.top
@@ -14,4 +16,5 @@ import qqzsh.top.preparation.entity.User;
  */
 public interface ArticleRepository extends JpaRepository<Article, Integer>, JpaSpecificationExecutor<Article> {
 
+    List<Article> findByNameLike(String name);
 }

@@ -13,11 +13,38 @@
 			  <a>首页</a>
 			  <a><cite>已下载管理</cite></a>
 			</span>
-    <div style="padding-top: 20px;">
+    <div>
         <div>
-            <button class="layui-btn layuiadmin-btn-list" data-type="batchdel" onclick="deleteSelected()">批量删除</button>
+            <div style="padding: 20px;padding-top: 50px">
+                <div class="layui-form">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">资源标题：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="a_name"  placeholder="请输入" autocomplete="off" class="layui-input" onkeydown="if(event.keyCode==13) search()"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">下载用户：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="s_name"  placeholder="请输入" autocomplete="off" class="layui-input" onkeydown="if(event.keyCode==13) search()"/>
+                        </div>
+                    </div>
+                    &nbsp;&nbsp;
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-list"  lay-submit="" onclick="search()" lay-filter="LAY-app-contlist-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn" ></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="layui-btn layuiadmin-btn-list" data-type="batchdel" onclick="deleteSelected()">批量删除</button>
+            </div>
         </div>
-        <table width="100%" id="downloadListTable"></table>
+        <div>
+            <table width="100%" id="downloadListTable"></table>
+        </div>
     </div>
 </div>
 
@@ -109,6 +136,20 @@
             },"json");
         }, function(){
 
+        });
+    }
+
+    function search(){
+        var s_name=$("#s_name").val();
+        var a_name=$("#a_name").val();
+        table.reload("downloadListTable",{
+            page:{
+                curr:1
+            }
+            ,where:{
+                userName:s_name,
+                articleName:a_name
+            }
         });
     }
 
