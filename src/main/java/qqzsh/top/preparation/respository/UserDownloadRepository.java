@@ -2,6 +2,7 @@ package qqzsh.top.preparation.respository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import qqzsh.top.preparation.entity.UserDownload;
 
@@ -15,14 +16,30 @@ public interface UserDownloadRepository extends JpaRepository<UserDownload, Inte
 
     /**
      * 查询某个用户下载某个资源的次数
+     *
      * @param userId
      * @param articleId
      * @return
      */
-    @Query(value="select count(*) from t_user_download where user_id=?1 and article_id=?2",nativeQuery=true)
-    Integer getCountByUserIdAndArticleId(Integer userId,Integer articleId);
+    @Query(value = "select count(*) from t_user_download where user_id=?1 and article_id=?2", nativeQuery = true)
+    Integer getCountByUserIdAndArticleId(Integer userId, Integer articleId);
 
+    /**
+     * 删除指定帖子的下载信息
+     *
+     * @param articleId
+     */
+    @Query(value = "delete from t_user_download where article_id=?1", nativeQuery = true)
+    @Modifying
+    void deleteByArticleId(Integer articleId);
 
+    /**
+     * 根据userId删除
+     * @param userId
+     */
+    @Query(value = "delete from t_user_download where user_id=?1", nativeQuery = true)
+    @Modifying
+    void deleteByUserId(Integer userId);
 
 }
 

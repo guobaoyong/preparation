@@ -34,6 +34,7 @@ public class CommentUserController {
 
     /**
      * 保存评论信息
+     *
      * @param comment
      * @param session
      * @return
@@ -41,11 +42,11 @@ public class CommentUserController {
      */
     @ResponseBody
     @PostMapping("/save")
-    public Map<String,Object> save(Comment comment, HttpSession session)throws Exception{
-        Map<String,Object> map=new HashMap<>();
+    public Map<String, Object> save(Comment comment, HttpSession session) throws Exception {
+        Map<String, Object> map = new HashMap<>();
         comment.setCommentDate(new Date());
         comment.setState(0);
-        comment.setUser((User)session.getAttribute("currentUser"));
+        comment.setUser((User) session.getAttribute("currentUser"));
         commentService.save(comment);
         map.put("success", true);
         return map;
@@ -53,11 +54,12 @@ public class CommentUserController {
 
     /**
      * 跳转到评论管理页面
+     *
      * @return
      */
     @RequestMapping("/toCommentManagePage")
-    public ModelAndView toCommentManagePage(){
-        ModelAndView mav=new ModelAndView();
+    public ModelAndView toCommentManagePage() {
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "评论管理");
         mav.setViewName("user/commentManage");
         return mav;
@@ -65,6 +67,7 @@ public class CommentUserController {
 
     /**
      * 根据条件分页查询评论信息
+     *
      * @param s_comment
      * @param page
      * @param limit
@@ -73,10 +76,10 @@ public class CommentUserController {
      */
     @ResponseBody
     @RequestMapping("/list")
-    public Map<String,Object> list(Comment s_comment, HttpSession session, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="limit",required=false)Integer limit)throws Exception{
-        Map<String,Object> resultMap=new HashMap<String,Object>();
-        User user=(User) session.getAttribute("currentUser");
-        Article article=new Article();
+    public Map<String, Object> list(Comment s_comment, HttpSession session, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        User user = (User) session.getAttribute("currentUser");
+        Article article = new Article();
         article.setUser(user);
         s_comment.setArticle(article);
         s_comment.setState(1);
@@ -90,14 +93,15 @@ public class CommentUserController {
 
     /**
      * 根据id删除评论
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/delete")
-    public Map<String,Object> delete(Integer id)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    public Map<String, Object> delete(Integer id) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         commentService.delete(id);
         resultMap.put("success", true);
         return resultMap;
@@ -106,18 +110,19 @@ public class CommentUserController {
 
     /**
      * 多选删除
+     *
      * @param ids
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/deleteSelected")
-    public Map<String,Object> deleteSelected(String ids)throws Exception{
+    public Map<String, Object> deleteSelected(String ids) throws Exception {
         String[] idsStr = ids.split(",");
-        for(int i=0;i<idsStr.length;i++){
+        for (int i = 0; i < idsStr.length; i++) {
             commentService.delete(Integer.parseInt(idsStr[i]));
         }
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }

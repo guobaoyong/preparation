@@ -1,5 +1,79 @@
-<meta charset="UTF-8"/>
-<div style="padding: 10px">
-	欢迎使用。
-</div>
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/static/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="/static/css/animate.min.css" rel="stylesheet"/>
+    <link href="/static/css/style.min862f.css" rel="stylesheet"/>
+</head>
 
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">总</span>
+                    <h5>用户</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" th:text="${userNum}"></h1>
+                    <div class="stat-percent font-bold text-success">
+                    </div>
+                    <small>总用户数</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">总</span>
+                    <h5>资源</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" th:text="${articleNums}"></h1>
+                    <div class="stat-percent font-bold text-info">
+                    </div>
+                    <small>总资源数</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">总</span>
+                    <h5>下载</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" th:text="${downloadNums}"></h1>
+                    <div class="stat-percent font-bold text-navy">
+                    </div>
+                    <small>总下载数</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">总</span>
+                    <h5>订单</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" th:text="${orderNums}"></h1>
+                    <div class="stat-percent font-bold text-navy">
+                    </div>
+                    <small>总订单数</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery.flot.js"></script>
+</body>
+</html>

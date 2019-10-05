@@ -3,6 +3,7 @@ package qqzsh.top.preparation.entity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,8 +13,8 @@ import java.util.Date;
  * @Description 用户下载实体
  */
 @Entity
-@Table(name="t_userDownload")
-public class UserDownload {
+@Table(name = "t_userDownload")
+public class UserDownload implements Serializable {
 
     // 编号
     @Id
@@ -22,12 +23,12 @@ public class UserDownload {
 
     // 下载资源
     @ManyToOne
-    @JoinColumn(name="articleId")
+    @JoinColumn(name = "articleId")
     private Article article;
 
     // 下载用户
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User user;
 
     // 下载日期
@@ -58,7 +59,7 @@ public class UserDownload {
         this.user = user;
     }
 
-    @JsonSerialize(using=CustomDateTimeSerializer.class)
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getDownloadDate() {
         return downloadDate;
     }

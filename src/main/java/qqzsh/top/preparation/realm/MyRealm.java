@@ -32,11 +32,11 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String userName=(String) SecurityUtils.getSubject().getPrincipal();
-        User user=userService.findByUserName(userName);
-        SimpleAuthorizationInfo info=new SimpleAuthorizationInfo();
-        Set<String> roles=new HashSet<>();
-        if("管理员".equals(user.getRoleName())){
+        String userName = (String) SecurityUtils.getSubject().getPrincipal();
+        User user = userService.findByUserName(userName);
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        Set<String> roles = new HashSet<>();
+        if ("管理员".equals(user.getRoleName())) {
             roles.add("管理员");
             info.addStringPermission("管理员默认页");
             info.addStringPermission("进入管理员主页");
@@ -59,9 +59,13 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("分页查询用户信息");
             info.addStringPermission("修改用户VIP状态");
             info.addStringPermission("修改用户状态");
+            info.addStringPermission("修改用户角色");
             info.addStringPermission("重置用户密码");
             info.addStringPermission("积分充值页");
+            info.addStringPermission("发送消息页");
             info.addStringPermission("用户积分充值");
+            info.addStringPermission("发送消息");
+            info.addStringPermission("删除用户信息");
 
             info.addStringPermission("资源管理页");
             info.addStringPermission("资源类别页");
@@ -78,6 +82,21 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("删除友情链接");
             info.addStringPermission("根据id查询友情链接实体");
 
+            info.addStringPermission("已下载管理页");
+            info.addStringPermission("分页查询用户下载信息");
+            info.addStringPermission("删除下载信息");
+
+            info.addStringPermission("消息管理页");
+            info.addStringPermission("分页查询消息信息");
+            info.addStringPermission("删除消息信息");
+            info.addStringPermission("更新消息状态");
+
+            info.addStringPermission("订单管理页");
+            info.addStringPermission("分页查询订单信息");
+            info.addStringPermission("删除订单信息");
+            info.addStringPermission("复议订单");
+
+            info.addStringPermission("清除签到信息");
             info.addStringPermission("修改管理员密码");
             info.addStringPermission("安全退出");
         }
@@ -90,12 +109,12 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        String userName=(String)token.getPrincipal();
-        User user=userService.findByUserName(userName);
-        if(user!=null){
-            AuthenticationInfo authcInfo=new SimpleAuthenticationInfo(user.getUserName(),user.getPassword(),"xx");
+        String userName = (String) token.getPrincipal();
+        User user = userService.findByUserName(userName);
+        if (user != null) {
+            AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(), "xx");
             return authcInfo;
-        }else{
+        } else {
             return null;
         }
     }

@@ -29,6 +29,7 @@ public class CommentAdminController {
 
     /**
      * 根据条件分页查询评论信息
+     *
      * @param s_comment
      * @param page
      * @param limit
@@ -37,9 +38,9 @@ public class CommentAdminController {
      */
     @ResponseBody
     @RequestMapping("/list")
-    @RequiresPermissions(value={"分页查询评论信息"})
-    public Map<String,Object> list(Comment s_comment, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="limit",required=false)Integer limit)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    @RequiresPermissions(value = {"分页查询评论信息"})
+    public Map<String, Object> list(Comment s_comment, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         List<Comment> commentList = commentService.list(s_comment, page, limit, Sort.Direction.DESC, "commentDate");
         Long count = commentService.getTotal(s_comment);
         resultMap.put("code", 0);
@@ -50,37 +51,39 @@ public class CommentAdminController {
 
     /**
      * 修改评论状态
+     *
      * @param id
      * @param state
      * @return
      */
     @ResponseBody
     @RequestMapping("/updateState")
-    @RequiresPermissions(value={"修改评论状态"})
-    public Map<String,Object> updateState(Integer id,boolean state){
+    @RequiresPermissions(value = {"修改评论状态"})
+    public Map<String, Object> updateState(Integer id, boolean state) {
         Comment comment = commentService.get(id);
-        if(state){
+        if (state) {
             comment.setState(1);
-        }else{
+        } else {
             comment.setState(2);
         }
         commentService.save(comment);
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     /**
      * 根据id删除评论
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/delete")
-    @RequiresPermissions(value={"删除评论"})
-    public Map<String,Object> delete(Integer id)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    @RequiresPermissions(value = {"删除评论"})
+    public Map<String, Object> delete(Integer id) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         commentService.delete(id);
         resultMap.put("success", true);
         return resultMap;
@@ -89,19 +92,20 @@ public class CommentAdminController {
 
     /**
      * 多选删除
+     *
      * @param ids
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/deleteSelected")
-    @RequiresPermissions(value={"删除评论"})
-    public Map<String,Object> deleteSelected(String ids)throws Exception{
+    @RequiresPermissions(value = {"删除评论"})
+    public Map<String, Object> deleteSelected(String ids) throws Exception {
         String[] idsStr = ids.split(",");
-        for(int i=0;i<idsStr.length;i++){
+        for (int i = 0; i < idsStr.length; i++) {
             commentService.delete(Integer.parseInt(idsStr[i]));
         }
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }

@@ -16,7 +16,7 @@
             <li class="layui-nav-item"><a href="/"><i class="layui-icon layui-icon-return">&nbsp;&nbsp;返回前台</i></a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img"
+                    <img th:src="${'/userImage/'+session.currentUser.imageName}" class="layui-nav-img"
                          th:text="${session.currentUser.userName}"></img>
                 </a>
             </li>
@@ -28,19 +28,23 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">导航菜单</a>
+                    <a class="" href="javascript:;">内容管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:openPage('articleManage')">资源管理</a></dd>
                         <dd><a href="javascript:openPage('arcTypeManage')">资源类别管理</a></dd>
                         <dd><a href="javascript:openPage('userManage')">用户管理</a></dd>
                         <dd><a href="javascript:openPage('commentManage')">评论管理</a></dd>
                         <dd><a href="javascript:openPage('linkManage')">友情链接管理</a></dd>
+                        <dd><a href="javascript:openPage('downloadManage')">已下载管理</a></dd>
+                        <dd><a href="javascript:openPage('messageManage')">消息管理</a></dd>
+                        <dd><a href="javascript:openPage('orderManage')">订单管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
                     <a href="javascript:;">系统管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:genAllIndex()">生成所有帖子索引</a></dd>
+                        <dd><a href="javascript:clearSign()">清除今日签到信息</a></dd>
                         <dd><a href="javascript:showModifyPasswordDialog();">修改密码</a></dd>
                         <dd><a href="javascript:logout();">安全退出</a></dd>
                     </dl>
@@ -56,7 +60,7 @@
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
-        Copyright © 2012-2018 Java知识分享网 版权所有
+        Copyright © 2019 校园学习资源共享云平台 版权所有
     </div>
 </div>
 <script src="/static/layui/layui.js"></script>
@@ -90,7 +94,7 @@
             type: 2,
             title: '修改密码',
             area: ['480px', '400px'],
-            content: '/admin/modifyPassword.html' //iframe的url
+            content: '/modifyPassword' //iframe的url
         });
     }
 
@@ -99,7 +103,7 @@
             title: "系统提示"
             , btn: ['确定', '取消'] //按钮
         }, function () {
-            window.location.href = "/admin/user/logout";
+            window.location.href = "/logout";
         }, function () {
 
         });
@@ -119,7 +123,29 @@
                     layer.closeAll('loading');
                     layer.msg("生成成功！");
                 } else {
-                    layer.msg("生成失败，请联系管理员！");
+                    layer.msg("生成失败，请重试！");
+                }
+            }, "json");
+        }, function () {
+
+        });
+    }
+
+    function clearSign() {
+        layer.confirm("您确定要清除今日的签到信息么吗？", {
+            title: "系统提示"
+            , btn: ['确定', '取消'] //按钮
+        }, function () {
+            layer.closeAll('dialog');
+            layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            $.post("/admin/user/clearSign", {}, function (result) {
+                if (result) {
+                    layer.closeAll('loading');
+                    layer.msg("清除成功！");
+                } else {
+                    layer.msg("清除失败，请重试！");
                 }
             }, "json");
         }, function () {

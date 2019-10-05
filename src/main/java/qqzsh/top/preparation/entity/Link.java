@@ -1,6 +1,7 @@
 package qqzsh.top.preparation.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author zsh
@@ -9,8 +10,8 @@ import javax.persistence.*;
  * @description 友情链接实体
  */
 @Entity
-@Table(name="t_link")
-public class Link {
+@Table(name = "t_link")
+public class Link implements Serializable {
 
     // 编号
     @Id
@@ -18,11 +19,11 @@ public class Link {
     private Integer id;
 
     // 名称
-    @Column(length=500)
+    @Column(length = 500)
     private String name;
 
     // 链接地址
-    @Column(length=500)
+    @Column(length = 500)
     private String url;
 
     // 排序

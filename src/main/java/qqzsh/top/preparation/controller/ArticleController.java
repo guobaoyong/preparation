@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.ArcType;
 import qqzsh.top.preparation.entity.Article;
@@ -15,6 +16,7 @@ import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
 import qqzsh.top.preparation.service.CommentService;
 import qqzsh.top.preparation.util.PageUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 import qqzsh.top.preparation.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +40,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleIndex articleIndex;
+
+    @Autowired
+    private RedisUtil<Article> redisUtil;
 
     /**
      * 根据条件分页查询资源帖子信息
@@ -82,14 +87,30 @@ public class ArticleController {
     @RequestMapping("/{id}")
     public ModelAndView view(@PathVariable("id") Integer id) throws Exception {
         ModelAndView mav = new ModelAndView();
-        Article article = articleService.get(id);
+        Article article = null;
+        String key = "article_" + id;
+        if (redisUtil.hasKey(key)) {
+            article = (Article) redisUtil.get(key);
+        } else {
+            article = articleService.get(id);
+            redisUtil.set(key, article, 60 * 60);
+        }
+        //查看次数由数据库获取
+        article.setView(articleService.get(id).getView());
         mav.addObject("article", article);
         mav.addObject("title", article.getName());
 
-        Article s_article = new Article();
-        s_article.setHot(true);
-        s_article.setArcType(article.getArcType());
-        List<Article> hotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC, "publishDate");
+        List<Article> hotArticleList = null;
+        String hKey = "hotArticleList_type_" + article.getArcType().getId();
+        if (redisUtil.hasKey(hKey)) {
+            hotArticleList = redisUtil.lGet(hKey, 0, -1);
+        } else {
+            Article s_article = new Article();
+            s_article.setHot(true);
+            s_article.setArcType(article.getArcType());
+            hotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC, "publishDate");
+            redisUtil.lSet(hKey, hotArticleList, 60 * 60);
+        }
         mav.addObject("hotArticleList", hotArticleList);
         Comment s_comment = new Comment();
         s_comment.setArticle(article);
@@ -156,6 +177,37 @@ public class ArticleController {
             pageCode.append("</div>");
         }
         return pageCode.toString();
+    }
+
+    /**
+     * 加载相关资源
+     *
+     * @param q
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/loadRelatedResources")
+    public List<Article> loadRelatedResources(String q) throws Exception {
+        if (StringUtil.isEmpty(q)) {
+            return null;
+        }
+        List<Article> articleList = articleIndex.searchNoHighLighter(q);
+        return articleList;
+    }
+
+    /**
+     * 查看次数加1
+     *
+     * @param id
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/updateView")
+    public void updateView(Integer id) throws Exception {
+        Article article = articleService.get(id);
+        article.setView(article.getView() + 1);
+        articleService.save(article);
     }
 }
 

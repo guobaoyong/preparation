@@ -16,10 +16,11 @@ public class MailConfig {
 
     /**
      * 获取邮件发送实例
+     *
      * @return
      */
     @Bean
-    public MailSender mailSender(){
+    public MailSender mailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.qq.com");//指定用来发送Email的邮件服务器主机名
         mailSender.setPort(587);//默认端口，标准的SMTP端口

@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ import java.util.List;
  * @description 用户Service实现类
  */
 @Service("userService")
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -52,45 +54,62 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> list(User s_user, Integer page, Integer pageSize, Sort.Direction direction, String... properties) {
-        Pageable pageable=new PageRequest(page-1, pageSize, direction, properties);
+        Pageable pageable = new PageRequest(page - 1, pageSize, direction, properties);
         Page<User> pageUser = userRepository.findAll(new Specification<User>() {
 
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_user!=null){
-                    if(StringUtil.isNotEmpty(s_user.getUserName())){
-                        predicate.getExpressions().add(cb.like(root.get("userName"), "%"+s_user.getUserName().trim()+"%"));
+                if (s_user != null) {
+                    if (StringUtil.isNotEmpty(s_user.getUserName())) {
+                        predicate.getExpressions().add(cb.like(root.get("userName"), "%" + s_user.getUserName().trim() + "%"));
                     }
-                    if(StringUtil.isNotEmpty(s_user.getEmail())){
-                        predicate.getExpressions().add(cb.like(root.get("email"), "%"+s_user.getEmail()+"%"));
+                    if (StringUtil.isNotEmpty(s_user.getEmail())) {
+                        predicate.getExpressions().add(cb.like(root.get("email"), "%" + s_user.getEmail() + "%"));
                     }
                 }
                 return predicate;
             }
-        },pageable);
+        }, pageable);
         return pageUser.getContent();
     }
 
     @Override
     public Long getTotal(User s_user) {
-        Long count=userRepository.count(new Specification<User>() {
+        Long count = userRepository.count(new Specification<User>() {
 
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(s_user!=null){
-                    if(StringUtil.isNotEmpty(s_user.getUserName())){
-                        predicate.getExpressions().add(cb.like(root.get("userName"), "%"+s_user.getUserName().trim()+"%"));
+                if (s_user != null) {
+                    if (StringUtil.isNotEmpty(s_user.getUserName())) {
+                        predicate.getExpressions().add(cb.like(root.get("userName"), "%" + s_user.getUserName().trim() + "%"));
                     }
-                    if(StringUtil.isNotEmpty(s_user.getEmail())){
-                        predicate.getExpressions().add(cb.like(root.get("email"), "%"+s_user.getEmail()+"%"));
+                    if (StringUtil.isNotEmpty(s_user.getEmail())) {
+                        predicate.getExpressions().add(cb.like(root.get("email"), "%" + s_user.getEmail() + "%"));
                     }
                 }
                 return predicate;
             }
         });
         return count;
+    }
+
+
+    @Override
+    @Transactional
+    public void updateAllSignInfo() {
+        userRepository.updateAllSignInfo();
+    }
+
+    @Override
+    public User findById(Integer id) {
+        return userRepository.findOne(id);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        userRepository.delete(id);
     }
 
 

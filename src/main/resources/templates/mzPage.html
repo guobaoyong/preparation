@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}+'-校园学习资源共享云平台'"></title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/static/css/css.css"/>
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon"/>
+</head>
+<body>
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+<div class="w1170">
+    <div>
+        <div class="data_list">
+            <div class="data_list_title">
+                <i class="layui-icon layui-icon-rate"></i>
+                <span class="head">免责申明</span>
+            </div>
+            <div style="padding: 10px;line-height: 40px">
+                本站所有资源都是由网友分享，仅供学习和交流使用，如果侵权了您的合法权益，请发邮件至admin@qqzsh.top,我们立即处理。
+            </div>
+        </div>
+    </div>
+</div>
+<div class="w1170" th:include="common/foot::#h" style="padding-top: 40px"></div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/common.js"></script>
+<script>
+    /*<![CDATA[*/
+    layui.use(['element', 'laypage', 'form'], function () {
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+        var $ = layui.jquery; // 使用jquery
+        var laypage = layui.laypage;
+        var tMenu = 't_0';
+        $("#" + tMenu).css("color", "red");
+    });
+
+
+    /*]]>*/
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?038436bd5c492acee545c83c4b0d6f6b";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+</body>
+</html>

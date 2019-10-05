@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}+'-校园学习资源共享云平台'"></title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/static/css/css.css"/>
+</head>
+<body>
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+<div class="w1170">
+    <div style="float: left;width: 200px" th:include="common/menu::#m"/>
+</div>
+<div style="float: right;width: 960px">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>订单管理</legend>
+    </fieldset>
+    <div>
+        <table class="layui-hide" id="orderListTable"></table>
+    </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script>
+    /*<![CDATA[*/
+    layui.use(['element', 'form', 'table', 'util'], function () {
+        var form = layui.form;
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+        $ = layui.jquery; // 使用jquery
+        table = layui.table;
+        var util = layui.util;
+
+        table.render({
+            elem: '#orderListTable'
+            , url: '/user/order/list'
+            , cols: [[
+                {field: 'orderNo', width: 140, title: '订单号'}
+                , {field: 'aliNo', width: 200, title: '支付宝订单号'}
+                , {field: 'money', width: 60, title: '金额', align: 'center'}
+                , {field: 'detail', width: 200, title: '订单详情', sort: true, align: 'center'}
+                , {field: 'status', width: 100, title: '状态', align: 'center'}
+                , {
+                    field: 'createTime',
+                    width: 150,
+                    title: '下单时间',
+                    align: 'center',
+                    templet: function (row) {
+                        return createTime(row.createTime);
+                    }
+                }
+                , {field: 'action', width: 100, title: '操作', align: 'center', templet: formatAction}
+            ]]
+            , page: true
+        });
+
+    });
+
+    function formatAction(d) {
+        return "<button class='layui-btn layui-btn-warm layui-btn-xs' onclick='checkOne(" + d.id + ")'><i class='layui-icon layui-icon-refresh-3' ></i>复议</button>";
+    }
+
+    function checkOne(id) {
+        layer.confirm('您确定要复议这条记录吗？', {
+            title: "系统提示"
+            , btn: ['确定', '取消'] //按钮
+        }, function () {
+            layer.closeAll('dialog');
+            $.post("/user/order/check", {"id": id}, function (result) {
+                if (result.success) {
+                    layer.msg("复议成功！");
+                    table.reload("orderListTable", {});
+                } else {
+                    layer.msg("该条记录无异议！");
+                }
+            }, "json");
+        }, function () {
+
+        });
+    }
+
+
+    /*]]>*/
+
+
+    function createTime(v) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var str = y + "-" + m + "-" + d + " " + h + ":" + M;
+        return str;
+    }
+
+</script>
+</body>
+</html>

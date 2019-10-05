@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发送消息</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"></link>
+    <style type="text/css">
+
+        table tr td {
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div style="padding: 20px">
+    <form method="post">
+        <table>
+            <tr>
+                <td>发送消息：</td>
+                <td><input type="text" id="msg" name="msg" class="layui-input"/></td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="layui-btn" onclick="submitData();return false;">提交</button>
+                </td>
+                <td><font id="errorInfo" color="red"></font></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script src="/static/js/jquery.js"></script>
+<script th:inline="javascript">
+
+    function submitData() {
+        var msg = $("#msg").val().trim()
+        if (msg == "") {
+            $("#errorInfo").text("请输入发送内容！");
+            $("#msg").focus();
+            return false;
+        }
+        var id = [[${id}]];
+        /*var id=getQueryVariable("id");*/
+        $.post("/admin/user/sentMessage", {userId: id, content: msg}, function (result) {
+            if (result.success) {
+                alert("发送成功！");
+                parent.reloadPage();
+            } else {
+                $("#errorInfo").text(result.errorInfo);
+            }
+        }, "json");
+    }
+
+
+    /*function getQueryVariable(variable){
+           var query = window.location.search.substring(1);
+           var vars = query.split("&");
+           for (var i=0;i<vars.length;i++) {
+                   var pair = vars[i].split("=");
+                   if(pair[0] == variable){return pair[1];}
+           }
+           return(false);
+    }*/
+
+</script>
+</body>
+</html>

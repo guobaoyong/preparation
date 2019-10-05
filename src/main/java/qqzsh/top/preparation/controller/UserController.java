@@ -26,12 +26,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.entity.VaptchaMessage;
+import qqzsh.top.preparation.service.MessageService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.CryptographyUtil;
 import qqzsh.top.preparation.util.DateUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 import qqzsh.top.preparation.util.StringUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -56,6 +59,12 @@ public class UserController {
 
     @Value("${userImageFilePath}")
     private String userImageFilePath;
+
+    @Autowired
+    private MessageService messageService;
+
+    @Resource
+    private RedisUtil<Integer> redisUtil;
 
 
     /**
@@ -92,6 +101,7 @@ public class UserController {
                     map.put("errorInfo", "该用户已经被封禁，请联系管理员！");
                     subject.logout();
                 } else {
+                    currentUser.setMessageCount(messageService.getCountByUserId(currentUser.getId()));
                     request.getSession().setAttribute("currentUser", currentUser);
                     map.put("success", true);
                     map.put("userRole", currentUser.getRoleName());
@@ -132,6 +142,14 @@ public class UserController {
             user.setRegisterDate(new Date());
             user.setImageName("default.jpg");
             userService.save(user);
+            //更新redis
+            if (redisUtil.hasKey("userNum")) {
+                int sum = (int) redisUtil.get("userNum");
+                redisUtil.del("userNum");
+                redisUtil.set("userNum", sum + 1);
+            } else {
+                redisUtil.set("userNum", userService.getTotal(null).intValue());
+            }
             map.put("success", true);
         }
         return map;
@@ -315,14 +333,69 @@ public class UserController {
 
     /**
      * 获取当前登录用户是否是VIP用户
+     *
      * @param session
      * @return
      */
     @ResponseBody
     @PostMapping("/isVip")
-    public boolean isVip(HttpSession session){
+    public boolean isVip(HttpSession session) {
         User user = (User) session.getAttribute("currentUser");
-        return user.isVip();
+        //如果发现vip已过期，则修改用户状态
+        if (((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) <= new Date().getTime())) {
+            User byId = userService.findById(user.getId());
+            byId.setVip(false);
+            byId.setEndtime(null);
+            userService.save(byId);
+        }
+        //VIP状态正常且在时间段内
+        if (user.isVip() && ((user.getEndtime() == null ? new Date().getTime() : user.getEndtime().getTime()) > new Date().getTime())) {
+            return user.isVip();
+        }
+        return false;
+    }
+
+    /**
+     * 用户签到
+     *
+     * @param session
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/sign")
+    public Map<String, Object> sign(HttpSession session, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (session.getAttribute("currentUser") == null) {
+            map.put("success", false);
+            map.put("errorInfo", "请先登录，才能签到;");
+            return map;
+        }
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser.isSign()) {
+            map.put("success", false);
+            map.put("errorInfo", "尊敬的会员，你已经签到了，不能重复签到;");
+            return map;
+        }
+        ServletContext application = request.getServletContext();
+        Integer signTotal = (Integer) redisUtil.get("signTotal");
+        redisUtil.set("signTotal", signTotal + 1);
+        application.setAttribute("signTotal", signTotal + 1);
+
+        // 更新到数据库
+        User user = userService.getById(currentUser.getId());
+        user.setSign(true);
+        user.setSignTime(new Date());
+        user.setSignSort(signTotal + 1);
+        user.setPoints(user.getPoints() + 3);
+        userService.save(user);
+
+        //更新session
+        user.setMessageCount(messageService.getCountByUserId(user.getId()));
+        session.setAttribute("currentUser", user);
+        map.put("success", true);
+        return map;
     }
 
 }

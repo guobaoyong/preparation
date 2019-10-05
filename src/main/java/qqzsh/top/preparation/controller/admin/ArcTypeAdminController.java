@@ -34,16 +34,17 @@ public class ArcTypeAdminController {
 
     /**
      * 分页查询资源类别信息
+     *
      * @param page
      * @param limit
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"分页查询资源类别信息"})
+    @RequiresPermissions(value = {"分页查询资源类别信息"})
     @RequestMapping("/list")
-    public Map<String,Object> list(@RequestParam(value="page",required=false)Integer page, @RequestParam(value="limit",required=false)Integer limit)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    public Map<String, Object> list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         List<ArcType> arcTypeList = arcTypeService.list(page, limit, Sort.Direction.ASC, "sort");
         Long total = arcTypeService.getTotal();
         resultMap.put("code", 0);
@@ -54,17 +55,18 @@ public class ArcTypeAdminController {
 
     /**
      * 添加或者修改类别信息
+     *
      * @param arcType
      * @param request
      * @return
      */
     @ResponseBody
-    @RequiresPermissions(value={"添加或者修改类别信息"})
+    @RequiresPermissions(value = {"添加或者修改类别信息"})
     @RequestMapping("/save")
-    public Map<String,Object> save(ArcType arcType, HttpServletRequest request){
+    public Map<String, Object> save(ArcType arcType, HttpServletRequest request) {
         arcTypeService.save(arcType);
         initSystem.loadData(request.getServletContext());
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
@@ -73,27 +75,28 @@ public class ArcTypeAdminController {
      * 删除类别信息
      */
     @ResponseBody
-    @RequiresPermissions(value={"删除类别信息"})
+    @RequiresPermissions(value = {"删除类别信息"})
     @RequestMapping("/delete")
-    public Map<String,Object> delete(Integer id,HttpServletRequest request){
+    public Map<String, Object> delete(Integer id, HttpServletRequest request) {
         arcTypeService.delete(id);
         initSystem.loadData(request.getServletContext());
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
         return resultMap;
     }
 
     /**
      * 根据id查询资源类别实体
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseBody
-    @RequiresPermissions(value={"根据id查询资源类别实体"})
+    @RequiresPermissions(value = {"根据id查询资源类别实体"})
     @RequestMapping("/findById")
-    public Map<String,Object> findById(Integer id)throws Exception{
-        Map<String,Object> resultMap=new HashMap<>();
+    public Map<String, Object> findById(Integer id) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
         ArcType arcType = arcTypeService.get(id);
         resultMap.put("arcType", arcType);
         resultMap.put("success", true);

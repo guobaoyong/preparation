@@ -14,12 +14,15 @@ import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.entity.UserDownload;
+import qqzsh.top.preparation.lucene.ArticleIndex;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.service.CommentService;
 import qqzsh.top.preparation.service.UserDownloadService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.DateUtil;
-import qqzsh.top.preparation.util.StringUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.Date;
@@ -48,6 +51,21 @@ public class ArticleUserController {
 
     @Value("${articleImageFilePath}")
     private String articleImageFilePath;
+
+    @Autowired
+    private ArticleIndex articleIndex;
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private RedisUtil<Article> redisUtil;
+
+    @Resource
+    private RedisUtil<Integer> redisNum;
+
+    @Autowired
+    private UserDownloadService downloadService;
 
     /**
      * Layui编辑器图片上传处理
@@ -152,8 +170,16 @@ public class ArticleUserController {
         article.setPublishDate(new Date());
         article.setUser(user);
         article.setState(1);
-        article.setView(StringUtil.randomInteger());
+        article.setView(0);
         articleService.save(article);
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num + 1);
+        }
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "发布帖子成功页面");
         mav.setViewName("user/publishArticleSuccess");
@@ -176,13 +202,16 @@ public class ArticleUserController {
         oldArticle.setDownload1(article.getDownload1());
         oldArticle.setPassword1(article.getPassword1());
         oldArticle.setPoints(article.getPoints());
-        if (oldArticle.getState() == 3) { // 假如审核未通过，用户点击修改的话 ，则重新审核
+        // 假如审核未通过，用户点击修改的话 ，则重新审核
+        if (oldArticle.getState() == 3) {
             oldArticle.setState(1);
         }
         articleService.save(oldArticle);
         if (oldArticle.getState() == 2) {
-            // todo 修改Lucene索引
+            //修改Lucene索引
+            articleIndex.updateIndex(oldArticle);
             // redis缓存删除这个缓存
+            redisUtil.del("article_" + oldArticle.getId());
         }
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "修改帖子成功页面");
@@ -201,10 +230,24 @@ public class ArticleUserController {
     @RequestMapping("/delete")
     public Map<String, Object> delete(Integer id) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
-        // todo 删除该帖子下的所有评论
+        //删除该帖子的下载信息
+        userDownloadService.deleteByArticleId(id);
+        //删除该帖子下的所有评论
+        commentService.deleteByArticleId(id);
+        //删除帖子
         articleService.delete(id);
-        // todo 删除索引
-        // todo 删除redis索引
+        //删除索引
+        articleIndex.deleteIndex(String.valueOf(id));
+        //删除redis索引
+        redisUtil.del("article_" + id);
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num - 1);
+        }
         resultMap.put("success", true);
         return resultMap;
     }
@@ -222,10 +265,24 @@ public class ArticleUserController {
     public Map<String, Object> deleteSelected(String ids) throws Exception {
         String[] idsStr = ids.split(",");
         for (int i = 0; i < idsStr.length; i++) {
-            // todo 删除该帖子下的所有评论
+            //删除该帖子下的下载信息
+            userDownloadService.deleteByArticleId(Integer.parseInt(idsStr[i]));
+            //删除该帖子下的所有评论
+            commentService.deleteByArticleId(Integer.parseInt(idsStr[i]));
+            //删除帖子
             articleService.delete(Integer.parseInt(idsStr[i]));
-            // todo 删除索引
-            // todo 删除redis索引
+            //删除索引
+            articleIndex.deleteIndex(idsStr[i]);
+            //删除redis索引
+            redisUtil.del("article_" + idsStr[i]);
+        }
+        //更新redis
+        if (!redisNum.hasKey("articleNums")) {
+            redisNum.set("articleNums", articleService.getTotal(null).intValue());
+        } else {
+            int num = (int) redisNum.get("articleNums");
+            redisNum.del("articleNums");
+            redisNum.set("articleNums", num - idsStr.length);
         }
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", true);
@@ -274,6 +331,15 @@ public class ArticleUserController {
             userDownload.setUser(user);
             userDownload.setDownloadDate(new Date());
             userDownloadService.save(userDownload);
+
+            //更新redis
+            if (!redisNum.hasKey("downloadNums")) {
+                redisNum.set("downloadNums", downloadService.getTotal(null).intValue());
+            } else {
+                int num = (int) redisNum.get("downloadNums");
+                redisNum.del("downloadNums");
+                redisNum.set("downloadNums", num + 1);
+            }
 
         }
 

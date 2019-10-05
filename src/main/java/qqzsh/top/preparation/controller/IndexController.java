@@ -30,18 +30,19 @@ public class IndexController {
 
     /**
      * 网站根目录请求
+     *
      * @return
      */
     @RequestMapping("/")
-    public ModelAndView root(HttpServletRequest request){
+    public ModelAndView root(HttpServletRequest request) {
         request.getSession().setAttribute("tMenu", "t_0");
-        Article s_article=new Article();
+        Article s_article = new Article();
         s_article.setState(2); // 审核通过的帖子
-        List<Article> indexArticleList = articleService.list(s_article, 1, 20, Sort.Direction.DESC,"publishDate");
-        Long total=articleService.getTotal(s_article);
+        List<Article> indexArticleList = articleService.list(s_article, 1, 20, Sort.Direction.DESC, "publishDate");
+        Long total = articleService.getTotal(s_article);
         s_article.setHot(true);
-        List<Article> indexHotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC,"publishDate");
-        ModelAndView mav=new ModelAndView();
+        List<Article> indexHotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC, "publishDate");
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "首页");
         mav.addObject("articleList", indexArticleList);
         mav.addObject("hotArticleList", indexHotArticleList);
@@ -52,77 +53,97 @@ public class IndexController {
 
     /**
      * 打开注册页面
+     *
      * @return
      */
     @GetMapping("/toRegister")
-    public ModelAndView toRegister(){
+    public ModelAndView toRegister() {
         return new ModelAndView("register");
     }
 
     /**
      * 打开登陆页面
+     *
      * @return
      */
     @GetMapping("/toLogin")
-    public ModelAndView toLogin(){
+    public ModelAndView toLogin() {
         return new ModelAndView("login");
     }
 
     /**
      * 打开找回密码页面
+     *
      * @return
      */
     @GetMapping("/findPassword")
-    public ModelAndView findPassword(){
+    public ModelAndView findPassword() {
         return new ModelAndView("findPassword");
     }
 
     /**
      * 打开修改密码页面
+     *
      * @return
      */
     @GetMapping("/modifyPassword")
-    public ModelAndView modifyPassword(){
+    public ModelAndView modifyPassword() {
         return new ModelAndView("modifyPassword");
     }
 
     /**
      * 打开修改头像页面
+     *
      * @return
      */
     @GetMapping("/modifyUserImage")
-    public ModelAndView modifyUserImage(){
+    public ModelAndView modifyUserImage() {
         return new ModelAndView("modifyUserImage");
     }
 
     /**
      * 打开管理员登陆页面
+     *
      * @return
      */
     @GetMapping("/adminLogin")
-    public ModelAndView adminLogin(){
+    public ModelAndView adminLogin() {
         return new ModelAndView("adminLogin");
     }
 
     /**
      * 进入后台页面
+     *
      * @param session
      * @return
      */
     @RequestMapping("/toAdmin")
-    public ModelAndView toAdminPage(HttpSession session){
-        ModelAndView mav=new ModelAndView();
+    public ModelAndView toAdminPage(HttpSession session) {
+        ModelAndView mav = new ModelAndView();
         mav.addObject("title", "进入后台");
         //获取当前用户
-        User user=(User) session.getAttribute("currentUser");
-        if (user == null){
+        User user = (User) session.getAttribute("currentUser");
+        if (user == null) {
             mav.setViewName("adminLogin");
-        }else if (user.getRoleName().equals("管理员")){
+        } else if (user.getRoleName().equals("管理员")) {
             mav.setViewName("admin/adminUserCenter");
-        }else {
+        } else {
             mav.setViewName("adminLogin");
         }
         return mav;
+    }
+
+    /**
+     * 免责声明页面
+     *
+     * @return
+     */
+    @GetMapping("/tomzPage")
+    public ModelAndView tomzPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("title", "免责声明");
+        modelAndView.setViewName("mzPage");
+        return modelAndView;
     }
 
 }

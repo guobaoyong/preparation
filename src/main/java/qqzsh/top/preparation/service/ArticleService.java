@@ -15,6 +15,7 @@ public interface ArticleService {
 
     /**
      * 根据条件分页查询资源信息
+     *
      * @param s_article
      * @param page
      * @param pageSize
@@ -22,16 +23,18 @@ public interface ArticleService {
      * @param properties
      * @return
      */
-    List<Article> list(Article s_article, Integer page, Integer pageSize, Sort.Direction direction, String...properties);
+    List<Article> list(Article s_article, Integer page, Integer pageSize, Sort.Direction direction, String... properties);
 
     /**
      * 查询所有帖子
+     *
      * @return
      */
     List<Article> listAll();
 
     /**
      * 根据条件查询总记录数
+     *
      * @param s_article
      * @return
      */
@@ -39,6 +42,7 @@ public interface ArticleService {
 
     /**
      * 根据id获取实体
+     *
      * @param id
      * @return
      */
@@ -46,15 +50,30 @@ public interface ArticleService {
 
     /**
      * 添加或者修改帖子
+     *
      * @param article
      */
     void save(Article article);
 
     /**
      * 根据id删除帖子
+     *
      * @param id
      */
     void delete(Integer id);
+
+    /**
+     * 根据标题查找帖子
+     *
+     * @param name
+     * @return
+     */
+    List<Article> findByNameLike(String name);
+
+    /**
+     * 根据用户id找
+     */
+    List<Article> findByUserId(Integer userId);
 
 
 }
