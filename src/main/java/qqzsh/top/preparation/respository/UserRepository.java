@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import qqzsh.top.preparation.entity.User;
 
 /**
@@ -36,6 +37,7 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
      * 重置所有签到信息
      */
     @Query(value = "update t_user set is_sign=false,sign_sort=null,sign_time=null", nativeQuery = true)
+    @Transactional
     @Modifying
     void updateAllSignInfo();
 }
