@@ -145,6 +145,17 @@ public class UserAdminController implements ServletContextListener {
         //要更新用户
         User oldUser = userService.getById(user.getId());
         oldUser.setVip(user.isVip());
+        //设置VIP时间
+        Calendar rightNow = Calendar.getInstance();
+        Date date = user.getEndtime() == null ? new Date() : user.getEndtime();
+        rightNow.setTime(date);
+        if (user.isVip()){
+            //在当前时间上加入50年
+            rightNow.add(Calendar.YEAR, 50);
+            oldUser.setEndtime(rightNow.getTime());
+        }else {
+            oldUser.setEndtime(rightNow.getTime());
+        }
         userService.save(oldUser);
         //如何要更新用户就是session用户
         if (currentUser.getId() == oldUser.getId()) {
