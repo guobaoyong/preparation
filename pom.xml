@@ -18,6 +18,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <!-- 推荐使用Harbor -->
+        <docker.repostory>registry.cn-hangzhou.aliyuncs.com</docker.repostory>
+        <docker.registry.name>zhangshunhai</docker.registry.name>
+        <docker.plugin.version>1.1.0</docker.plugin.version>
     </properties>
 
     <repositories>
@@ -187,26 +191,43 @@
             <version>1.18.10</version>
             <scope>provided</scope>
         </dependency>
-
-
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Docker maven plugin -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.13</version>
+                <configuration>
+                    <!--镜像名称-->
+                    <imageName>${docker.repostory}/${docker.registry.name}/${project.artifactId}:${project.version}</imageName>
+                    <!-- 指定Dockerfile所在的路径 -->
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+
+                    <!--推送阿里云相关-->
+                    <serverId>docker-aliyun</serverId>
+                    <!--表示阿里云的docker仓库地址。阿里云的容器镜像服务地址-->
+                    <registryUrl>${docker.repostory}</registryUrl>
+                    <!--表示推送镜像到仓库。-->
+                    <pushImage>true</pushImage>
+
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    &lt;!&ndash;true跳过测试&ndash;&gt;
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>-->
         </plugins>
     </build>
 
