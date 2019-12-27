@@ -24,6 +24,28 @@
 <body>
 <div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
 
+<!--通知区域-->
+<div class="w1170">
+    <div align="left" style="padding-top: 0px;padding-bottom: 10px;" id="notice">
+        <span th:utext="${newOne.getContent()}"></span>
+    </div>
+</div>
+
+<div class="w1170">
+    <div align="left" style="padding-top: 0px;padding-bottom: 10px;" id="notice">
+        <!--虚线-->
+        <hr style="border:1px dashed #000; height:1px;">
+    </div>
+</div>
+
+<!--广告区域-->
+<div class="w1170">
+    <div align="left" style="padding-top: 0px;padding-bottom: 10px;" id="ad">
+        <span th:utext="${newOneAD.getContent()}"></span>
+    </div>
+</div>
+
+<!--检索区域-->
 <div class="w1170">
 
     <div class="pLeft">

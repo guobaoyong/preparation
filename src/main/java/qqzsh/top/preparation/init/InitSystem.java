@@ -8,8 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import qqzsh.top.preparation.entity.ArcType;
 import qqzsh.top.preparation.entity.Link;
+import qqzsh.top.preparation.entity.Notice;
 import qqzsh.top.preparation.service.ArcTypeService;
 import qqzsh.top.preparation.service.LinkService;
+import qqzsh.top.preparation.service.NoticeService;
 import qqzsh.top.preparation.service.UserService;
 import qqzsh.top.preparation.util.RedisUtil;
 
@@ -36,6 +38,12 @@ public class InitSystem implements ServletContextListener, ApplicationContextAwa
 
     @Resource
     private RedisUtil<Integer> redisUtil;
+
+    @Resource
+    private RedisUtil<Notice> noticeRedisUtil;
+
+    @Resource
+    private NoticeService noticeService;
 
     /**
      * 加载数据到application缓存中
@@ -65,7 +73,14 @@ public class InitSystem implements ServletContextListener, ApplicationContextAwa
         redisUtil.del("articleNums");
         redisUtil.del("downloadNums");
         redisUtil.del("orderNums");
-
+        //加载通知实体到redis
+        noticeRedisUtil.del("notice");
+        Notice newOne = noticeService.getNewOne();
+        noticeRedisUtil.set("notice",newOne);
+        //加载广告实体到redis
+        noticeRedisUtil.del("ad");
+        Notice newOneAD = noticeService.getNewOneAD();
+        noticeRedisUtil.set("ad",newOneAD);
     }
 
     @Override

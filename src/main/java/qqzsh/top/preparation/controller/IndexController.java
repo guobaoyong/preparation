@@ -1,5 +1,6 @@
 package qqzsh.top.preparation.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -7,10 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.entity.Article;
+import qqzsh.top.preparation.entity.Notice;
 import qqzsh.top.preparation.entity.User;
 import qqzsh.top.preparation.service.ArticleService;
+import qqzsh.top.preparation.service.NoticeService;
 import qqzsh.top.preparation.util.PageUtil;
+import qqzsh.top.preparation.util.RedisUtil;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -22,10 +27,14 @@ import java.util.List;
  * @description 首页或者跳转url控制器
  */
 @Controller
+@AllArgsConstructor
 public class IndexController {
 
-    @Autowired
     private ArticleService articleService;
+    private NoticeService noticeService;
+
+    @Resource
+    private RedisUtil<Notice> noticeRedisUtil;
 
 
     /**
@@ -35,15 +44,34 @@ public class IndexController {
      */
     @RequestMapping("/")
     public ModelAndView root(HttpServletRequest request) {
+        // 获取最新一条通知
+        Notice newOne = null;
+        if (noticeRedisUtil.hasKey("notice")){
+            newOne = (Notice) noticeRedisUtil.get("notice");
+        }else {
+            newOne = noticeService.getNewOne();
+            noticeRedisUtil.set("notice",newOne);
+        }
+        // 获取最新一条广告
+        Notice newOneAD = null;
+        if (noticeRedisUtil.hasKey("ad")){
+            newOneAD = (Notice) noticeRedisUtil.get("ad");
+        }else {
+            newOneAD = noticeService.getNewOneAD();
+            noticeRedisUtil.set("ad",newOneAD);
+        }
         request.getSession().setAttribute("tMenu", "t_0");
         Article s_article = new Article();
-        s_article.setState(2); // 审核通过的帖子
+        // 审核通过的帖子
+        s_article.setState(2);
         List<Article> indexArticleList = articleService.list(s_article, 1, 20, Sort.Direction.DESC, "publishDate");
         Long total = articleService.getTotal(s_article);
         s_article.setHot(true);
         List<Article> indexHotArticleList = articleService.list(s_article, 1, 43, Sort.Direction.DESC, "publishDate");
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "首页");
+        mav.addObject("newOne", newOne);
+        mav.addObject("newOneAD", newOneAD);
         mav.addObject("articleList", indexArticleList);
         mav.addObject("hotArticleList", indexHotArticleList);
         mav.addObject("pageCode", PageUtil.genPagination("/article/list", total, 1, 20, ""));
