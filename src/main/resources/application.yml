@@ -36,6 +36,9 @@ articleImageFilePath: /opt/preparation/articleImages/
 # D://articleImages/
 # /opt/preparation/articleImages
 
+#通知广告图片路径
+noticeImageFilePath: /opt/preparation/noticeImages/
+
 # lucene保存路径
 lucenePath: /opt/preparation/lucene/
 # C://lucene

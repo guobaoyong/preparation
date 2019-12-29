@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}+'-校园学习资源共享云平台'"></title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/static/css/css.css"/>
+</head>
+<body>
+<div style="float: left;width: 960px">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>发布通知广告</legend>
+    </fieldset>
+    <div>
+        <div style="padding-left: 10px">
+            <form class="layui-form" action="/admin/notice/add" method="post">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题：</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="name" name="name" lay-verify="required" autocomplete="off"
+                               placeholder="请输入标题" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类别：</label>
+                    <div class="layui-input-inline">
+                        <select id="type" name="type" lay-verify="required">
+                            <option value="">请选择类别</option>
+                            <option value="notice">通知</option>
+                            <option value="ad">广告</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">内容：</label>
+                    <div class="layui-input-block">
+                        <textarea id="content" name="content" style="display: none;"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="pa">立即提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    layui.use(['element', 'form', 'layedit'], function () {
+        var form = layui.form;
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+        var $ = layui.jquery; // 使用jquery
+        var layedit = layui.layedit;
+        var index = layedit.build('content', {
+            uploadImage: {
+                url: '/admin/notice/uploadImage',
+                type: 'post'
+            }
+        });
+
+        //监听提交
+        form.on('submit(pa)', function (data) {
+            var content = layedit.getContent(index);
+            if (content == "") {
+                layer.msg("请输入通知广告内容！");
+                return false;
+            }
+            $("#content").val(content);
+            return true;
+        });
+    });
+
+
+    /*]]>*/
+
+
+</script>
+</body>
+</html>

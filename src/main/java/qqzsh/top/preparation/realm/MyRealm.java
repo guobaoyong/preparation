@@ -82,6 +82,13 @@ public class MyRealm extends AuthorizingRealm {
             info.addStringPermission("删除友情链接");
             info.addStringPermission("根据id查询友情链接实体");
 
+            info.addStringPermission("通知广告管理页");
+            info.addStringPermission("分页查询通知广告");
+            info.addStringPermission("删除通知广告");
+            info.addStringPermission("查看通知广告内容");
+            info.addStringPermission("通知广告增加修改页");
+            info.addStringPermission("通知广告增加修改");
+
             info.addStringPermission("已下载管理页");
             info.addStringPermission("分页查询用户下载信息");
             info.addStringPermission("删除下载信息");

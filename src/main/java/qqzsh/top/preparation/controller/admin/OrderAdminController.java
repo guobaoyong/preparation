@@ -78,7 +78,7 @@ public class OrderAdminController {
     }
 
     /**
-     * 根据id删除消息
+     * 根据id删除订单
      *
      * @param id
      * @return

@@ -20,6 +20,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Value("${articleImageFilePath}")
     private String articleImageFilePath;
 
+    @Value("${noticeImageFilePath}")
+    private String noticeImageFilePath;
+
     /**
      * 静态资源的加载和Swagger2配置
      *
@@ -33,7 +36,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         //用户头像
         registry.addResourceHandler("/userImage/**")
                 .addResourceLocations("file:" + userImageFilePath);
+        //文章、通知广告图片
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:" + articleImageFilePath);
+                .addResourceLocations("file:" + articleImageFilePath)
+                .addResourceLocations("file:" + noticeImageFilePath);;
     }
 }

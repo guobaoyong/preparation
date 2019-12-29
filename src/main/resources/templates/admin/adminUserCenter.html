@@ -28,20 +28,31 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">内容管理</a>
+                    <a class="" href="javascript:;">用户资源模块</a>
                     <dl class="layui-nav-child">
+                        <dd><a href="javascript:openPage('userManage')">用户管理</a></dd>
                         <dd><a href="javascript:openPage('articleManage')">资源管理</a></dd>
                         <dd><a href="javascript:openPage('arcTypeManage')">资源类别管理</a></dd>
-                        <dd><a href="javascript:openPage('userManage')">用户管理</a></dd>
-                        <dd><a href="javascript:openPage('commentManage')">评论管理</a></dd>
-                        <dd><a href="javascript:openPage('linkManage')">友情链接管理</a></dd>
                         <dd><a href="javascript:openPage('downloadManage')">已下载管理</a></dd>
-                        <dd><a href="javascript:openPage('messageManage')">消息管理</a></dd>
-                        <dd><a href="javascript:openPage('orderManage')">订单管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a href="javascript:;">系统管理</a>
+                    <a class="" href="javascript:;">评论消息模块</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:openPage('commentManage')">评论管理</a></dd>
+                        <dd><a href="javascript:openPage('messageManage')">消息管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">订单广告模块</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:openPage('orderManage')">订单管理</a></dd>
+                        <dd><a href="javascript:openPage('noticeManage')">通知广告管理</a></dd>
+                        <dd><a href="javascript:openPage('linkManage')">友情链接管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">系统管理模块</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:genAllIndex()">生成所有帖子索引</a></dd>
                         <dd><a href="javascript:clearSign()">清除今日签到信息</a></dd>

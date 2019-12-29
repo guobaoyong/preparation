@@ -198,5 +198,14 @@ public class IndexAdminController {
         return mav;
     }
 
+    @RequiresPermissions(value = {"通知广告管理页"})
+    @GetMapping("/admin/noticeManage")
+    public ModelAndView tonoticeManagePage() {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("title", "通知广告管理页面");
+        mav.setViewName("admin/noticeManage");
+        return mav;
+    }
+
 }
 
