@@ -1,5 +1,6 @@
 package qqzsh.top.preparation.controller.user;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ public class IndexUserController {
     }
 
     @RequestMapping("/user/tobuyVipPage")
+    @RequiresPermissions("user:buy:vip")
     public ModelAndView tobuyVipPage() {
         ModelAndView mav = new ModelAndView();
         mav.addObject("title", "购买VIP页面");

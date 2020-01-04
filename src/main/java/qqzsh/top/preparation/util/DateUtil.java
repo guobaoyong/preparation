@@ -45,7 +45,7 @@ public class DateUtil {
 
     public static String getCurrentDateStr() throws Exception {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmssSSS");
         return sdf.format(date);
     }
 
@@ -57,7 +57,7 @@ public class DateUtil {
 
     public static void main(String[] args) {
         try {
-            System.out.println(getCurrentDatePath());
+            System.out.println(getCurrentDateStr());
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
