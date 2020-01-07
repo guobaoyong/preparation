@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.order.mapper.OrderMapper">
+    
+    <resultMap type="Order" id="OrderResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="detail"    column="detail"    />
+        <result property="money"    column="money"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="userId"    column="user_id"    />
+        <result property="aliNo"    column="ali_no"    />
+        <result property="orderNo"    column="order_no"    />
+    </resultMap>
+
+    <sql id="selectOrderVo">
+        select id, create_time, detail, money, status, type, user_id, ali_no, order_no from sys_order
+    </sql>
+
+    <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        <where>  
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="aliNo != null  and aliNo != ''"> and ali_no = #{aliNo}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null ">create_time,</if>
+            <if test="detail != null  and detail != ''">detail,</if>
+            <if test="money != null ">money,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="aliNo != null  and aliNo != ''">ali_no,</if>
+            <if test="orderNo != null  and orderNo != ''">order_no,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="detail != null  and detail != ''">#{detail},</if>
+            <if test="money != null ">#{money},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="aliNo != null  and aliNo != ''">#{aliNo},</if>
+            <if test="orderNo != null  and orderNo != ''">#{orderNo},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="Order">
+        update sys_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="detail != null  and detail != ''">detail = #{detail},</if>
+            <if test="money != null ">money = #{money},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="aliNo != null  and aliNo != ''">ali_no = #{aliNo},</if>
+            <if test="orderNo != null  and orderNo != ''">order_no = #{orderNo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderById" parameterType="Long">
+        delete from sys_order where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderByIds" parameterType="String">
+        delete from sys_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

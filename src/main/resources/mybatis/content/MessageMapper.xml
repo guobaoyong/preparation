@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.message.mapper.MessageMapper">
+    
+    <resultMap type="Message" id="MessageResult">
+        <result property="id"    column="id"    />
+        <result property="content"    column="content"    />
+        <result property="see"    column="see"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <resultMap type="User" id="UserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="loginName"    column="login_name"   />
+    </resultMap>
+
+    <sql id="selectMessageVo">
+        select id, content, see, publish_date, user_id from sys_message
+    </sql>
+
+    <select id="selectMessageList" parameterType="Message" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+        <where>  
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="see != null"> and see = #{see}</if>
+            <if test="publishDate != null "> and publish_date = #{publishDate}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectMessageById" parameterType="Long" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''">content,</if>
+            <if test="see != null ">see,</if>
+            <if test="publishDate != null ">publish_date,</if>
+            <if test="userId != null ">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="see != null ">#{see},</if>
+            <if test="publishDate != null ">#{publishDate},</if>
+            <if test="userId != null ">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMessage" parameterType="Message">
+        update sys_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="see != null ">see = #{see},</if>
+            <if test="publishDate != null ">publish_date = #{publishDate},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMessageById" parameterType="Long">
+        delete from sys_message where id = #{id}
+    </delete>
+
+    <delete id="deleteMessageByIds" parameterType="String">
+        delete from sys_message where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <update id="updateState" parameterType="Long">
+        update sys_message set see = true where user_id = #{userId}
+    </update>
+
+    <select id="selectJoint" parameterType="String" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+        <where>
+            <if test="content != null and content != ''">
+                AND content like concat('%', #{content}, '%')
+            </if>
+            <if test="loginName != null  and loginName != ''">and user_id in (SELECT user_id FROM sys_user WHERE login_name = #{loginName})</if>
+            <if test="beginPublishDate != null and beginPublishDate != ''"><!-- 发布开始时间检索 -->
+                AND date_format(publish_date,'%y%m%d') &gt;= date_format(#{beginPublishDate},'%y%m%d')
+            </if>
+            <if test="endPublishDate != null and endPublishDate != ''"><!-- 发布结束时间检索 -->
+                AND date_format(publish_date,'%y%m%d') &lt;= date_format(#{endPublishDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+</mapper>

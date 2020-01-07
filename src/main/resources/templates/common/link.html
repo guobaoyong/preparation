@@ -1,0 +1,18 @@
+<meta charset="UTF-8"/>
+<div id="h">
+    <div class="data_list">
+        <div class="data_list_title">
+            <img th:src="@{/img/link_icon.png}"/>
+            <span class="head">友情链接</span>
+        </div>
+        <div class="data_link">
+            <ul>
+                <li th:each="link:${allLinkList}">
+                    <a target="_blank" th:href="${link.linkUrl}" th:title="${link.linkName}">
+                        <span th:text="${link.linkName}"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

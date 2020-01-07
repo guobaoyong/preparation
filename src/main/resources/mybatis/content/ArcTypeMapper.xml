@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.type.mapper.ArcTypeMapper">
+    
+    <resultMap type="ArcType" id="ArcTypeResult">
+        <result property="srcTypeId"    column="src_type_id"    />
+        <result property="srcTypeName"    column="src_type_name"    />
+        <result property="srcTypeRemark"    column="src_type_remark"    />
+        <result property="srcTypeSort"    column="src_type_sort"    />
+    </resultMap>
+
+    <sql id="selectArcTypeVo">
+        select src_type_id, src_type_name, src_type_remark, src_type_sort from sys_arc_type
+    </sql>
+
+    <select id="selectArcTypeList" parameterType="ArcType" resultMap="ArcTypeResult">
+        <include refid="selectArcTypeVo"/>
+        <where>  
+            <if test="srcTypeName != null  and srcTypeName != ''"> and src_type_name like concat('%', #{srcTypeName}, '%')</if>
+            <if test="srcTypeRemark != null  and srcTypeRemark != ''"> and src_type_remark = #{srcTypeRemark}</if>
+            <if test="srcTypeSort != null "> and src_type_sort = #{srcTypeSort}</if>
+        </where>
+        order by src_type_sort asc
+    </select>
+    
+    <select id="selectArcTypeById" parameterType="Long" resultMap="ArcTypeResult">
+        <include refid="selectArcTypeVo"/>
+        where src_type_id = #{srcTypeId}
+    </select>
+        
+    <insert id="insertArcType" parameterType="ArcType" useGeneratedKeys="true" keyProperty="srcTypeId">
+        insert into sys_arc_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="srcTypeName != null  and srcTypeName != ''">src_type_name,</if>
+            <if test="srcTypeRemark != null  and srcTypeRemark != ''">src_type_remark,</if>
+            <if test="srcTypeSort != null ">src_type_sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="srcTypeName != null  and srcTypeName != ''">#{srcTypeName},</if>
+            <if test="srcTypeRemark != null  and srcTypeRemark != ''">#{srcTypeRemark},</if>
+            <if test="srcTypeSort != null ">#{srcTypeSort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArcType" parameterType="ArcType">
+        update sys_arc_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="srcTypeName != null  and srcTypeName != ''">src_type_name = #{srcTypeName},</if>
+            <if test="srcTypeRemark != null  and srcTypeRemark != ''">src_type_remark = #{srcTypeRemark},</if>
+            <if test="srcTypeSort != null ">src_type_sort = #{srcTypeSort},</if>
+        </trim>
+        where src_type_id = #{srcTypeId}
+    </update>
+
+    <delete id="deleteArcTypeById" parameterType="Long">
+        delete from sys_arc_type where src_type_id = #{srcTypeId}
+    </delete>
+
+    <delete id="deleteArcTypeByIds" parameterType="String">
+        delete from sys_arc_type where src_type_id in 
+        <foreach item="srcTypeId" collection="array" open="(" separator="," close=")">
+            #{srcTypeId}
+        </foreach>
+    </delete>
+    
+</mapper>

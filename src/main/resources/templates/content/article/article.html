@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('资源列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>名称：</p>
+                                <input type="text" name="articleName"/>
+                            </li>
+                            <li class="select-time">
+                                <p>发布时间：</p>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginArticlePublishDate]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endArticlePublishDate]"/>
+                            </li>
+                            <li>
+                                <p>状态：</p>
+                                <select name="articleState" class="form-control m-b" th:with="type=${@dict.getType('sys_article_status')}">
+                                    <option value="">请选择</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="content:article:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="content:article:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="content:article:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="content:article:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('content:article:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('content:article:remove')}]];
+        var datas = [[${@dict.getType('sys_article_status')}]];
+        var prefix = ctx + "content/article";
+
+        var sysUser = [[${@permission.getPrincipalProperty('ordinary')}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "资源",
+                uniqueId: "articleId",
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field : 'articleName',
+                        title : '名称'
+                    },
+                    {
+                        field : 'arcType.srcTypeName',
+                        title : '所属类别'
+                    },
+                    {
+                        field : 'user.loginName',
+                        title : '所属用户'
+                    },
+                {
+                    field : 'articleIsHot', 
+                    title : '是否是热门资源',
+                    formatter: function (value, row, index) {
+                        return statusTools(row);
+                    }
+                },
+                {
+                    field : 'articlePublishDate', 
+                    title : '发布时间'
+                },
+                {
+                    field : 'articleState',
+                    title : '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return '<span title="拒绝原因：'+row.articleReason+'">'+$.table.selectDictLabel(datas, value)+'</span>';
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.articleId + '\')"><i class="fa fa-edit"></i>编辑/审核</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.articleId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function statusTools(row) {
+            if (row.articleIsHot == false) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.articleId + '\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.articleId + '\')"></i> ';
+            }
+        }
+
+        /* 热门资源-停用 */
+        function disable(articleId) {
+            if (!sysUser){
+                $.modal.confirm("确认要取消此热门资源吗？", function() {
+                    $.operate.post(prefix + "/changeStatus", { "articleId": parseInt(articleId), "articleIsHot": false });
+                })
+            }else {
+                $.modal.alertWarning("无权操作！");
+            }
+        }
+
+        /* 热门资源-启用 */
+        function enable(articleId) {
+            if (!sysUser) {
+                $.modal.confirm("确认要将此资源设置为热门资源吗？", function () {
+                    $.operate.post(prefix + "/changeStatus", {"articleId": parseInt(articleId), "articleIsHot": true});
+                })
+            }else {
+                $.modal.alertWarning("无权操作！");
+            }
+        }
+
+    </script>
+</body>
+</html>

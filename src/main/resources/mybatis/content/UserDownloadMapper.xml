@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.download.mapper.UserDownloadMapper">
+    
+    <resultMap type="UserDownload" id="UserDownloadResult">
+        <result property="downloadId"    column="download_id"    />
+        <result property="downloadDate"    column="download_date"    />
+        <result property="downloadArticleId"    column="download_article_id"    />
+        <result property="downloadUserId"    column="download_user_id"    />
+    </resultMap>
+
+    <resultMap type="User" id="UserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="loginName"    column="login_name"   />
+    </resultMap>
+
+    <resultMap type="Article" id="ArticleResult">
+        <result property="articleId"    column="article_id"    />
+        <result property="articleName"    column="article_name"    />
+    </resultMap>
+
+    <sql id="selectUserDownloadVo">
+        select download_id, download_date, download_article_id, download_user_id from sys_user_download
+    </sql>
+
+    <select id="selectUserDownloadList" parameterType="UserDownload" resultMap="UserDownloadResult">
+        <include refid="selectUserDownloadVo"/>
+        <where>  
+            <if test="downloadDate != null "> and download_date = #{downloadDate}</if>
+            <if test="downloadArticleId != null "> and download_article_id = #{downloadArticleId}</if>
+            <if test="downloadUserId != null "> and download_user_id = #{downloadUserId}</if>
+            <if test="params.beginDownloadDate != null and params.beginDownloadDate != ''"><!-- 下载开始时间检索 -->
+                AND date_format(download_date,'%y%m%d') &gt;= date_format(#{params.beginDownloadDate},'%y%m%d')
+            </if>
+            <if test="params.endDownloadDate != null and params.endDownloadDate != ''"><!-- 下载结束时间检索 -->
+                AND date_format(download_date,'%y%m%d') &lt;= date_format(#{params.endDownloadDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectUserDownloadById" parameterType="Long" resultMap="UserDownloadResult">
+        <include refid="selectUserDownloadVo"/>
+        where download_id = #{downloadId}
+    </select>
+        
+    <insert id="insertUserDownload" parameterType="UserDownload" useGeneratedKeys="true" keyProperty="downloadId">
+        insert into sys_user_download
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="downloadDate != null ">download_date,</if>
+            <if test="downloadArticleId != null ">download_article_id,</if>
+            <if test="downloadUserId != null ">download_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="downloadDate != null ">#{downloadDate},</if>
+            <if test="downloadArticleId != null ">#{downloadArticleId},</if>
+            <if test="downloadUserId != null ">#{downloadUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserDownload" parameterType="UserDownload">
+        update sys_user_download
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="downloadDate != null ">download_date = #{downloadDate},</if>
+            <if test="downloadArticleId != null ">download_article_id = #{downloadArticleId},</if>
+            <if test="downloadUserId != null ">download_user_id = #{downloadUserId},</if>
+        </trim>
+        where download_id = #{downloadId}
+    </update>
+
+    <delete id="deleteUserDownloadById" parameterType="Long">
+        delete from sys_user_download where download_id = #{downloadId}
+    </delete>
+
+    <delete id="deleteUserDownloadByIds" parameterType="String">
+        delete from sys_user_download where download_id in 
+        <foreach item="downloadId" collection="array" open="(" separator="," close=")">
+            #{downloadId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByArticleId" parameterType="Long">
+        delete from sys_user_download where download_article_id = #{articleId}
+    </delete>
+
+    <select id="selectJoint" parameterType="String" resultMap="UserDownloadResult">
+        <include refid="selectUserDownloadVo"/>
+        <where>
+            <if test="articleName != null  and articleName != ''">and download_article_id IN (SELECT article_id FROM sys_article WHERE article_name = #{articleName})</if>
+            <if test="loginName != null  and loginName != ''">and download_user_id in (SELECT user_id FROM sys_user WHERE login_name = #{loginName})</if>
+            <if test="beginDownloadDate != null and beginDownloadDate != ''"><!-- 评论开始时间检索 -->
+                AND date_format(download_date,'%y%m%d') &gt;= date_format(#{beginDownloadDate},'%y%m%d')
+            </if>
+            <if test="endDownloadDate != null and endDownloadDate != ''"><!-- 评论结束时间检索 -->
+                AND date_format(download_date,'%y%m%d') &lt;= date_format(#{endDownloadDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
+</mapper>

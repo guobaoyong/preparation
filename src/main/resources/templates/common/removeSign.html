@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('清除今日签到信息')" />
+</head>
+<body class="gray-bg">
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var status =  [[${status}]];
+    if (status){
+        $.modal.msgSuccess("清除成功！", modal_status.SUCCESS);
+    } else {
+        $.modal.msgError("清除失败，请重试！！", modal_status.FAIL);
+    }
+    setTimeout(function () {
+        $.modal.closeTab();
+    }, 2000);
+</script>
+</body>
+</html>

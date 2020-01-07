@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.article.mapper.ArticleMapper">
+    
+    <resultMap type="Article" id="ArticleResult">
+        <result property="articleId"    column="article_id"    />
+        <result property="articleCheckDate"    column="article_check_date"    />
+        <result property="articleContent"    column="article_content"    />
+        <result property="articleDownload1"    column="article_download1"    />
+        <result property="articleIsHot"    column="article_is_hot"    />
+        <result property="articleName"    column="article_name"    />
+        <result property="articlePassword1"    column="article_password1"    />
+        <result property="articlePoints"    column="article_points"    />
+        <result property="articlePublishDate"    column="article_publish_date"    />
+        <result property="articleReason"    column="article_reason"    />
+        <result property="articleState"    column="article_state"    />
+        <result property="articleView"    column="article_view"    />
+        <result property="articleTypeId"    column="article_type_id"    />
+        <result property="articleUserId"    column="article_user_id"    />
+    </resultMap>
+
+    <sql id="selectArticleVo">
+        select article_id, article_check_date, article_content, article_download1, article_is_hot, article_name, article_password1, article_points, article_publish_date, article_reason, article_state, article_view, article_type_id, article_user_id from sys_article
+    </sql>
+
+    <select id="selectArticleList" parameterType="Article" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        <where>  
+            <if test="articleCheckDate != null "> and article_check_date = #{articleCheckDate}</if>
+            <if test="articleContent != null  and articleContent != ''"> and article_content = #{articleContent}</if>
+            <if test="articleDownload1 != null  and articleDownload1 != ''"> and article_download1 = #{articleDownload1}</if>
+            <if test="articleIsHot != null  and articleIsHot != ''"> and article_is_hot = #{articleIsHot}</if>
+            <if test="articleName != null  and articleName != ''"> and article_name like concat('%', #{articleName}, '%')</if>
+            <if test="articlePassword1 != null  and articlePassword1 != ''"> and article_password1 = #{articlePassword1}</if>
+            <if test="articlePoints != null "> and article_points = #{articlePoints}</if>
+            <if test="articlePublishDate != null "> and article_publish_date = #{articlePublishDate}</if>
+            <if test="articleReason != null  and articleReason != ''"> and article_reason = #{articleReason}</if>
+            <if test="articleState != null "> and article_state = #{articleState}</if>
+            <if test="articleView != null "> and article_view = #{articleView}</if>
+            <if test="articleTypeId != null "> and article_type_id = #{articleTypeId}</if>
+            <if test="articleUserId != null "> and article_user_id = #{articleUserId}</if>
+            <if test="params.beginArticlePublishDate != null and params.beginArticlePublishDate != ''"><!-- 开始时间检索 -->
+                and date_format(article_publish_date,'%y%m%d') &gt;= date_format(#{params.beginArticlePublishDate},'%y%m%d')
+            </if>
+            <if test="params.endArticlePublishDate != null and params.endArticlePublishDate != ''"><!-- 结束时间检索 -->
+                and date_format(article_publish_date,'%y%m%d') &lt;= date_format(#{params.endArticlePublishDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectArticleById" parameterType="Long" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        where article_id = #{articleId}
+    </select>
+        
+    <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="articleId">
+        insert into sys_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleCheckDate != null ">article_check_date,</if>
+            <if test="articleContent != null  and articleContent != ''">article_content,</if>
+            <if test="articleDownload1 != null  and articleDownload1 != ''">article_download1,</if>
+            <if test="articleIsHot != null ">article_is_hot,</if>
+            <if test="articleName != null  and articleName != ''">article_name,</if>
+            <if test="articlePassword1 != null  and articlePassword1 != ''">article_password1,</if>
+            <if test="articlePoints != null ">article_points,</if>
+            <if test="articlePublishDate != null ">article_publish_date,</if>
+            <if test="articleReason != null  and articleReason != ''">article_reason,</if>
+            <if test="articleState != null ">article_state,</if>
+            <if test="articleView != null ">article_view,</if>
+            <if test="articleTypeId != null ">article_type_id,</if>
+            <if test="articleUserId != null ">article_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleCheckDate != null ">#{articleCheckDate},</if>
+            <if test="articleContent != null  and articleContent != ''">#{articleContent},</if>
+            <if test="articleDownload1 != null  and articleDownload1 != ''">#{articleDownload1},</if>
+            <if test="articleIsHot != null ">#{articleIsHot},</if>
+            <if test="articleName != null  and articleName != ''">#{articleName},</if>
+            <if test="articlePassword1 != null  and articlePassword1 != ''">#{articlePassword1},</if>
+            <if test="articlePoints != null ">#{articlePoints},</if>
+            <if test="articlePublishDate != null ">#{articlePublishDate},</if>
+            <if test="articleReason != null  and articleReason != ''">#{articleReason},</if>
+            <if test="articleState != null ">#{articleState},</if>
+            <if test="articleView != null ">#{articleView},</if>
+            <if test="articleTypeId != null ">#{articleTypeId},</if>
+            <if test="articleUserId != null ">#{articleUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArticle" parameterType="Article">
+        update sys_article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="articleCheckDate != null ">article_check_date = #{articleCheckDate},</if>
+            <if test="articleContent != null  and articleContent != ''">article_content = #{articleContent},</if>
+            <if test="articleDownload1 != null  and articleDownload1 != ''">article_download1 = #{articleDownload1},</if>
+            <if test="articleIsHot != null ">article_is_hot = #{articleIsHot},</if>
+            <if test="articleName != null  and articleName != ''">article_name = #{articleName},</if>
+            <if test="articlePassword1 != null  and articlePassword1 != ''">article_password1 = #{articlePassword1},</if>
+            <if test="articlePoints != null ">article_points = #{articlePoints},</if>
+            <if test="articlePublishDate != null ">article_publish_date = #{articlePublishDate},</if>
+            <if test="articleReason != null  and articleReason != ''">article_reason = #{articleReason},</if>
+            <if test="articleState != null ">article_state = #{articleState},</if>
+            <if test="articleView != null ">article_view = #{articleView},</if>
+            <if test="articleTypeId != null ">article_type_id = #{articleTypeId},</if>
+            <if test="articleUserId != null ">article_user_id = #{articleUserId},</if>
+        </trim>
+        where article_id = #{articleId}
+    </update>
+
+    <delete id="deleteArticleById" parameterType="Long">
+        delete from sys_article where article_id = #{articleId}
+    </delete>
+
+    <delete id="deleteArticleByIds" parameterType="String">
+        delete from sys_article where article_id in 
+        <foreach item="articleId" collection="array" open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.comment.mapper.CommentMapper">
+    
+    <resultMap type="Comment" id="CommentResult">
+        <result property="commentId"    column="comment_id"    />
+        <result property="commentDate"    column="comment_date"    />
+        <result property="commentContent"    column="comment_content"    />
+        <result property="commentState"    column="comment_state"    />
+        <result property="commentArticleId"    column="comment_article_id"    />
+        <result property="commentUserId"    column="comment_user_id"    />
+    </resultMap>
+
+    <resultMap type="User" id="UserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="loginName"    column="login_name"   />
+    </resultMap>
+
+    <resultMap type="Article" id="ArticleResult">
+        <result property="articleId"    column="article_id"    />
+        <result property="articleName"    column="article_name"    />
+    </resultMap>
+
+    <sql id="selectCommentVo">
+        select comment_id, comment_date, comment_content, comment_state, comment_article_id, comment_user_id from sys_comment
+    </sql>
+
+    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        <where>  
+            <if test="commentDate != null "> and comment_date = #{commentDate}</if>
+            <if test="commentContent != null  and commentContent != ''"> and comment_content = #{commentContent}</if>
+            <if test="commentState != null "> and comment_state = #{commentState}</if>
+            <if test="commentArticleId != null "> and comment_article_id = #{commentArticleId}</if>
+            <if test="commentUserId != null "> and comment_user_id = #{commentUserId}</if>
+            <if test="params.beginDownloadDate != null and params.beginDownloadDate != ''"><!-- 评论开始时间检索 -->
+                AND date_format(comment_date,'%y%m%d') &gt;= date_format(#{params.beginCommentDate},'%y%m%d')
+            </if>
+            <if test="params.endDownloadDate != null and params.endDownloadDate != ''"><!-- 评论结束时间检索 -->
+                AND date_format(comment_date,'%y%m%d') &lt;= date_format(#{params.endCommentDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectCommentById" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where comment_id = #{commentId}
+    </select>
+        
+    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="commentId">
+        insert into sys_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentDate != null ">comment_date,</if>
+            <if test="commentContent != null  and commentContent != ''">comment_content,</if>
+            <if test="commentState != null ">comment_state,</if>
+            <if test="commentArticleId != null ">comment_article_id,</if>
+            <if test="commentUserId != null ">comment_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commentDate != null ">#{commentDate},</if>
+            <if test="commentContent != null  and commentContent != ''">#{commentContent},</if>
+            <if test="commentState != null ">#{commentState},</if>
+            <if test="commentArticleId != null ">#{commentArticleId},</if>
+            <if test="commentUserId != null ">#{commentUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComment" parameterType="Comment">
+        update sys_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="commentDate != null ">comment_date = #{commentDate},</if>
+            <if test="commentContent != null  and commentContent != ''">comment_content = #{commentContent},</if>
+            <if test="commentState != null ">comment_state = #{commentState},</if>
+            <if test="commentArticleId != null ">comment_article_id = #{commentArticleId},</if>
+            <if test="commentUserId != null ">comment_user_id = #{commentUserId},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteCommentById" parameterType="Long">
+        delete from sys_comment where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteCommentByIds" parameterType="String">
+        delete from sys_comment where comment_id in 
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByArticleId" parameterType="Long">
+        delete from sys_comment where comment_article_id = #{articleId}
+    </delete>
+
+    <select id="selectJoint" parameterType="String" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        <where>
+            <if test="articleName != null  and articleName != ''">and comment_article_id IN (SELECT article_id FROM sys_article WHERE article_name = #{articleName})</if>
+            <if test="loginName != null  and loginName != ''">and comment_user_id in (SELECT user_id FROM sys_user WHERE login_name = #{loginName})</if>
+            <if test="beginCommentDate != null and beginCommentDate != ''"><!-- 评论开始时间检索 -->
+                AND date_format(comment_date,'%y%m%d') &gt;= date_format(#{beginCommentDate},'%y%m%d')
+            </if>
+            <if test="endCommentDate != null and endCommentDate != ''"><!-- 评论结束时间检索 -->
+                AND date_format(comment_date,'%y%m%d') &lt;= date_format(#{endCommentDate},'%y%m%d')
+            </if>
+            <if test="commentState != null and commentState != 'null'"> and comment_state = #{commentState}</if>
+        </where>
+    </select>
+    
+</mapper>
