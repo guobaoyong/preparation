@@ -72,10 +72,10 @@
     $(document).ready(function(){
         $.ajax({
             type: 'get',
-            url: 'https://www.qqzsh.top/getIns',
-            dataType: 'jsonp',
+            url: '/getIns',
+            dataType: 'json',
             success:function(data){
-                $("#ins").html(data);
+                $("#ins").html(data.msg);
             }, error:function(){
                 $("#ins").html("励志接口暂无励志语");
             }
