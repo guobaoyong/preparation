@@ -77,8 +77,9 @@ public class ArticleController extends BaseController {
 
     @RequiresPermissions("content:article:view")
     @GetMapping()
-    public String article()
-    {
+    public String article(ModelMap mmap) {
+        //是否有审核权限
+        mmap.addAttribute("ordinary",ShiroUtils.isOrdinary(ShiroUtils.getSysUser()));
         return prefix + "/article";
     }
 
@@ -164,6 +165,8 @@ public class ArticleController extends BaseController {
             redisUtil.set("arc_type_list",arcTypes);
             mmap.addAttribute("arc_type",arcTypes);
         }
+        //是否有审核权限
+        mmap.addAttribute("ordinary",ShiroUtils.isOrdinary(ShiroUtils.getSysUser()));
         return prefix + "/edit";
     }
 
@@ -201,8 +204,6 @@ public class ArticleController extends BaseController {
                 message.setSee(0);
                 // 判断状态是否是审核通过
                 if (article.getArticleState().equals(1L) && (oldArticle.getArticleState().equals(0L) || oldArticle.getArticleState().equals(2L))){
-                    // 将此资源加入redis
-                    redisUtil.set("article_"+article.getArticleId(),article);
                     // 消息模块添加
                     message.setContent("【审核通过】您发布的【" + article.getArticleName() + "】帖子审核成功！审核人："+ShiroUtils.getSysUser().getUserName());
                     messageService.insertMessage(message);

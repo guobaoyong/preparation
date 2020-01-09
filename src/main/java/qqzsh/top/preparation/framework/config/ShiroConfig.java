@@ -289,6 +289,7 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/user/tobuyVipPage", "anon,captchaValidate");
         filterChainDefinitionMap.put("/alipay/**", "anon,captchaValidate");
         filterChainDefinitionMap.put("/getIns", "anon,captchaValidate");
+        filterChainDefinitionMap.put("/article/search/**", "anon,captchaValidate");
 
         // 系统权限列表
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());

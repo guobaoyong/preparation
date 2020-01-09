@@ -223,7 +223,7 @@ public class AliPayController {
             mav.addObject("copyrightYear", preparationConfig.getCopyrightYear());
             mav.addObject("demoEnabled", preparationConfig.isDemoEnabled());
             request.getSession().setAttribute("currentUser",user);
-            mav.setViewName("index");
+            mav.setViewName("redirect:/index");
         } else {
             mav.setViewName("redirect:/");
         }
@@ -313,7 +313,7 @@ public class AliPayController {
                         }
                         //更新时间
                         byId.setVipTime(rightNow.getTime());
-                        userService.updateUser(byId);
+                        userService.updateUserInfo(byId);
                     }
                 }
             }

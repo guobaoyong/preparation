@@ -57,8 +57,7 @@ public class UserDownloadServiceImpl implements IUserDownloadService
      * @return 结果
      */
     @Override
-    public int insertUserDownload(UserDownload userDownload)
-    {
+    public int insertUserDownload(UserDownload userDownload) {
         int row = userDownloadMapper.insertUserDownload(userDownload);
         if (redisUtil.hasKey("downloadNums")){
             Integer downloadNums = (Integer) redisUtil.get("downloadNums");
@@ -77,8 +76,7 @@ public class UserDownloadServiceImpl implements IUserDownloadService
      * @return 结果
      */
     @Override
-    public int updateUserDownload(UserDownload userDownload)
-    {
+    public int updateUserDownload(UserDownload userDownload) {
         return userDownloadMapper.updateUserDownload(userDownload);
     }
 

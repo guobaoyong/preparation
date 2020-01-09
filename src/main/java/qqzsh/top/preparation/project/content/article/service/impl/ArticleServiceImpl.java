@@ -67,7 +67,15 @@ public class ArticleServiceImpl implements IArticleService {
         article.setArticlePublishDate(new Date());
         // 设置资源所属用户ID
         article.setArticleUserId(ShiroUtils.getSysUser().getUserId());
-        return articleMapper.insertArticle(article);
+        int row = articleMapper.insertArticle(article);
+        if (redisUtil.hasKey("articleNums")){
+            Integer integer =  (Integer) redisUtil.get("articleNums");
+            redisUtil.delete("articleNums");
+            redisUtil.set("articleNums",integer+1);
+        }else {
+            redisUtil.set("articleNums",selectArticleList(new Article()).size());
+        }
+        return row;
     }
 
     /**
@@ -88,9 +96,16 @@ public class ArticleServiceImpl implements IArticleService {
      * @return 结果
      */
     @Override
-    public int deleteArticleByIds(String ids)
-    {
-        return articleMapper.deleteArticleByIds(Convert.toStrArray(ids));
+    public int deleteArticleByIds(String ids) {
+        int row = articleMapper.deleteArticleByIds(Convert.toStrArray(ids));
+        if (redisUtil.hasKey("articleNums")){
+            Integer integer =  (Integer) redisUtil.get("articleNums");
+            redisUtil.delete("articleNums");
+            redisUtil.set("articleNums",integer-row);
+        }else {
+            redisUtil.set("articleNums",selectArticleList(new Article()).size());
+        }
+        return row;
     }
 
     /**
@@ -100,8 +115,15 @@ public class ArticleServiceImpl implements IArticleService {
      * @return 结果
      */
     @Override
-    public int deleteArticleById(Long articleId)
-    {
-        return articleMapper.deleteArticleById(articleId);
+    public int deleteArticleById(Long articleId) {
+        int row = articleMapper.deleteArticleById(articleId);
+        if (redisUtil.hasKey("articleNums")){
+            Integer integer =  (Integer) redisUtil.get("articleNums");
+            redisUtil.delete("articleNums");
+            redisUtil.set("articleNums",integer-1);
+        }else {
+            redisUtil.set("articleNums",selectArticleList(new Article()).size());
+        }
+        return row;
     }
 }

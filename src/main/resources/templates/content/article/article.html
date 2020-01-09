@@ -62,7 +62,7 @@
         var datas = [[${@dict.getType('sys_article_status')}]];
         var prefix = ctx + "content/article";
 
-        var sysUser = [[${@permission.getPrincipalProperty('ordinary')}]];
+        var sysUser = [[${ordinary}]];
 
         $(function() {
             var options = {
@@ -73,12 +73,21 @@
                 exportUrl: prefix + "/export",
                 modalName: "资源",
                 uniqueId: "articleId",
+                sortName: "articlePublishDate",
+                sortOrder: "desc",
                 columns: [{
                     checkbox: true
                 },
                     {
                         field : 'articleName',
-                        title : '名称'
+                        title : '名称',
+                        formatter: function(value, row, index) {
+                            if (row.articleState == '1'){
+                                return '<a href="/article/detail/'+row.articleId+'" target="_blank">'+value+'</a>';
+                            }else {
+                                return value;
+                            }
+                        }
                     },
                     {
                         field : 'arcType.srcTypeName',

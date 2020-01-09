@@ -2,11 +2,15 @@ package qqzsh.top.preparation.project.system.user.controller;
 
 import java.util.List;
 
+import qqzsh.top.preparation.common.utils.DateUtils;
 import qqzsh.top.preparation.common.utils.RedisUtil;
+import qqzsh.top.preparation.common.utils.security.ShiroUtils;
 import qqzsh.top.preparation.project.content.article.domain.Article;
 import qqzsh.top.preparation.project.content.article.service.IArticleService;
 import qqzsh.top.preparation.project.content.download.domain.UserDownload;
 import qqzsh.top.preparation.project.content.download.service.IUserDownloadService;
+import qqzsh.top.preparation.project.content.message.domain.Message;
+import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import qqzsh.top.preparation.project.content.order.domain.Order;
 import qqzsh.top.preparation.project.content.order.service.IOrderService;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
@@ -19,6 +23,8 @@ import qqzsh.top.preparation.framework.web.controller.BaseController;
 import qqzsh.top.preparation.project.system.menu.domain.Menu;
 import qqzsh.top.preparation.project.system.menu.service.IMenuService;
 import qqzsh.top.preparation.project.system.user.domain.User;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * 首页 业务处理
@@ -49,9 +55,12 @@ public class IndexController extends BaseController {
     @Autowired
     private IOrderService orderService;
 
+    @Autowired
+    private IMessageService messageService;
+
     // 系统首页
     @GetMapping("/index")
-    public String index(ModelMap mmap)
+    public String index(ModelMap mmap, HttpSession session)
     {
         // 取身份信息
         User user = getSysUser();
@@ -61,6 +70,18 @@ public class IndexController extends BaseController {
         mmap.put("user", user);
         mmap.put("copyrightYear", preparationConfig.getCopyrightYear());
         mmap.put("demoEnabled", preparationConfig.isDemoEnabled());
+        // 格式化VIP时间
+        try {
+            user.setVipTimeStr(DateUtils.formatDate(userService.selectUserById(user.getUserId()).getVipTime()));
+        }catch (Exception e){
+            user.setVipTimeStr("");
+        }
+        // 将未读消息数量放入User
+        Message message = new Message();
+        message.setSee(0);
+        message.setUserId(user.getUserId());
+        user.setMessageCount(messageService.selectMessageList(message).size());
+        session.setAttribute("currentUser",user);
         return "index";
     }
 

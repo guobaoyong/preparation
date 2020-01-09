@@ -1,11 +1,9 @@
 package qqzsh.top.preparation.project.front.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import com.google.gson.Gson;
-import org.apache.http.client.methods.HttpGet;
 import org.springframework.web.client.RestTemplate;
 import qqzsh.top.preparation.common.constant.UserConstants;
 import qqzsh.top.preparation.common.utils.PageUtil;
@@ -29,7 +27,6 @@ import qqzsh.top.preparation.project.content.message.domain.Message;
 import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import qqzsh.top.preparation.project.content.type.domain.ArcType;
 import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
-import qqzsh.top.preparation.project.front.entity.InsResponse;
 import qqzsh.top.preparation.project.front.lucene.ArticleIndex;
 import qqzsh.top.preparation.project.system.notice.domain.Notice;
 import qqzsh.top.preparation.project.system.notice.service.INoticeService;

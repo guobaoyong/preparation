@@ -147,7 +147,11 @@ public class UserServiceImpl implements IUserService
     public User selectUserById(Long userId) {
         User user = userMapper.selectUserById(userId);
         // 格式化下vip到期时间
-        user.setVipTimeStr(DateUtils.formatDate(user.getVipTime()));
+        try {
+            user.setVipTimeStr(DateUtils.formatDate(user.getVipTime()));
+        }catch (Exception e){
+            user.setVipTimeStr("");
+        }
         return user;
     }
 
