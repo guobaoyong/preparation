@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}+'-'+${@config.getKey('site.name')}"></title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/css/css.css}"/>
+</head>
+<body onload="ResizeImages()">
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+
+<div class="w1170">
+
+    <div class="pLeft">
+
+        <div class="data_list">
+            <div class="data_list_title">
+                <i class="layui-icon layui-icon-app"></i>
+                <span class="head">通知详情</span>
+            </div>
+            <div class="article">
+                <div class="title" th:text="${notice.noticeTitle}"></div>
+                <div class="info">
+                    <a href="" target="_blank" th:text="${notice.createBy}"></a>&nbsp;&nbsp;
+                    发布于&nbsp;&nbsp;<font th:text="${#dates.format(notice.createTime,'yyyy-MM-dd')}"></font>
+                </div>
+                <div align="center">
+                    <div class="bshare-custom"><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博"
+                                                                                              class="bshare-sinaminiblog"></a><a
+                            title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a><a
+                            title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台"
+                                                                            class="bshare-more bshare-more-icon more-style-addthis"></a><span
+                            class="BSHARE_COUNT bshare-share-count">0</span></div>
+                    <script type="text/javascript" charset="utf-8"
+                            src="https://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script>
+                    <script type="text/javascript" charset="utf-8" src="https://static.bshare.cn/b/bshareC0.js"></script>
+                </div>
+
+                <div id="content" class="content" th:utext="${notice.noticeContent}"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="pRight">
+
+        <div class="data_list">
+            <div class="data_list_title">
+                <i class="layui-icon layui-icon-face-smile-fine"></i>
+                <span class="head">每日签到，每日领取3个积分</span>
+            </div>
+            <div align="center">
+                <a onclick="sign()" th:if="${session.currentUser == null or !session.currentUser.isSign()}"><img
+                        style="padding-top: 10px;padding-bottom: 10px" width="200" height="50" alt="用户签到处"
+                        src="/img/sign.jpg"/></a>
+                <div th:if="${session.currentUser!=null and session.currentUser.isSign()}"
+                     style="padding-top: 10px;padding-bottom: 10px">
+                    您今天第<font color="red" th:text="${session.currentUser.signSort}"></font>个签到成功；<br/>
+                    签到时间:<font th:text="${#dates.format(session.currentUser.signTime,'HH时mm分ss秒')}"></font>
+                </div>
+
+                <p style="padding-bottom: 10px">今日已经有<font color="red" th:text="${signTotal}"></font>位会员签到了！
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="w1170" th:include="common/link::#h"></div>
+
+<div class="w1170" th:include="common/foot::#h" style="padding-top: 40px"></div>
+
+<script th:src="@{/layui/layui.js}" type="text/javascript"></script>
+<script th:src="@{/js/jquery.js}" type="text/javascript"></script>
+<script th:src="@{/js/common.js}" type="text/javascript"></script>
+</body>
+</html>

@@ -937,6 +937,10 @@ public class FrontIndexController {
         return modelAndView;
     }
 
+    /**
+     * 获取励志语接口
+     * @return
+     */
     @GetMapping("/getIns")
     @ResponseBody
     public AjaxResult getIns(){
@@ -949,4 +953,179 @@ public class FrontIndexController {
             return AjaxResult.error();
         }
     }
+
+    /**
+     * 打开精品资源页面
+     * @return
+     */
+    @GetMapping("/boutique")
+    public ModelAndView boutique(HttpServletRequest request){
+        request.getSession().setAttribute("tMenu", "t_0");
+        ModelAndView data = getData(null, 1, "");
+        Article article = new Article();
+        // 审核通过的帖子
+        article.setArticleState(1L);
+        // 热门帖子，精品资源
+        article.setArticleIsHot(true);
+        startPage(1,20,"article_publish_date desc");
+        List<Article> list = articleService.selectArticleList(article);
+        List<Article> newList = new LinkedList<>();
+        list.forEach(article1 -> {
+            article1.setUser(userService.selectUserById(article1.getArticleUserId()));
+            newList.add(article1);
+        });
+        data.addObject("articleList", newList);
+        // 获取总共多少页
+        data.addObject("pageCode", PageUtil.genPagination("/article/list/boutique", new PageInfo(list).getTotal(), 1, 20, ""));
+        data.setViewName("front/boutique");
+        // 签到总数
+        if (redisUtil.hasKey("signTotal")){
+            data.addObject("signTotal", redisUtil.get("signTotal"));
+        }else {
+            redisUtil.set("signTotal", 0);
+            data.addObject("signTotal", 0);
+        }
+        return data;
+    }
+
+    /**
+     * 精品资源分页
+     * @param typeId
+     * @param page
+     * @param request
+     * @return
+     */
+    @GetMapping("/article/list/boutique/{id}")
+    public ModelAndView boutique(@RequestParam(value = "typeId", required = false) Long typeId,
+                                 @PathVariable(value = "id", required = false) Integer page,
+                                 HttpServletRequest request){
+        StringBuffer param = new StringBuffer();
+        if (typeId != null) {
+            param.append("?typeId=" + typeId);
+        }
+        if (typeId != null) {
+            request.getSession().setAttribute("tMenu", "t_" + typeId);
+        }
+        ModelAndView data = getData(typeId, page,param.toString());
+        Article article = new Article();
+        // 审核通过的帖子
+        article.setArticleState(1L);
+        // 热门
+        article.setArticleIsHot(true);
+        if (page == null){
+            page = 1;
+        }
+        if (typeId != null) {
+            ArcType arcType = arcTypeService.selectArcTypeById(typeId);
+            article.setArticleTypeId(typeId);
+            data.addObject("title", arcType.getSrcTypeName() + "-第" + page + "页");
+        }else {
+            data.addObject("title", "第" + page + "页");
+        }
+        startPage(page,20,"article_publish_date desc");
+        List<Article> list = articleService.selectArticleList(article);
+        List<Article> newList = new LinkedList<>();
+        list.forEach(article1 -> {
+            article1.setUser(userService.selectUserById(article1.getArticleUserId()));
+            newList.add(article1);
+        });
+        data.addObject("articleList", newList);
+        // 获取总共多少页
+        data.addObject("pageCode", PageUtil.genPagination("/article/list/boutique", new PageInfo(list).getTotal(), page, 20, param.toString()));
+        data.setViewName("front/boutique");
+        return data;
+    }
+
+    /**
+     * 打开通知页面
+     * @return
+     */
+    @GetMapping("/notice")
+    public ModelAndView notice(){
+        ModelAndView data = getData(null, 1, "");
+        Notice notice = new Notice();
+        // 状态正常
+        notice.setStatus("0");
+        // 类型为通知
+        notice.setNoticeType("1");
+        startPage(1,20,"create_time desc");
+        List<Notice> list = noticeService.selectNoticeList(notice);
+        data.addObject("noticeList", list);
+        // 获取总共多少页
+        data.addObject("pageCode", PageUtil.genPagination("/notice/list", new PageInfo(list).getTotal(), 1, 20, ""));
+        data.setViewName("front/notice");
+        // 签到总数
+        if (redisUtil.hasKey("signTotal")){
+            data.addObject("signTotal", redisUtil.get("signTotal"));
+        }else {
+            redisUtil.set("signTotal", 0);
+            data.addObject("signTotal", 0);
+        }
+        return data;
+    }
+
+    /**
+     * 通知公告分页
+     */
+    @GetMapping("/notice/list/{id}")
+    public ModelAndView noticelist(@PathVariable(value = "id", required = false) Integer page){
+        ModelAndView data = getData(null, page, "");
+        Notice notice = new Notice();
+        // 状态正常
+        notice.setStatus("0");
+        // 类型为通知
+        notice.setNoticeType("1");
+        startPage(page,20,"create_time desc");
+        List<Notice> list = noticeService.selectNoticeList(notice);
+        data.addObject("noticeList", list);
+        // 获取总共多少页
+        data.addObject("pageCode", PageUtil.genPagination("/notice/list", new PageInfo(list).getTotal(), page, 20, ""));
+        data.setViewName("front/notice");
+        return data;
+    }
+
+    /**
+     * 根据id查询通知
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/notice/detail/{id}")
+    public ModelAndView noticeView(@PathVariable("id") Long id) throws Exception {
+        ModelAndView data = getData(null, null, "");
+        Notice notice = noticeService.selectNoticeById(id);
+        data.addObject("notice",notice);
+        // 签到总数
+        if (redisUtil.hasKey("signTotal")){
+            data.addObject("signTotal", redisUtil.get("signTotal"));
+        }else {
+            redisUtil.set("signTotal", 0);
+            data.addObject("signTotal", 0);
+        }
+        data.addObject("title",notice.getNoticeTitle());
+        data.setViewName("front/noticeDetail");
+        return data;
+    }
+
+    @GetMapping("/about")
+    public ModelAndView about(){
+        ModelAndView data = getData(null, 1, "");
+        Notice notice = new Notice();
+        // 状态正常
+        notice.setStatus("0");
+        // 类型为平台简介
+        notice.setNoticeType("3");
+        startPage(1,20,"create_time desc");
+        List<Notice> list = noticeService.selectNoticeList(notice);
+        if (list.size() != 0){
+            data.addObject("about", list.get(0).getNoticeContent());
+        }else {
+            data.addObject("about", "暂无简介");
+        }
+        data.setViewName("front/about");
+        return data;
+    }
+
+
 }

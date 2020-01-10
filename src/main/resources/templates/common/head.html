@@ -1,7 +1,10 @@
 <meta charset="UTF-8"/>
 <div id="h">
     <ul class="layui-nav" lay-filter="">
-        <li class="layui-nav-item"><a href="/">首页</a></li>
+        <li class="layui-nav-item" id="index"><a href="/">首页</a></li>
+        <li class="layui-nav-item" id="boutique"><a href="/boutique">精品资源</a></li>
+        <li class="layui-nav-item" id="notice"><a href="/notice">通知公告</a></li>
+        <li class="layui-nav-item" id="about"><a href="/about">平台简介</a></li>
         <li th:if="${session.currentUser != null}" class="layui-nav-item" style="float: right;">
             <a href="/index">
                 <img th:src="(${session.currentUser.avatar} == '') ? @{/img/profile.jpg} : @{${session.currentUser.avatar}}"

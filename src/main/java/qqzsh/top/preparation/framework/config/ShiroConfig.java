@@ -290,6 +290,10 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/alipay/**", "anon,captchaValidate");
         filterChainDefinitionMap.put("/getIns", "anon,captchaValidate");
         filterChainDefinitionMap.put("/article/search/**", "anon,captchaValidate");
+        filterChainDefinitionMap.put("/boutique/**", "anon,captchaValidate");
+        filterChainDefinitionMap.put("/notice", "anon,captchaValidate");
+        filterChainDefinitionMap.put("/notice/detail/**", "anon,captchaValidate");
+        filterChainDefinitionMap.put("/about", "anon,captchaValidate");
 
         // 系统权限列表
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());

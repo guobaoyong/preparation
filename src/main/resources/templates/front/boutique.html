@@ -54,9 +54,9 @@
                                     class="stitle">资源类别：</font></td>
                             <td>
                                 <ul>
-                                    <li><a href="/"><span id="t_0">全部</span></a></li>
+                                    <li><a href="/boutique"><span id="t_0">全部</span></a></li>
                                     <li th:each="arcType:${allArcTypeList}">
-                                        <a th:href="'/article/list/1?typeId='+${arcType.srcTypeId}" th:title="${arcType.srcTypeName}">
+                                        <a th:href="'/article/list/boutique/1?typeId='+${arcType.srcTypeId}" th:title="${arcType.srcTypeName}">
                                             <span th:id="'t_'+${arcType.srcTypeId}" th:text="${arcType.srcTypeName}"></span>
                                         </a>
                                     </li>
@@ -95,7 +95,7 @@
         <div class="data_list">
             <div class="data_list_title">
                 <i class="layui-icon layui-icon-template-1"></i>
-                <span class="head">资源列表</span>
+                <span class="head">精品列表</span>
             </div>
             <div class="layui-form">
                 <table class="layui-table" lay-skin="line">
@@ -155,21 +155,6 @@
             </div>
         </div>
 
-        <div class="data_list">
-            <div class="data_list_title">
-                <i class="layui-icon layui-icon-fire"></i>
-                <span class="head">热门资源</span>
-            </div>
-            <div class="datas">
-                <ul>
-                    <li th:each="hotArticle:${hotArticleList}">
-                        <a target="_blank" th:href="'/article/detail/'+${hotArticle.articleId}" th:title="${hotArticle.articleName}"
-                           th:text="${#strings.length(hotArticle.articleName)>20} ? ${#strings.substring(hotArticle.articleName,0,21)} : ${hotArticle.articleName}"></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
     </div>
 
 </div>
@@ -188,10 +173,8 @@
         var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
         var tMenu = [[${session.tMenu}]];
         $("#" + tMenu).css("color", "red");
-        $("#index").addClass("layui-this");
+        $("#boutique").addClass("layui-this");
     });
-
-    /*]]>*/
 
     $(function(){
         $(window).scroll(function(){
@@ -205,6 +188,9 @@
             }
         })
     })
+
+
+    /*]]>*/
 </script>
 </body>
 </html>
