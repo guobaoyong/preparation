@@ -177,13 +177,28 @@ public class FrontIndexController {
 
         // 将资源类别返回前台
         if (redisUtil.hasKey("arc_type_list")){
-            modelAndView.addObject("allArcTypeList",redisUtil.get("arc_type_list"));
+            //每个资源类别的数量
+            List<ArcType> arc_type_list = (List<ArcType>) redisUtil.get("arc_type_list");
+            arc_type_list.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                arcType.setAllSize(articleService.selectArticleList(article1).size());
+            });
+            modelAndView.addObject("allArcTypeList",arc_type_list);
         }else {
             // 从数据库中查询所有资源类别并放入redis
             List<ArcType> arcTypes = arcTypeService.selectArcTypeList(null);
             redisUtil.set("arc_type_list",arcTypes);
+            arcTypes.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                arcType.setAllSize(articleService.selectArticleList(article1).size());
+            });
             modelAndView.addObject("allArcTypeList",arcTypes);
         }
+
 
         // 获取总共多少页
         modelAndView.addObject("pageCode", PageUtil.genPagination("/article/list", new PageInfo(list).getTotal(), page, 20, param));
@@ -860,11 +875,25 @@ public class FrontIndexController {
         mav.addObject("q", q);
         // 将资源类别返回前台
         if (redisUtil.hasKey("arc_type_list")){
-            mav.addObject("allArcTypeList",redisUtil.get("arc_type_list"));
+            //每个资源类别的数量
+            List<ArcType> arc_type_list = (List<ArcType>) redisUtil.get("arc_type_list");
+            arc_type_list.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                arcType.setAllSize(articleService.selectArticleList(article1).size());
+            });
+            mav.addObject("allArcTypeList",arc_type_list);
         }else {
             // 从数据库中查询所有资源类别并放入redis
             List<ArcType> arcTypes = arcTypeService.selectArcTypeList(null);
             redisUtil.set("arc_type_list",arcTypes);
+            arcTypes.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                arcType.setAllSize(articleService.selectArticleList(article1).size());
+            });
             mav.addObject("allArcTypeList",arcTypes);
         }
         //友情链接
@@ -962,6 +991,31 @@ public class FrontIndexController {
     public ModelAndView boutique(HttpServletRequest request){
         request.getSession().setAttribute("tMenu", "t_0");
         ModelAndView data = getData(null, 1, "");
+        // 将资源类别返回前台
+        if (redisUtil.hasKey("arc_type_list")){
+            //每个资源类别的数量
+            List<ArcType> arc_type_list = (List<ArcType>) redisUtil.get("arc_type_list");
+            arc_type_list.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                article1.setArticleIsHot(true);
+                arcType.setHotSize(articleService.selectArticleList(article1).size());
+            });
+            data.addObject("allArcTypeList",arc_type_list);
+        }else {
+            // 从数据库中查询所有资源类别并放入redis
+            List<ArcType> arcTypes = arcTypeService.selectArcTypeList(null);
+            redisUtil.set("arc_type_list",arcTypes);
+            arcTypes.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                article1.setArticleIsHot(true);
+                arcType.setHotSize(articleService.selectArticleList(article1).size());
+            });
+            data.addObject("allArcTypeList",arcTypes);
+        }
         Article article = new Article();
         // 审核通过的帖子
         article.setArticleState(1L);
@@ -1007,6 +1061,31 @@ public class FrontIndexController {
             request.getSession().setAttribute("tMenu", "t_" + typeId);
         }
         ModelAndView data = getData(typeId, page,param.toString());
+        // 将资源类别返回前台
+        if (redisUtil.hasKey("arc_type_list")){
+            //每个资源类别的数量
+            List<ArcType> arc_type_list = (List<ArcType>) redisUtil.get("arc_type_list");
+            arc_type_list.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                article1.setArticleIsHot(true);
+                arcType.setHotSize(articleService.selectArticleList(article1).size());
+            });
+            data.addObject("allArcTypeList",arc_type_list);
+        }else {
+            // 从数据库中查询所有资源类别并放入redis
+            List<ArcType> arcTypes = arcTypeService.selectArcTypeList(null);
+            redisUtil.set("arc_type_list",arcTypes);
+            arcTypes.forEach(arcType -> {
+                Article article1 = new Article();
+                article1.setArticleState(1L);
+                article1.setArticleTypeId(arcType.getSrcTypeId());
+                article1.setArticleIsHot(true);
+                arcType.setHotSize(articleService.selectArticleList(article1).size());
+            });
+            data.addObject("allArcTypeList",arcTypes);
+        }
         Article article = new Article();
         // 审核通过的帖子
         article.setArticleState(1L);

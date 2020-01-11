@@ -28,7 +28,7 @@
                                 <ul>
                                     <li><a href="/"><span id="t_0">全部</span></a></li>
                                     <li th:each="arcType:${allArcTypeList}">
-                                        <a th:href="'/article/list/1?typeId='+${arcType.srcTypeId}" th:title="${arcType.srcTypeName}">
+                                        <a th:href="'/article/list/1?typeId='+${arcType.srcTypeId}" th:title="'已有资源数：'+${arcType.allSize}">
                                             <span th:id="'t_'+${arcType.srcTypeId}" th:text="${arcType.srcTypeName}"></span>
                                         </a>
                                     </li>
