@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('积分变更记录列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>变更记录：</p>
+                                <input type="text" name="pointContent"/>
+                            </li>
+                            <li>
+                                <p>变更用户：</p>
+                                <input type="text" name="pointLoginName"/>
+                            </li>
+                            <li>
+                                <p>提现账号：</p>
+                                <input type="text" name="pointAccount"/>
+                            </li>
+                            <li>
+                                <p>变更状态：</p>
+                                <select name="pointStatus" th:with="type=${@dict.getType('sys_point_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <p>提现方式：</p>
+                                <select name="pointType" th:with="type=${@dict.getType('sys_point_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li class="select-time">
+                                <p>创建时间：</p>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginPointCreateTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endPointCreateTime]"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="content:change:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="content:change:edit">
+                    <i class="fa fa-edit"></i> 审核
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="content:change:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="content:change:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('content:change:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('content:change:remove')}]];
+        var datas = [[${@dict.getType('sys_point_status')}]];
+        var data2 = [[${@dict.getType('sys_point_type')}]];
+        var prefix = ctx + "content/change";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "积分变更记录",
+                sortName: "pointId",
+                sortOrder: "desc",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'pointId', 
+                    title : 'ID',
+                    visible: false
+                },
+                    {
+                        field : 'pointLoginName',
+                        title : '变更用户'
+                    },
+                {
+                    field : 'pointContent', 
+                    title : '变更记录'
+                },
+                {
+                    field : 'pointFront', 
+                    title : '变更前积分'
+                },
+                    {
+                        field : 'pointChange',
+                        title : '变更积分',
+                        formatter: function(value, row, index) {
+                            return row.pointSymbol+value;
+                        }
+                    },
+                {
+                    field : 'pointEnd', 
+                    title : '变更后积分'
+                },
+                {
+                    field : 'pointStatus', 
+                    title : '变更状态',
+                    formatter: function(value, row, index) {
+                        return '<span title="驳回理由：'+row.pointReason+'">'+$.table.selectDictLabel(datas, value)+'</span>';
+                    }
+                },
+                {
+                    field : 'pointCreateTime', 
+                    title : '创建时间'
+                },
+                {
+                    field : 'pointType', 
+                    title : '提现方式',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(data2, value);
+                    }
+                },
+                {
+                    field : 'pointAccount', 
+                    title : '提现账号'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.pointId + '\')"><i class="fa fa-edit"></i>审核</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.pointId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

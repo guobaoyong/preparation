@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.change.mapper.PointChangeMapper">
+    
+    <resultMap type="PointChange" id="PointChangeResult">
+        <result property="pointId"    column="point_id"    />
+        <result property="pointContent"    column="point_content"    />
+        <result property="pointFront"    column="point_front"    />
+        <result property="pointEnd"    column="point_end"    />
+        <result property="pointChange"    column="point_change"    />
+        <result property="pointUserId"    column="point_user_id"    />
+        <result property="pointStatus"    column="point_status"    />
+        <result property="pointLoginName"    column="point_login_name"    />
+        <result property="pointCreateTime"    column="point_create_time"    />
+        <result property="pointUpdateTime"    column="point_update_time"    />
+        <result property="pointType"    column="point_type"    />
+        <result property="pointAccount"    column="point_account"    />
+        <result property="pointReason"    column="point_reason"    />
+        <result property="pointSymbol"    column="point_symbol"    />
+    </resultMap>
+
+    <sql id="selectPointChangeVo">
+        select point_id, point_content, point_front, point_end, point_change, point_user_id, point_status, point_login_name, point_create_time, point_update_time, point_type, point_account, point_reason,point_symbol from sys_point_change
+    </sql>
+
+    <select id="selectPointChangeList" parameterType="PointChange" resultMap="PointChangeResult">
+        <include refid="selectPointChangeVo"/>
+        <where>  
+            <if test="pointContent != null  and pointContent != ''">
+             and point_content like concat('%', #{pointContent}, '%')</if>
+            <if test="pointFront != null "> and point_front = #{pointFront}</if>
+            <if test="pointEnd != null "> and point_end = #{pointEnd}</if>
+            <if test="pointChange != null "> and point_change = #{pointChange}</if>
+            <if test="pointUserId != null "> and point_user_id = #{pointUserId}</if>
+            <if test="pointStatus != null "> and point_status = #{pointStatus}</if>
+            <if test="pointLoginName != null  and pointLoginName != ''">
+             and point_login_name like concat('%', #{pointLoginName}, '%')</if>
+            <if test="pointCreateTime != null "> and point_create_time = #{pointCreateTime}</if>
+            <if test="pointUpdateTime != null "> and point_update_time = #{pointUpdateTime}</if>
+            <if test="pointType != null "> and point_type = #{pointType}</if>
+            <if test="pointAccount != null  and pointAccount != ''"> and point_account = #{pointAccount}</if>
+            <if test="pointReason != null  and pointReason != ''"> and point_reason = #{pointReason}</if>
+            <if test="params.beginPointCreateTime != null and params.beginPointCreateTime != ''"><!-- 开始时间检索 -->
+                AND date_format(point_create_time,'%y%m%d') &gt;= date_format(#{params.beginPointCreateTime},'%y%m%d')
+            </if>
+            <if test="params.endPointCreateTime != null and params.endPointCreateTime != ''"><!-- 结束时间检索 -->
+                AND date_format(point_create_time,'%y%m%d') &lt;= date_format(#{params.endPointCreateTime},'%y%m%d')
+            </if>
+            <if test="pointSymbol != null  and pointSymbol != ''"> and point_symbol = #{pointSymbol}</if>
+        </where>
+    </select>
+    
+    <select id="selectPointChangeById" parameterType="Long" resultMap="PointChangeResult">
+        <include refid="selectPointChangeVo"/>
+        where point_id = #{pointId}
+    </select>
+        
+    <insert id="insertPointChange" parameterType="PointChange" useGeneratedKeys="true" keyProperty="pointId">
+        insert into sys_point_change
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pointContent != null  and pointContent != ''">point_content,</if>
+            <if test="pointFront != null ">point_front,</if>
+            <if test="pointEnd != null ">point_end,</if>
+            <if test="pointChange != null ">point_change,</if>
+            <if test="pointUserId != null ">point_user_id,</if>
+            <if test="pointStatus != null ">point_status,</if>
+            <if test="pointLoginName != null  and pointLoginName != ''">point_login_name,</if>
+            <if test="pointCreateTime != null ">point_create_time,</if>
+            <if test="pointUpdateTime != null ">point_update_time,</if>
+            <if test="pointType != null ">point_type,</if>
+            <if test="pointAccount != null  and pointAccount != ''">point_account,</if>
+            <if test="pointReason != null  and pointReason != ''">point_reason,</if>
+            <if test="pointSymbol != null  and pointSymbol != ''">point_symbol,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pointContent != null  and pointContent != ''">#{pointContent},</if>
+            <if test="pointFront != null ">#{pointFront},</if>
+            <if test="pointEnd != null ">#{pointEnd},</if>
+            <if test="pointChange != null ">#{pointChange},</if>
+            <if test="pointUserId != null ">#{pointUserId},</if>
+            <if test="pointStatus != null ">#{pointStatus},</if>
+            <if test="pointLoginName != null  and pointLoginName != ''">#{pointLoginName},</if>
+            <if test="pointCreateTime != null ">#{pointCreateTime},</if>
+            <if test="pointUpdateTime != null ">#{pointUpdateTime},</if>
+            <if test="pointType != null ">#{pointType},</if>
+            <if test="pointAccount != null  and pointAccount != ''">#{pointAccount},</if>
+            <if test="pointReason != null  and pointReason != ''">#{pointReason},</if>
+            <if test="pointSymbol != null  and pointSymbol != ''">#{pointSymbol},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePointChange" parameterType="PointChange">
+        update sys_point_change
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pointContent != null  and pointContent != ''">point_content = #{pointContent},</if>
+            <if test="pointFront != null ">point_front = #{pointFront},</if>
+            <if test="pointEnd != null ">point_end = #{pointEnd},</if>
+            <if test="pointChange != null ">point_change = #{pointChange},</if>
+            <if test="pointUserId != null ">point_user_id = #{pointUserId},</if>
+            <if test="pointStatus != null ">point_status = #{pointStatus},</if>
+            <if test="pointLoginName != null  and pointLoginName != ''">point_login_name = #{pointLoginName},</if>
+            <if test="pointCreateTime != null ">point_create_time = #{pointCreateTime},</if>
+            <if test="pointUpdateTime != null ">point_update_time = #{pointUpdateTime},</if>
+            <if test="pointType != null ">point_type = #{pointType},</if>
+            <if test="pointAccount != null  and pointAccount != ''">point_account = #{pointAccount},</if>
+            <if test="pointReason != null  and pointReason != ''">point_reason = #{pointReason},</if>
+            <if test="pointSymbol != null  and pointSymbol != ''">point_symbol = #{pointSymbol},</if>
+        </trim>
+        where point_id = #{pointId}
+    </update>
+
+    <delete id="deletePointChangeById" parameterType="Long">
+        delete from sys_point_change where point_id = #{pointId}
+    </delete>
+
+    <delete id="deletePointChangeByIds" parameterType="String">
+        delete from sys_point_change where point_id in 
+        <foreach item="pointId" collection="array" open="(" separator="," close=")">
+            #{pointId}
+        </foreach>
+    </delete>
+    
+</mapper>

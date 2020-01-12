@@ -6,10 +6,7 @@ import com.github.pagehelper.util.StringUtil;
 import com.google.gson.Gson;
 import org.springframework.web.client.RestTemplate;
 import qqzsh.top.preparation.common.constant.UserConstants;
-import qqzsh.top.preparation.common.utils.PageUtil;
-import qqzsh.top.preparation.common.utils.RedisUtil;
-import qqzsh.top.preparation.common.utils.StringUtils;
-import qqzsh.top.preparation.common.utils.VaptchaMessage;
+import qqzsh.top.preparation.common.utils.*;
 import qqzsh.top.preparation.common.utils.security.ShiroUtils;
 import qqzsh.top.preparation.framework.config.PreparationConfig;
 import qqzsh.top.preparation.framework.shiro.service.PasswordService;
@@ -17,6 +14,8 @@ import qqzsh.top.preparation.framework.web.domain.AjaxResult;
 import qqzsh.top.preparation.framework.web.service.ConfigService;
 import qqzsh.top.preparation.project.content.article.domain.Article;
 import qqzsh.top.preparation.project.content.article.service.IArticleService;
+import qqzsh.top.preparation.project.content.change.domain.PointChange;
+import qqzsh.top.preparation.project.content.change.service.IPointChangeService;
 import qqzsh.top.preparation.project.content.comment.domain.Comment;
 import qqzsh.top.preparation.project.content.comment.service.ICommentService;
 import qqzsh.top.preparation.project.content.download.domain.UserDownload;
@@ -106,6 +105,9 @@ public class FrontIndexController {
 
     @Autowired
     private IMessageService messageService;
+
+    @Autowired
+    private IPointChangeService pointChangeService;
 
     /**
      * 默认lucene的地址
@@ -439,7 +441,7 @@ public class FrontIndexController {
         }
         User user = userService.selectUserById(userId);
         user.setPassword("123456");
-        userService.updateUser(user);
+        userService.updateUserInfo(user);
         //将session中的验证码清空
         session.removeAttribute("mailCode");
         session.removeAttribute("userId");
@@ -469,7 +471,7 @@ public class FrontIndexController {
             return resulMap;
         }
         user.setPassword(passwordService.encryptPassword(user.getLoginName(), password, user.getSalt()));
-        userService.updateUser(user);
+        userService.updateUserInfo(user);
         resulMap.put("success", true);
         return resulMap;
     }
@@ -630,14 +632,41 @@ public class FrontIndexController {
                 return null;
             }
 
+            //积分变更记录
+            PointChange pointChange = new PointChange();
+            pointChange.setPointContent("下载资源【"+ article.getArticleName()+"】");
+            pointChange.setPointFront(Long.parseLong(String.valueOf(user.getPoint())));
+            pointChange.setPointEnd(Long.parseLong(String.valueOf(user.getPoint() - article.getArticlePoints())));
+            pointChange.setPointChange(Long.parseLong(String.valueOf(article.getArticlePoints())));
+            pointChange.setPointUserId(user.getUserId());
+            pointChange.setPointStatus(2);
+            pointChange.setPointLoginName(user.getLoginName());
+            pointChange.setPointCreateTime(DateUtils.getNowDate());
+            pointChange.setPointUpdateTime(DateUtils.getNowDate());
+            pointChange.setPointSymbol("-");
+            pointChangeService.insertPointChange(pointChange);
             // 扣积分
             user.setPoint(user.getPoint() - article.getArticlePoints());
-            userService.updateUser(user);
+            userService.updateUserInfo(user);
+
+            //积分变更记录2
+            User articleUser = userService.selectUserById(article.getArticleUserId());
+            PointChange pointChange2 = new PointChange();
+            pointChange2.setPointContent("资源【"+ article.getArticleName()+"】被【"+user.getLoginName()+"】下载");
+            pointChange2.setPointFront(Long.parseLong(String.valueOf(articleUser.getPoint())));
+            pointChange2.setPointEnd(Long.parseLong(String.valueOf(articleUser.getPoint() + article.getArticlePoints())));
+            pointChange2.setPointChange(Long.parseLong(String.valueOf(article.getArticlePoints())));
+            pointChange2.setPointUserId(articleUser.getUserId());
+            pointChange2.setPointStatus(2);
+            pointChange2.setPointLoginName(articleUser.getLoginName());
+            pointChange2.setPointCreateTime(DateUtils.getNowDate());
+            pointChange2.setPointUpdateTime(DateUtils.getNowDate());
+            pointChange2.setPointSymbol("+");
+            pointChangeService.insertPointChange(pointChange2);
 
             // 给分享人加积分
-            User articleUser = userService.selectUserById(article.getArticleUserId());
             articleUser.setPoint(articleUser.getPoint() + article.getArticlePoints());
-            userService.updateUser(articleUser);
+            userService.updateUserInfo(articleUser);
 
             // 保存用户下载信息
             userDownload.setDownloadArticleId(article.getArticleId());
@@ -762,11 +791,26 @@ public class FrontIndexController {
 
         // 更新到数据库
         User newUser = userService.selectUserById(user.getUserId());
+
+        //加入积分变更记录
+        PointChange pointChange = new PointChange();
+        pointChange.setPointContent("用户签到，日期:"+ DateUtils.formatDate(DateUtils.getNowDate()));
+        pointChange.setPointFront(Long.parseLong(String.valueOf(newUser.getPoint())));
+        pointChange.setPointEnd(Long.parseLong(String.valueOf(newUser.getPoint())) + 3);
+        pointChange.setPointChange(3L);
+        pointChange.setPointUserId(newUser.getUserId());
+        pointChange.setPointStatus(2);
+        pointChange.setPointLoginName(newUser.getLoginName());
+        pointChange.setPointCreateTime(DateUtils.getNowDate());
+        pointChange.setPointUpdateTime(DateUtils.getNowDate());
+        pointChange.setPointSymbol("+");
+        pointChangeService.insertPointChange(pointChange);
+
         newUser.setSign(true);
         newUser.setSignTime(new Date());
         newUser.setSignSort(signTotal + 1);
         newUser.setPoint(newUser.getPoint() + 3);
-        userService.updateUser(newUser);
+        userService.updateUserInfo(newUser);
 
         //更新session
         Message message = new Message();
@@ -791,7 +835,7 @@ public class FrontIndexController {
         if (((user.getVipTime() == null ? new Date().getTime() : user.getVipTime().getTime()) <= new Date().getTime())) {
             User byId = userService.selectUserById(user.getUserId());
             byId.setVipTime(null);
-            userService.updateUser(byId);
+            userService.updateUserInfo(byId);
         }
         //VIP状态正常且在时间段内
         if ((user.getVipTime() == null ? new Date().getTime() : user.getVipTime().getTime()) > new Date().getTime()) {
@@ -836,6 +880,25 @@ public class FrontIndexController {
             userDownload.setDownloadDate(new Date());
             userDownloadService.insertUserDownload(userDownload);
         }
+
+        //积分变更记录
+        User articleUser = userService.selectUserById(article.getArticleUserId());
+        PointChange pointChange2 = new PointChange();
+        pointChange2.setPointContent("资源【"+ article.getArticleName()+"】被【"+user.getUserName()+"】下载");
+        pointChange2.setPointFront(Long.parseLong(String.valueOf(articleUser.getPoint())));
+        pointChange2.setPointEnd(Long.parseLong(String.valueOf(articleUser.getPoint() + article.getArticlePoints())));
+        pointChange2.setPointChange(Long.parseLong(String.valueOf(article.getArticlePoints())));
+        pointChange2.setPointUserId(articleUser.getUserId());
+        pointChange2.setPointStatus(2);
+        pointChange2.setPointLoginName(articleUser.getLoginName());
+        pointChange2.setPointCreateTime(DateUtils.getNowDate());
+        pointChange2.setPointUpdateTime(DateUtils.getNowDate());
+        pointChange2.setPointSymbol("+");
+        pointChangeService.insertPointChange(pointChange2);
+
+        // 给分享人加积分
+        articleUser.setPoint(articleUser.getPoint() + article.getArticlePoints());
+        userService.updateUserInfo(articleUser);
 
         ModelAndView mav = new ModelAndView();
         mav.addObject("article", article);

@@ -3,6 +3,9 @@ package qqzsh.top.preparation.project.system.user.controller;
 import java.util.Date;
 import java.util.List;
 
+import qqzsh.top.preparation.common.utils.DateUtils;
+import qqzsh.top.preparation.project.content.change.domain.PointChange;
+import qqzsh.top.preparation.project.content.change.service.IPointChangeService;
 import qqzsh.top.preparation.project.content.message.domain.Message;
 import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import lombok.AllArgsConstructor;
@@ -63,6 +66,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private IMessageService messageService;
+
+    @Autowired
+    private IPointChangeService pointChangeService;
 
     @RequiresPermissions("system:user:view")
     @GetMapping()
@@ -198,11 +204,20 @@ public class UserController extends BaseController {
     @ResponseBody
     public AjaxResult addPointSave(User user) {
         User byId = userService.selectUserById(user.getUserId());
-        try {
-            user.setPoint(byId.getPoint() + user.getPoint());
-        }catch (Exception e){
-            user.setPoint(user.getPoint());
-        }
+        //积分变更记录
+        PointChange pointChange = new PointChange();
+        pointChange.setPointContent("管理员【"+ ShiroUtils.getSysUser().getLoginName()+"】为【"+byId.getLoginName()+"】增加积分");
+        pointChange.setPointFront(Long.parseLong(String.valueOf(byId.getPoint())));
+        pointChange.setPointEnd(Long.parseLong(String.valueOf(byId.getPoint() + user.getPoint())));
+        pointChange.setPointChange(Long.parseLong(String.valueOf(user.getPoint())));
+        pointChange.setPointUserId(byId.getUserId());
+        pointChange.setPointStatus(2);
+        pointChange.setPointLoginName(byId.getLoginName());
+        pointChange.setPointCreateTime(DateUtils.getNowDate());
+        pointChange.setPointUpdateTime(DateUtils.getNowDate());
+        pointChange.setPointSymbol("+");
+        pointChangeService.insertPointChange(pointChange);
+
         return toAjax(userService.updateUserInfo(user));
     }
 

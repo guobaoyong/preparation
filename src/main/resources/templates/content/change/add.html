@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('申请积分提现')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-change-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">申请积分：</label>
+                <div class="col-sm-8">
+                    <input name="pointChange" id="pointChange" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">提现方式：</label>
+                <div class="col-sm-8">
+                    <select name="pointType" class="form-control m-b" th:with="type=${@dict.getType('sys_point_type')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">提现账号：</label>
+                <div class="col-sm-8">
+                    <input name="pointAccount" class="form-control" type="text" required>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "content/change"
+        $("#form-change-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                var num = document.getElementById("pointChange").value;
+                if (!(/(^[1-9]\d*$)/.test(num))) {
+                    $.modal.alertError("申请积分必须是正整数");
+                    return false;
+                }else {
+                    $.operate.save(prefix + "/add", $('#form-change-add').serialize());
+                }
+            }
+        }
+    </script>
+</body>
+</html>
