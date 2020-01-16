@@ -58,9 +58,9 @@ public class UserRealm extends AuthorizingRealm
     {
         User user = ShiroUtils.getSysUser();
         // 角色列表
-        Set<String> roles = new HashSet<String>();
+        Set<String> roles = new HashSet<>();
         // 功能列表
-        Set<String> menus = new HashSet<String>();
+        Set<String> menus = new HashSet<>();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         // 管理员拥有所有权限
         if (ShiroUtils.isAdmin(user))

@@ -737,25 +737,29 @@ public class FrontIndexController {
     @RequiresPermissions("index:restart:gen")
     public ModelAndView genAllIndex() {
         ModelAndView modelAndView = new ModelAndView();
-        //1.删除原来的索引
+        // 1.删除原来的索引
         try {
             File file = new File(lucenePath);
+            // 通过JDK的File类的delete方法进行删除
             if (file.isDirectory()) {
                 for (File f : file.listFiles()) {
                     f.delete();
                 }
             }
         } catch (Exception e) {
+            // 写入索引信息失败
             modelAndView.addObject("status",false);
         }
-        //2.添加新的索引
+        // 2.添加新的索引
         List<Article> articleList = articleService.selectArticleList(new Article());
         for (Article article : articleList) {
             if (!articleIndex.addIndex(article)) {
                 modelAndView.addObject("status",false);
             }
         }
+        // 写入索引信息成功
         modelAndView.addObject("status",true);
+        // 返回前台页面
         modelAndView.setViewName("common/genIndex");
         return modelAndView;
     }

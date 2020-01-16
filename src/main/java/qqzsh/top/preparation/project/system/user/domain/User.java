@@ -87,7 +87,7 @@ public class User extends BaseEntity {
     @Excel(name = "最后登陆时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
     private Date loginDate;
 
-    /** 最后登陆时间 */
+    /** VIP到期时间 */
     @Excel(name = "VIP到期时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
     private Date vipTime;
 

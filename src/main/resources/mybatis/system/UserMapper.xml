@@ -183,7 +183,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
  			<if test="remark != null">remark = #{remark},</if>
 			<if test="vipTime != null">vip_time = #{vipTime},</if>
-			<if test="point != null and point != ''">point = #{point},</if>
+			<if test="point != null">point = #{point},</if>
 			<if test="sign != null and sign != ''">sign = #{sign},</if>
 			<if test="signTime != null">sign_time = #{signTime},</if>
 			<if test="signSort != null and signSort != ''">sign_sort = #{signSort},</if>

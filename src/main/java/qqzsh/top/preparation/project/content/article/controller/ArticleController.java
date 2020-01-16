@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import qqzsh.top.preparation.common.utils.DateUtils;
 import qqzsh.top.preparation.common.utils.RedisUtil;
 import qqzsh.top.preparation.common.utils.security.ShiroUtils;
 import qqzsh.top.preparation.common.utils.text.Convert;
+import qqzsh.top.preparation.project.content.change.domain.PointChange;
+import qqzsh.top.preparation.project.content.change.service.IPointChangeService;
 import qqzsh.top.preparation.project.content.comment.service.ICommentService;
 import qqzsh.top.preparation.project.content.download.domain.UserDownload;
 import qqzsh.top.preparation.project.content.download.service.IUserDownloadService;
@@ -74,6 +77,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private ICommentService commentService;
+
+    @Autowired
+    private IPointChangeService pointChangeService;
 
     @RequiresPermissions("content:article:view")
     @GetMapping()
@@ -259,6 +265,44 @@ public class ArticleController extends BaseController {
     @PostMapping("/changeStatus")
     @ResponseBody
     public AjaxResult changeStatus(Article article) {
+        Article articleById = articleService.selectArticleById(article.getArticleId());
+        Long articleUserId = articleById.getArticleUserId();
+        User userById = userService.selectUserById(articleUserId);
+        PointChange pointChange = new PointChange();
+        // 设为热门资源，奖励50积分
+        if (article.isArticleIsHot()){
+            //积分变更记录
+            pointChange.setPointContent("资源【"+ articleById.getArticleName()+"】被管理员【"+ShiroUtils.getSysUser().getUserName()+"】评为优秀资源，奖励50积分！");
+            pointChange.setPointFront(Long.parseLong(String.valueOf(userById.getPoint())));
+            pointChange.setPointEnd(Long.parseLong(String.valueOf(userById.getPoint() + 50)));
+            pointChange.setPointChange(50L);
+            pointChange.setPointUserId(articleUserId);
+            pointChange.setPointStatus(2);
+            pointChange.setPointLoginName(userById.getLoginName());
+            pointChange.setPointCreateTime(DateUtils.getNowDate());
+            pointChange.setPointUpdateTime(DateUtils.getNowDate());
+            pointChange.setPointSymbol("+");
+            pointChangeService.insertPointChange(pointChange);
+        }else {
+            // 取消热门资源，扣50积分
+            pointChange.setPointContent("资源【"+ articleById.getArticleName()+"】被管理员【"+ShiroUtils.getSysUser().getUserName()+"】取消优秀资源，扣50积分！");
+            pointChange.setPointFront(Long.parseLong(String.valueOf(userById.getPoint())));
+            pointChange.setPointEnd(Long.parseLong(String.valueOf(userById.getPoint() - 50)));
+            pointChange.setPointChange(50L);
+            pointChange.setPointUserId(articleUserId);
+            pointChange.setPointStatus(2);
+            pointChange.setPointLoginName(userById.getLoginName());
+            pointChange.setPointCreateTime(DateUtils.getNowDate());
+            pointChange.setPointUpdateTime(DateUtils.getNowDate());
+            pointChange.setPointSymbol("-");
+            if (pointChange.getPointEnd().intValue() < 0){
+                pointChange.setPointEnd(0L);
+            }
+            pointChangeService.insertPointChange(pointChange);
+        }
+        // 更新用户
+        userById.setPoint(Integer.parseInt(String.valueOf(pointChange.getPointEnd())));
+        userService.updateUserInfo(userById);
         // 更新时间
         article.setArticleCheckDate(new Date());
         return toAjax(articleService.updateArticle(article));
