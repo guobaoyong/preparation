@@ -364,7 +364,17 @@
 			<version>4.7.12.ALL</version>
 		</dependency>
 
-
+		<!--阿里内容管理-->
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-green</artifactId>
+			<version>3.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>4.1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

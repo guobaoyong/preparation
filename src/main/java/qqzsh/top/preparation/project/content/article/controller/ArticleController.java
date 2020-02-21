@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.EnableAsync;
 import qqzsh.top.preparation.common.utils.DateUtils;
 import qqzsh.top.preparation.common.utils.RedisUtil;
 import qqzsh.top.preparation.common.utils.security.ShiroUtils;
@@ -51,6 +52,7 @@ import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
  */
 @Controller
 @RequestMapping("/content/article")
+@EnableAsync
 public class ArticleController extends BaseController {
     private String prefix = "content/article";
 
@@ -151,8 +153,9 @@ public class ArticleController extends BaseController {
     @Log(title = "资源", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(Article article) {
-        return toAjax(articleService.insertArticle(article));
+    public AjaxResult addSave(Article article) throws Exception {
+        AjaxResult ajaxResult = toAjax(articleService.insertArticle(article));
+        return ajaxResult;
     }
 
     /**

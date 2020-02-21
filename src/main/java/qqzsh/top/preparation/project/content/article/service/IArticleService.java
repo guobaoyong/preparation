@@ -11,15 +11,15 @@ import java.util.List;
  * @author zsh
  * @date 2019-12-30
  */
-public interface IArticleService 
-{
+public interface IArticleService {
+
     /**
      * 查询资源
      * 
      * @param articleId 资源ID
      * @return 资源
      */
-    public Article selectArticleById(Long articleId);
+    Article selectArticleById(Long articleId);
 
     /**
      * 查询资源列表
@@ -27,7 +27,7 @@ public interface IArticleService
      * @param article 资源
      * @return 资源集合
      */
-    public List<Article> selectArticleList(Article article);
+    List<Article> selectArticleList(Article article);
 
     /**
      * 新增资源
@@ -35,7 +35,7 @@ public interface IArticleService
      * @param article 资源
      * @return 结果
      */
-    public int insertArticle(Article article);
+    int insertArticle(Article article) throws Exception;
 
     /**
      * 修改资源
@@ -43,7 +43,7 @@ public interface IArticleService
      * @param article 资源
      * @return 结果
      */
-    public int updateArticle(Article article);
+    int updateArticle(Article article);
 
     /**
      * 批量删除资源
@@ -51,7 +51,7 @@ public interface IArticleService
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteArticleByIds(String ids);
+    int deleteArticleByIds(String ids);
 
     /**
      * 删除资源信息
@@ -59,5 +59,5 @@ public interface IArticleService
      * @param articleId 资源ID
      * @return 结果
      */
-    public int deleteArticleById(Long articleId);
+    int deleteArticleById(Long articleId);
 }
