@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import qqzsh.top.preparation.common.utils.RedisUtil;
+import qqzsh.top.preparation.common.utils.StringUtils;
 import qqzsh.top.preparation.common.utils.aliyun.AliyunTextScanRequest;
 import qqzsh.top.preparation.common.utils.security.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,9 @@ public class ArticleServiceImpl implements IArticleService {
         // 设置发表时间
         article.setArticlePublishDate(new Date());
         // 设置资源所属用户ID
-        article.setArticleUserId(ShiroUtils.getSysUser().getUserId());
+        if (article.getArticleUserId() == null){
+            article.setArticleUserId(ShiroUtils.getSysUser().getUserId());
+        }
         int row = articleMapper.insertArticle(article);
         if (redisUtil.hasKey("articleNums")){
             Integer integer =  (Integer) redisUtil.get("articleNums");

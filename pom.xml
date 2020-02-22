@@ -375,6 +375,13 @@
 			<artifactId>aliyun-java-sdk-core</artifactId>
 			<version>4.1.1</version>
 		</dependency>
+
+		<!--爬虫博客-->
+		<dependency>
+			<groupId>me.zhyd.hunter</groupId>
+			<artifactId>blog-hunter</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>

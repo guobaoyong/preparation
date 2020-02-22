@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qqzsh.top.preparation.project.content.virtualarticle.mapper.VirtualarticleMapper">
+    
+    <resultMap type="Virtualarticle" id="VirtualarticleResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="author"    column="author"    />
+        <result property="releasedate"    column="releaseDate"    />
+        <result property="source"    column="source"    />
+        <result property="description"    column="description"    />
+        <result property="keywords"    column="keywords"    />
+        <result property="tags"    column="tags"    />
+        <result property="imagelinks"    column="imageLinks"    />
+    </resultMap>
+
+    <sql id="selectVirtualarticleVo">
+        select id, title, content, author, releaseDate, source, description, keywords, tags, imageLinks from sys_virtualarticle
+    </sql>
+
+    <select id="selectVirtualarticleList" parameterType="Virtualarticle" resultMap="VirtualarticleResult">
+        <include refid="selectVirtualarticleVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="releasedate != null "> and releaseDate = #{releasedate}</if>
+            <if test="source != null  and source != ''"> and source = #{source}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="keywords != null  and keywords != ''"> and keywords = #{keywords}</if>
+            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+            <if test="imagelinks != null  and imagelinks != ''"> and imageLinks = #{imagelinks}</if>
+        </where>
+    </select>
+    
+    <select id="selectVirtualarticleById" parameterType="Long" resultMap="VirtualarticleResult">
+        <include refid="selectVirtualarticleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVirtualarticle" parameterType="Virtualarticle" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_virtualarticle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="author != null  and author != ''">author,</if>
+            <if test="releasedate != null ">releaseDate,</if>
+            <if test="source != null  and source != ''">source,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="keywords != null  and keywords != ''">keywords,</if>
+            <if test="tags != null  and tags != ''">tags,</if>
+            <if test="imagelinks != null  and imagelinks != ''">imageLinks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="author != null  and author != ''">#{author},</if>
+            <if test="releasedate != null ">#{releasedate},</if>
+            <if test="source != null  and source != ''">#{source},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="keywords != null  and keywords != ''">#{keywords},</if>
+            <if test="tags != null  and tags != ''">#{tags},</if>
+            <if test="imagelinks != null  and imagelinks != ''">#{imagelinks},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVirtualarticle" parameterType="Virtualarticle">
+        update sys_virtualarticle
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="author != null  and author != ''">author = #{author},</if>
+            <if test="releasedate != null ">releaseDate = #{releasedate},</if>
+            <if test="source != null  and source != ''">source = #{source},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="keywords != null  and keywords != ''">keywords = #{keywords},</if>
+            <if test="tags != null  and tags != ''">tags = #{tags},</if>
+            <if test="imagelinks != null  and imagelinks != ''">imageLinks = #{imagelinks},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVirtualarticleById" parameterType="Long">
+        delete from sys_virtualarticle where id = #{id}
+    </delete>
+
+    <delete id="deleteVirtualarticleByIds" parameterType="String">
+        delete from sys_virtualarticle where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
