@@ -181,23 +181,17 @@ public class FrontIndexController {
         if (redisUtil.hasKey("arc_type_list")){
             //每个资源类别的数量
             List<ArcType> arc_type_list = (List<ArcType>) redisUtil.get("arc_type_list");
-            arc_type_list.forEach(arcType -> {
-                Article article1 = new Article();
-                article1.setArticleState(1L);
-                article1.setArticleTypeId(arcType.getSrcTypeId());
-                arcType.setAllSize(articleService.selectArticleList(article1).size());
-            });
             modelAndView.addObject("allArcTypeList",arc_type_list);
         }else {
             // 从数据库中查询所有资源类别并放入redis
             List<ArcType> arcTypes = arcTypeService.selectArcTypeList(null);
-            redisUtil.set("arc_type_list",arcTypes);
             arcTypes.forEach(arcType -> {
                 Article article1 = new Article();
                 article1.setArticleState(1L);
                 article1.setArticleTypeId(arcType.getSrcTypeId());
                 arcType.setAllSize(articleService.selectArticleList(article1).size());
             });
+            redisUtil.set("arc_type_list",arcTypes);
             modelAndView.addObject("allArcTypeList",arcTypes);
         }
 
