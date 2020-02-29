@@ -215,7 +215,25 @@ public class FrontIndexController {
             modelAndView.addObject("allLinkList",links);
         }
 
-        // 未读消息数量
+        //用户数、资源总数、下载量
+        //redis获取数据-用户数
+        if (!redisUtil.hasKey("userNum")) {
+            redisUtil.set("userNum", userService.selectUserList(new User()).size());
+        }
+        modelAndView.addObject("userNum", redisUtil.get("userNum"));
+
+        //redis获取数据-资源数
+        if (!redisUtil.hasKey("articleNums")) {
+            redisUtil.set("articleNums", articleService.selectArticleList(new Article()).size());
+        }
+        modelAndView.addObject("articleNums", redisUtil.get("articleNums"));
+
+        //redis获取数据-总下载数
+        if (!redisUtil.hasKey("downloadNums")) {
+            redisUtil.set("downloadNums", userDownloadService.selectUserDownloadList(new UserDownload()).size());
+        }
+        modelAndView.addObject("downloadNums", redisUtil.get("downloadNums"));
+
 
         return modelAndView;
     }
