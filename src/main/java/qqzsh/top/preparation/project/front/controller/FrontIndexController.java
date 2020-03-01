@@ -749,6 +749,7 @@ public class FrontIndexController {
     @RequiresPermissions("index:restart:gen")
     public ModelAndView genAllIndex() {
         ModelAndView modelAndView = new ModelAndView();
+        log.info("lucenePath:"+lucenePath);
         // 1.删除原来的索引
         try {
             File file = new File(lucenePath);
@@ -763,8 +764,12 @@ public class FrontIndexController {
             modelAndView.addObject("status",false);
         }
         // 2.添加新的索引
-        List<Article> articleList = articleService.selectArticleList(new Article());
+        Article article1 = new Article();
+        article1.setArticleState(1L);
+        List<Article> articleList = articleService.selectArticleList(article1);
+        int i = 1;
         for (Article article : articleList) {
+            log.info("索引写入进度："+((double) (i++) / articleList.size()*100)+"%");
             if (!articleIndex.addIndex(article)) {
                 modelAndView.addObject("status",false);
             }
