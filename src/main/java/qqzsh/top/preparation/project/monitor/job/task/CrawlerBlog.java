@@ -64,6 +64,8 @@ public class CrawlerBlog {
             exitWayEnum = ExitWayEnum.DEFAULT;
         }else if ("增量".equalsIgnoreCase(key)){
             exitWayEnum = ExitWayEnum.URL_COUNT;
+        }else {
+            exitWayEnum = ExitWayEnum.URL_COUNT;
         }
         //设置平台及数据字段
         String[] fields = {"imooc.list","csdn.list","cnblogs.list","juejin.list","v2ex.list"};
@@ -138,15 +140,15 @@ public class CrawlerBlog {
                     virtualarticleService.insertVirtualarticle(virtualarticle);
                     //发布资源
                     Article article = new Article();
-                    article.setArticlePublishDate(new Date());
+                    article.setArticlePublishDate(virtualarticle.getReleasedate());
                     article.setArticleContent(virtualarticle.getContent());
                     article.setArticleDownload1(virtualarticle.getSource());
                     article.setArticlePassword1("无");
                     article.setArticleIsHot(false);
                     article.setArticleName(virtualarticle.getTitle());
                     article.setArticlePoints(0);
-                    article.setArticleCheckDate(virtualarticle.getReleasedate());
-                    article.setArticleState(1L);
+                    article.setArticleCheckDate(new Date());
+                    article.setArticleState(0L);
                     article.setArticleView(0L);
                     article.setArticleTypeId(finalTypeId);
                     article.setArticleUserId(finalUserId);

@@ -80,8 +80,10 @@ public class ArticleServiceImpl implements IArticleService {
     public int insertArticle(Article article) throws Exception {
         // 将状态设为待审核
         article.setArticleState(0L);
-        // 设置发表时间
-        article.setArticlePublishDate(new Date());
+        if (article.getArticlePublishDate() == null){
+            // 设置发表时间
+            article.setArticlePublishDate(new Date());
+        }
         // 设置资源所属用户ID
         if (article.getArticleUserId() == null){
             article.setArticleUserId(ShiroUtils.getSysUser().getUserId());
