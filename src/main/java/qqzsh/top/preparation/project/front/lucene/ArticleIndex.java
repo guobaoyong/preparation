@@ -69,7 +69,7 @@ public class ArticleIndex {
             Document doc = new Document();
             doc.add(new StringField("articleId", String.valueOf(article.getArticleId()), Field.Store.YES));
             doc.add(new TextField("articleName", article.getArticleName(), Field.Store.YES));
-            doc.add(new StringField("articlePublishDate", DateUtils.formatDate(new Date()), Field.Store.YES));
+            doc.add(new StringField("articlePublishDate", DateUtils.formatDate(article.getArticlePublishDate()), Field.Store.YES));
             doc.add(new TextField("articleContent", article.getArticleContent(), Field.Store.YES));
             writer.addDocument(doc);
             writer.close();
@@ -96,7 +96,7 @@ public class ArticleIndex {
             Document doc = new Document();
             doc.add(new StringField("articleId", String.valueOf(article.getArticleId()), Field.Store.YES));
             doc.add(new TextField("articleName", article.getArticleName(), Field.Store.YES));
-            doc.add(new StringField("articlePublishDate", DateUtils.formatDate(new Date()), Field.Store.YES));
+            doc.add(new StringField("articlePublishDate", DateUtils.formatDate(article.getArticlePublishDate()), Field.Store.YES));
             doc.add(new TextField("articleContent", article.getArticleContent(), Field.Store.YES));
             writer.updateDocument(new Term("articleId", String.valueOf(article.getArticleId())), doc);
             writer.close();
