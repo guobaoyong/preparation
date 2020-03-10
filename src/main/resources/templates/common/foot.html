@@ -10,7 +10,7 @@
     <div class="sInfo" align="center">
         资源总数：<span th:text="${articleNums}"></span>  用户总数：<span th:text="${userNum}"></span>  下载量：<span th:text="${downloadNums}"></span>
     </div>
-    <div class="foot" align="center">Copyright © <span th:text="${@config.getKey('site.copyrightyear')}"/> <a th:href="${@config.getKey('site.url')}"><span th:text="${@config.getKey('site.url')}"></span></a> 版权所有<br><span th:text="${@config.getKey('site.record')}"></span>
+    <div class="foot" align="center">Copyright © <span th:text="${@config.getKey('site.copyrightyear')}"/> <a th:href="${@config.getKey('site.url')}"><span th:text="${@config.getKey('site.url')}"></span></a> 版权所有<br><a href="http://www.beian.miit.gov.cn" target="_blank"><span th:text="${@config.getKey('site.record')}"></span></a>
     </div>
 </div>
 
