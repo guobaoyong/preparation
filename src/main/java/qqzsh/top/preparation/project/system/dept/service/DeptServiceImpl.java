@@ -296,4 +296,9 @@ public class DeptServiceImpl implements IDeptService
         }
         return UserConstants.DEPT_NAME_UNIQUE;
     }
+
+    @Override
+    public List<Dept> selectTop10() {
+        return deptMapper.selectTop10();
+    }
 }

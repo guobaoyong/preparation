@@ -1,6 +1,7 @@
 package qqzsh.top.preparation.project.content.article.domain;
 
 import qqzsh.top.preparation.project.content.type.domain.ArcType;
+import qqzsh.top.preparation.project.system.dept.domain.Dept;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -91,4 +92,13 @@ public class Article extends BaseEntity {
     /** 资源所属用户 */
     private User user;
 
+    /** 资源所属高校ID */
+    @Excel(name = "资源所属高校ID")
+    private Long articleDeptId;
+
+    /** 资源所属高校 */
+    private Dept dept;
+
+    /** 累计下载量 */
+    private Integer total;
 }

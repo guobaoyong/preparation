@@ -123,6 +123,9 @@ public class User extends BaseEntity {
     /** 未读消息的数量 */
     private Integer messageCount;
 
+    /** 资源总数 */
+    private Integer total;
+
     public User(Long userId) {
         this.userId = userId;
     }
@@ -164,5 +167,13 @@ public class User extends BaseEntity {
             dept = new Dept();
         }
         return dept;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 }

@@ -538,4 +538,9 @@ public class UserServiceImpl implements IUserService
     public void updateAllSignInfo() {
         userMapper.updateAllSignInfo();
     }
+
+    @Override
+    public List<User> selectTop10() {
+        return userMapper.selectTop10();
+    }
 }

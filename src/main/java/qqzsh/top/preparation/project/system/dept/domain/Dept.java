@@ -48,6 +48,15 @@ public class Dept extends BaseEntity
     /** 父部门名称 */
     private String parentName;
 
+    /** 校徽 */
+    private String badge;
+
+    /** 简介 */
+    private String introduction;
+
+    /** 资源总数 */
+    private Integer total;
+
     public Long getDeptId()
     {
         return deptId;
@@ -164,6 +173,30 @@ public class Dept extends BaseEntity
         this.parentName = parentName;
     }
 
+    public String getBadge() {
+        return badge;
+    }
+
+    public void setBadge(String badge) {
+        this.badge = badge;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -181,6 +214,8 @@ public class Dept extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
-            .toString();
+                .append("badge", getBadge())
+                .append("introduction", getIntroduction())
+                .toString();
     }
 }

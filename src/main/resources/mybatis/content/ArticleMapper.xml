@@ -19,10 +19,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="articleView"    column="article_view"    />
         <result property="articleTypeId"    column="article_type_id"    />
         <result property="articleUserId"    column="article_user_id"    />
+        <result property="articleDeptId"    column="article_dept_id"    />
+        <result property="total"    column="total"    />
     </resultMap>
 
     <sql id="selectArticleVo">
-        select article_id, article_check_date, article_content, article_download1, article_is_hot, article_name, article_password1, article_points, article_publish_date, article_reason, article_state, article_view, article_type_id, article_user_id from sys_article
+        select article_id, article_check_date, article_content, article_download1, article_is_hot, article_name, article_password1, article_points, article_publish_date, article_reason, article_state, article_view, article_type_id, article_user_id,article_dept_id from sys_article
     </sql>
 
     <select id="selectArticleList" parameterType="Article" resultMap="ArticleResult">
@@ -41,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="articleView != null "> and article_view = #{articleView}</if>
             <if test="articleTypeId != null "> and article_type_id = #{articleTypeId}</if>
             <if test="articleUserId != null "> and article_user_id = #{articleUserId}</if>
+            <if test="articleDeptId != null "> and article_dept_id = #{articleDeptId}</if>
             <if test="params.beginArticlePublishDate != null and params.beginArticlePublishDate != ''"><!-- 开始时间检索 -->
                 and date_format(article_publish_date,'%y%m%d') &gt;= date_format(#{params.beginArticlePublishDate},'%y%m%d')
             </if>
@@ -48,6 +51,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and date_format(article_publish_date,'%y%m%d') &lt;= date_format(#{params.endArticlePublishDate},'%y%m%d')
             </if>
         </where>
+    </select>
+
+    <!--获取最新10条资源-->
+    <select id="selectNew10" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        WHERE sys_article.article_state = 1
+        ORDER BY sys_article.article_publish_date desc limit 10
+    </select>
+
+    <!--获取最热10条资源-->
+    <select id="selectHot10" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        WHERE sys_article.article_state = 1 and sys_article.article_is_hot = TRUE
+        ORDER BY sys_article.article_publish_date desc limit 10
+    </select>
+
+    <!--获取下载量最大的10条资源-->
+    <select id="selectDownloadTop10" resultMap="ArticleResult">
+        SELECT sys_user_download.download_article_id as article_id,count(*) as total FROM sys_user_download GROUP BY sys_user_download.download_article_id ORDER BY total desc limit 10
     </select>
     
     <select id="selectArticleById" parameterType="Long" resultMap="ArticleResult">
@@ -71,7 +93,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="articleView != null ">article_view,</if>
             <if test="articleTypeId != null ">article_type_id,</if>
             <if test="articleUserId != null ">article_user_id,</if>
-         </trim>
+            <if test="articleDeptId != null ">article_dept_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="articleCheckDate != null ">#{articleCheckDate},</if>
             <if test="articleContent != null  and articleContent != ''">#{articleContent},</if>
@@ -86,7 +109,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="articleView != null ">#{articleView},</if>
             <if test="articleTypeId != null ">#{articleTypeId},</if>
             <if test="articleUserId != null ">#{articleUserId},</if>
-         </trim>
+            <if test="articleDeptId != null ">#{articleDeptId},</if>
+        </trim>
     </insert>
 
     <update id="updateArticle" parameterType="Article">
@@ -105,6 +129,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="articleView != null ">article_view = #{articleView},</if>
             <if test="articleTypeId != null ">article_type_id = #{articleTypeId},</if>
             <if test="articleUserId != null ">article_user_id = #{articleUserId},</if>
+            <if test="articleDeptId != null ">article_dept_id = #{articleDeptId},</if>
         </trim>
         where article_id = #{articleId}
     </update>

@@ -58,4 +58,22 @@ public interface ArticleMapper
      * @return 结果
      */
     public int deleteArticleByIds(String[] articleIds);
+
+    /**
+     * 获取最新10条资源内容
+     * @return
+     */
+    List<Article> selectNew10();
+
+    /**
+     * 获取最热10条资源内容
+     * @return
+     */
+    List<Article> selectHot10();
+
+    /**
+     * 获取下载量最大的10条资源
+     * @return
+     */
+    List<Article> selectDownloadTop10();
 }

@@ -106,4 +106,10 @@ public interface DeptMapper
      * @return 部门列表
      */
     public List<Dept> selectChildrenDeptById(Long deptId);
+
+    /**
+     * 获取资源数最多的10个高校
+     * @return
+     */
+    List<Dept> selectTop10();
 }

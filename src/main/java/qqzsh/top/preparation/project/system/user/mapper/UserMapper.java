@@ -1,7 +1,6 @@
 package qqzsh.top.preparation.project.system.user.mapper;
 
 import qqzsh.top.preparation.project.system.user.domain.User;
-import qqzsh.top.preparation.project.system.user.domain.User;
 
 import java.util.List;
 
@@ -128,4 +127,10 @@ public interface UserMapper
      * 重置所有签到信息
      */
     void updateAllSignInfo();
+
+    /**
+     * 获取资源数最多的10个用户
+     * @return
+     */
+    List<User> selectTop10();
 }

@@ -29,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="sign"   column="sign"  />
 		<result property="signTime"   column="sign_time"  />
 		<result property="signSort"   column="sign_sort"  />
+		<result property="total"   column="total"  />
 		<association property="dept"    column="dept_id" javaType="Dept" resultMap="deptResult" />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
 	</resultMap>
@@ -85,6 +86,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
+	</select>
+
+	<!--获取资源数最多的10个用户-->
+	<select id="selectTop10" resultMap="UserResult">
+		SELECT sys_article.article_user_id as user_id, count(*) as total FROM sys_article GROUP BY sys_article.article_user_id ORDER BY total desc limit 10
 	</select>
 	
 	<select id="selectAllocatedList" parameterType="User" resultMap="UserResult">

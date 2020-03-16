@@ -185,4 +185,10 @@ public interface IUserService
      * 重置所有签到信息
      */
     void updateAllSignInfo();
+
+    /**
+     * 获取资源数最多的10个用户
+     * @return
+     */
+    List<User> selectTop10();
 }

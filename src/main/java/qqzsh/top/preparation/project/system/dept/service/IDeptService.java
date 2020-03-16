@@ -92,4 +92,10 @@ public interface IDeptService
      * @return 结果
      */
     public String checkDeptNameUnique(Dept dept);
+
+    /**
+     * 获取资源数最多的10个高校
+     * @return
+     */
+    List<Dept> selectTop10();
 }

@@ -60,4 +60,22 @@ public interface IArticleService {
      * @return 结果
      */
     int deleteArticleById(Long articleId);
+
+    /**
+     * 获取最新10条资源内容
+     * @return
+     */
+    List<Article> selectNew10();
+
+    /**
+     * 获取最热10条资源内容
+     * @return
+     */
+    List<Article> selectHot10();
+
+    /**
+     * 获取下载量最大的10条资源
+     * @return
+     */
+    List<Article> selectDownloadTop10();
 }

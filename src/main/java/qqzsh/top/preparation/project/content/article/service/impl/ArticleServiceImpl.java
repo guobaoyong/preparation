@@ -185,4 +185,19 @@ public class ArticleServiceImpl implements IArticleService {
         }
         return row;
     }
+
+    @Override
+    public List<Article> selectNew10() {
+        return articleMapper.selectNew10();
+    }
+
+    @Override
+    public List<Article> selectHot10() {
+        return articleMapper.selectHot10();
+    }
+
+    @Override
+    public List<Article> selectDownloadTop10() {
+        return articleMapper.selectDownloadTop10();
+    }
 }
