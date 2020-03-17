@@ -112,4 +112,11 @@ public interface DeptMapper
      * @return
      */
     List<Dept> selectTop10();
+
+    /**
+     * 获取高校用户数
+     * @param deptId 高校ID
+     * @return
+     */
+    Dept selectUserCount(Long deptId);
 }

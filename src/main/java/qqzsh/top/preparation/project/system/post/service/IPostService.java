@@ -89,4 +89,9 @@ public interface IPostService
      * @return 结果
      */
     public String checkPostCodeUnique(Post post);
+
+    /**
+     *
+     */
+    List<Post> findPostByUserId(Long userId);
 }

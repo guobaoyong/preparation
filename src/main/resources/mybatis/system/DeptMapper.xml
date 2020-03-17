@@ -22,6 +22,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateTime" column="update_time" />
 		<result property="badge" column="badge" />
 		<result property="introduction" column="introduction" />
+		<result property="total" column="total" />
+		<result property="totalUser" column="total_user" />
 	</resultMap>
 	
 	<sql id="selectDeptVo">
@@ -57,6 +59,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!--获取资源数最多的10个高校-->
 	<select id="selectTop10" resultMap="DeptResult">
 		SELECT sys_article.article_dept_id as dept_id,count(*) as total FROM sys_article GROUP BY sys_article.article_dept_id ORDER BY total desc limit 10
+	</select>
+
+	<!--获取高校用户数-->
+	<select id="selectUserCount" parameterType="Long" resultMap="DeptResult">
+		SELECT count(*) as total_user FROM sys_user WHERE sys_user.dept_id  = #{deptId}
 	</select>
 	
 	<select id="checkDeptExistUser" parameterType="Long" resultType="int">

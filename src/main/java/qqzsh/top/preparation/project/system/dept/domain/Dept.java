@@ -57,6 +57,9 @@ public class Dept extends BaseEntity
     /** 资源总数 */
     private Integer total;
 
+    /** 教师总数 */
+    private Integer totalUser;
+
     public Long getDeptId()
     {
         return deptId;
@@ -195,6 +198,14 @@ public class Dept extends BaseEntity
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public Integer getTotalUser() {
+        return totalUser;
+    }
+
+    public void setTotalUser(Integer totalUser) {
+        this.totalUser = totalUser;
     }
 
     @Override

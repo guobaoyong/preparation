@@ -1,0 +1,75 @@
+*{
+	box-sizing: border-box;
+	margin: 0;
+}
+.tab_{
+	background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    height: 337px;
+}
+.tab_head{
+	list-style: none;
+	position: relative;
+	border-bottom: 2px solid #a00001;
+    height: 28px;
+    padding-left: 25px !important;
+}
+.tab_head li{
+	float: left;
+    margin: 0;
+    padding: 0.2em 1em;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 3px 3px 0 0;
+    line-height: 1.42857143;
+}
+.tab_head_current{
+	background:rgb(0, 122, 255);
+    color: #fff;
+}
+.tab_head_more{
+	position: absolute;
+	right: 0px;
+	font-size: 12px;
+}
+.tab_head_more a,.tab_l a,.tab_b a{
+	color: black;
+	text-decoration: none;
+}
+.tab_head_more a:hover,.tab_l a:hover,.tab_b a:hover{
+	color:rgb(160, 0, 1);
+}
+.tab_contain{
+	display: none;
+}
+.tab_contain ul{
+	padding: 10px 20px;
+}
+.tab_l{
+	position: relative;
+	font-size: 14px;
+	border-bottom: 1px dotted #ddd;
+    height: 28.6px;
+}
+.tab_b{
+	position: relative;
+	font-size: 14px;
+}
+.tab_t_span{
+	position: absolute;
+	right: -20px;
+	font-size: 13px;
+	opacity: 0.6;
+}
+.tab_contain_current{
+	display: block;
+	animation: tab 0.9s;
+}
+@keyframes tab{
+	from{opacity: 0;}
+	to{opacity:1;}
+}

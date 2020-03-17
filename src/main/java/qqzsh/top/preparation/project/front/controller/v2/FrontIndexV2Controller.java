@@ -1,10 +1,11 @@
-package qqzsh.top.preparation.project.front.controller;
+package qqzsh.top.preparation.project.front.controller.v2;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.common.utils.RedisUtil;
 import qqzsh.top.preparation.framework.web.domain.AjaxResult;
 import qqzsh.top.preparation.project.content.article.domain.Article;
@@ -18,6 +19,8 @@ import qqzsh.top.preparation.project.system.dept.domain.Dept;
 import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.notice.domain.Notice;
 import qqzsh.top.preparation.project.system.notice.service.INoticeService;
+import qqzsh.top.preparation.project.system.post.domain.Post;
+import qqzsh.top.preparation.project.system.post.service.IPostService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
 
@@ -27,12 +30,11 @@ import java.util.List;
 /**
  * @author zsh
  * @site https://www.qqzsh.top
- * @create 2020-03-16 13:33
- * @Description 首页接口提供
+ * @create 2020-03-17 9:14
+ * @Description
  */
 @RestController
-@RequestMapping("/front")
-public class FIndexController {
+public class FrontIndexV2Controller {
 
     @Autowired
     private RedisUtil redisUtil;
@@ -51,13 +53,38 @@ public class FIndexController {
     private ILinkService linkService;
     @Autowired
     private IUserDownloadService userDownloadService;
+    @Autowired
+    private IPostService postService;
+
+    /**
+     * 打开首页V2方法
+     * @return
+     */
+    @GetMapping("/")
+    public ModelAndView index(){
+        // 获取平台数据量
+        ModelAndView modelAndView = data();
+        //获取友情链接
+        modelAndView.addObject("allLinkList",links());
+        //获取下载量最大的10条资源
+        modelAndView.addObject("downloadList",getDownloadTop10());
+        //获取最热10条资源
+        modelAndView.addObject("hotList",getHot10());
+        //获取最新10条资源
+        modelAndView.addObject("newList",getNew10());
+        //获取资源数最多的10个高校
+        modelAndView.addObject("collegeList",getCollegeTop10());
+        //获取资源数最多的10个用户
+        modelAndView.addObject("userList",getUserTop10());
+        modelAndView.setViewName("front/v2/index");
+        return modelAndView;
+    }
 
     /**
      * 获取最新一条通知
      * @return
      */
-    @GetMapping("/getNewNotice")
-    public AjaxResult getNewNotice(){
+    public Notice getNewNotice(){
         // 获取最新一条通知
         Notice newOne = null;
         if (redisUtil.hasKey("notice")){
@@ -66,15 +93,14 @@ public class FIndexController {
             newOne = noticeService.getNewOne();
             redisUtil.set("notice",newOne);
         }
-        return AjaxResult.success(newOne);
+        return newOne;
     }
 
     /**
      * 获取最新一条广告
      * @return
      */
-    @GetMapping("/getNewAD")
-    public AjaxResult getNewAD(){
+    public Notice getNewAD(){
         // 获取最新一条广告
         Notice newOneAD = null;
         if (redisUtil.hasKey("ad")){
@@ -83,32 +109,31 @@ public class FIndexController {
             newOneAD = noticeService.getNewOneAD();
             redisUtil.set("ad",newOneAD);
         }
-        return AjaxResult.success(newOneAD);
+        return newOneAD;
     }
 
     /**
      * 获取资源数最多的10个高校
      * @return
      */
-    @GetMapping("/getCollegeTop10")
-    public AjaxResult getCollegeTop10(){
+    public List<Dept> getCollegeTop10(){
         List<Dept> depts = deptService.selectTop10();
         List<Dept> result = new ArrayList<>();
         depts.forEach(dept -> {
             int total = dept.getTotal();
             dept = deptService.selectDeptById(dept.getDeptId());
             dept.setTotal(total);
+            dept.setTotalUser(deptService.selectUserCount(dept.getDeptId()).getTotalUser());
             result.add(dept);
         });
-        return AjaxResult.success(result);
+        return result;
     }
 
     /**
      * 获取资源数最多的10个用户
      * @return
      */
-    @GetMapping("/getUserTop10")
-    public AjaxResult getUserTop10() {
+    public List<User> getUserTop10() {
         List<User> users = userService.selectTop10();
         List<User> result = new ArrayList<>();
         users.forEach(user -> {
@@ -117,17 +142,30 @@ public class FIndexController {
             user.setPassword("");
             user.setSalt("");
             user.setTotal(total);
+            List<Post> postByUserId = postService.findPostByUserId(user.getUserId());
+            if (postByUserId.size() != 0){
+                String postStr = "";
+                for (int i = 0; i <postByUserId.size() ; i++) {
+                    if (i == postByUserId.size()-1){
+                        postStr += postByUserId.get(i).getPostName();
+                    }else {
+                        postStr += postByUserId.get(i).getPostName() + ",";
+                    }
+                }
+                user.setPostStr(postStr);
+            }else {
+                user.setPostStr("教师");
+            }
             result.add(user);
         });
-        return AjaxResult.success(result);
+        return result;
     }
 
     /**
      * 获取最新10条资源
      * @return
      */
-    @GetMapping("/getNew10")
-    public AjaxResult getNew10() {
+    public List<Article> getNew10() {
         List<Article> articles = articleService.selectNew10();
         List<Article> result = new ArrayList<>();
         articles.forEach(article -> {
@@ -142,15 +180,14 @@ public class FIndexController {
             article.setArticlePassword1("");
             result.add(article);
         });
-        return AjaxResult.success(result);
+        return result;
     }
 
     /**
      * 获取最热10条资源
      * @return
      */
-    @GetMapping("/getHot10")
-    public AjaxResult getHot10() {
+    public List<Article> getHot10() {
         List<Article> articles = articleService.selectHot10();
         List<Article> result = new ArrayList<>();
         articles.forEach(article -> {
@@ -165,15 +202,14 @@ public class FIndexController {
             article.setArticlePassword1("");
             result.add(article);
         });
-        return AjaxResult.success(result);
+        return result;
     }
 
     /**
      * 获取下载量最大的10条资源
      * @return
      */
-    @GetMapping("/getDownloadTop10")
-    public AjaxResult getDownloadTop10() {
+    public List<Article> getDownloadTop10() {
         List<Article> articles = articleService.selectDownloadTop10();
         List<Article> result = new ArrayList<>();
         articles.forEach(article -> {
@@ -191,7 +227,7 @@ public class FIndexController {
             article.setArticlePassword1("");
             result.add(article);
         });
-        return AjaxResult.success(result);
+        return result;
     }
 
     /**
@@ -199,14 +235,14 @@ public class FIndexController {
      * @return
      */
     @GetMapping("/links")
-    public AjaxResult links(){
+    public List<Link> links(){
         if (redisUtil.hasKey("link_list")){
-            return AjaxResult.success(redisUtil.get("link_list"));
+            return (List<Link>) redisUtil.get("link_list");
         }else {
             // 从数据库中查询所有友情链接并放入redis
             List<Link> links = linkService.selectLinkList(null);
             redisUtil.set("link_list",links);
-            return AjaxResult.success(redisUtil.get("link_list"));
+            return (List<Link>) redisUtil.get("link_list");
         }
     }
 
@@ -214,49 +250,27 @@ public class FIndexController {
      * 获取平台数据量
      * @return
      */
-    @GetMapping("/data")
-    public AjaxResult data(){
-        JSONObject jsonObject = new JSONObject();
+    public ModelAndView data(){
+        ModelAndView modelAndView = new ModelAndView();
         //用户数、资源总数、下载量
         //redis获取数据-用户数
         if (!redisUtil.hasKey("userNum")) {
             redisUtil.set("userNum", userService.selectUserList(new User()).size());
         }
-        jsonObject.put("userNum", redisUtil.get("userNum"));
+        modelAndView.addObject("userNum", redisUtil.get("userNum"));
 
         //redis获取数据-资源数
         if (!redisUtil.hasKey("articleNums")) {
             redisUtil.set("articleNums", articleService.selectArticleList(new Article()).size());
         }
-        jsonObject.put("articleNums", redisUtil.get("articleNums"));
+        modelAndView.addObject("articleNums", redisUtil.get("articleNums"));
 
         //redis获取数据-总下载数
         if (!redisUtil.hasKey("downloadNums")) {
             redisUtil.set("downloadNums", userDownloadService.selectUserDownloadList(new UserDownload()).size());
         }
-        jsonObject.put("downloadNums", redisUtil.get("downloadNums"));
-        return AjaxResult.success(jsonObject);
+        modelAndView.addObject("downloadNums", redisUtil.get("downloadNums"));
+        return modelAndView;
     }
 
-    @GetMapping("/test")
-    public AjaxResult test(){
-        List<Article> articles = articleService.selectDownloadTop10();
-        List<Article> result = new ArrayList<>();
-        articles.forEach(article -> {
-            int total = article.getTotal();
-            article = articleService.selectArticleById(article.getArticleId());
-            article.setTotal(total);
-            //用户名
-            article.setUser(userService.selectUserById(article.getArticleUserId()));
-            //资源类别
-            article.setArcType(arcTypeService.selectArcTypeById(article.getArticleTypeId()));
-            //高校
-            article.setDept(deptService.selectDeptById(article.getArticleDeptId()));
-            article.setArticleContent("");
-            article.setArticleDownload1("");
-            article.setArticlePassword1("");
-            result.add(article);
-        });
-        return AjaxResult.success(result);
-    }
 }

@@ -114,7 +114,12 @@ public class FrontIndexController {
      */
     private static String lucenePath = PreparationConfig.getProfile() + "/lucene/";
 
-    @GetMapping("/")
+    /**
+     * 打开首页V1方法
+     * @param request
+     * @return
+     */
+    @GetMapping("/V1")
     public ModelAndView index(HttpServletRequest request){
         request.getSession().setAttribute("tMenu", "t_0");
         ModelAndView data = getData(null,null,"");

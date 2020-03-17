@@ -301,4 +301,9 @@ public class DeptServiceImpl implements IDeptService
     public List<Dept> selectTop10() {
         return deptMapper.selectTop10();
     }
+
+    @Override
+    public Dept selectUserCount(Long deptId) {
+        return deptMapper.selectUserCount(deptId);
+    }
 }

@@ -186,4 +186,9 @@ public class PostServiceImpl implements IPostService
         }
         return UserConstants.POST_CODE_UNIQUE;
     }
+
+    @Override
+    public List<Post> findPostByUserId(Long userId) {
+        return postMapper.selectPostsByUserId(userId);
+    }
 }
