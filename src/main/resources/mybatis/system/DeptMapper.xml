@@ -24,10 +24,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="introduction" column="introduction" />
 		<result property="total" column="total" />
 		<result property="totalUser" column="total_user" />
+		<result property="url" column="url" />
+		<result property="ename" column="ename" />
 	</resultMap>
 	
 	<sql id="selectDeptVo">
-        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time,d.introduction,d.badge
+        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time,d.introduction,d.badge,d.url,d.ename
         from sys_dept d
     </sql>
     
@@ -83,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="selectDeptById" parameterType="Long" resultMap="DeptResult">
-		select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status,d.introduction,d.badge,
+		select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status,d.introduction,d.badge,d.url,d.ename,
 			(select dept_name from sys_dept where dept_id = d.parent_id) parent_name
 		from sys_dept d
 		where d.dept_id = #{deptId}
@@ -105,7 +107,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="email != null and email != ''">email,</if>
 		<if test="badge != null and badge != ''">badge,</if>
 		<if test="introduction != null and introduction != ''">introduction,</if>
- 			<if test="status != null">status,</if>
+		<if test="url != null and url != ''">url,</if>
+		<if test="ename != null and ename != ''">ename,</if>
+		<if test="status != null">status,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			create_time
  		)values(
@@ -118,6 +122,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="phone != null and phone != ''">#{phone},</if>
  			<if test="email != null and email != ''">#{email},</if>
 		<if test="badge != null and badge != ''">#{badge},</if>
+		<if test="url != null and url != ''">#{url},</if>
+		<if test="ename != null and ename != ''">#{ename},</if>
 		<if test="introduction != null and introduction != ''">#{introduction},</if>
 		<if test="status != null">#{status},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
@@ -137,6 +143,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="email != null">email = #{email},</if>
 			<if test="badge != null and badge != ''">badge = #{badge},</if>
 			<if test="introduction != null and introduction != ''">introduction = #{introduction},</if>
+			<if test="url != null and url != ''">url = #{url},</if>
+			<if test="ename != null and ename != ''">ename = #{ename},</if>
 			<if test="status != null and status != ''">status = #{status},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
  			update_time = sysdate()

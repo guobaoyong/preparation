@@ -76,6 +76,13 @@
 		            title: '排序',
 		            align: "left"
 		        },
+					{
+						field: 'badge',
+						title: '校徽',
+						formatter: function(value, item, index) {
+							return '<img src="' + value + '" width="50" height="50">';
+						}
+					},
 		        {
 		            field: 'status',
 		            title: '状态',

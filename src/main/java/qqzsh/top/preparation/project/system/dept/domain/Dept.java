@@ -54,6 +54,12 @@ public class Dept extends BaseEntity
     /** 简介 */
     private String introduction;
 
+    /** 官网地址 */
+    private String url;
+
+    /** 英文名称 */
+    private String ename;
+
     /** 资源总数 */
     private Integer total;
 
@@ -206,6 +212,22 @@ public class Dept extends BaseEntity
 
     public void setTotalUser(Integer totalUser) {
         this.totalUser = totalUser;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getEname() {
+        return ename;
+    }
+
+    public void setEname(String ename) {
+        this.ename = ename;
     }
 
     @Override
