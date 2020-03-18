@@ -14,9 +14,10 @@ a {
 }
 
 .nav {
-    width: 1200px;
+    /*width: 1200px;*/
     margin: 0px auto;
     /* border: 1px #000 solid; */
+    padding: 10px 20px 10px 20px;
 }
 
 .tip {
@@ -45,7 +46,7 @@ a {
     list-style: none;
     display: inline-block;
     color: #fff;
-    padding: 5px 10px;
+    padding: 5px 5px;
 }
 
 
@@ -53,6 +54,7 @@ a {
 
 .dbdh {
     overflow: hidden;
+    color: white;
 }
 
 .dbdh .left {
@@ -61,17 +63,22 @@ a {
 
 .dbdh .right {
     float: right;
+    padding-top: 15px;
 }
 
 .dbdh li {
     list-style: none;
     display: inline-block;
-    padding: 35px 20px;
-    color: #000;
+    /*padding: 35px 20px;*/
+    /*color: #000;*/
 }
 
+/*.register{*/
+/*    color: #007AFF;!important;*/
+/*}*/
 .dbdh a {
-    color: #000;
+    color: white;
+    padding: 2px 3px 3px 5px;
 }
 
 .active {
@@ -85,6 +92,9 @@ a {
 
 /*教师展示 */
 
+.jszs{
+    margin-top: 40px;
+}
 .carousel {
     position: relative;
     height: 374px;
@@ -104,7 +114,7 @@ a {
 .carousel_box {
     position: absolute;
     /*left: -1168px;*/
-    width: 2100px;
+    width: 2840px;
     /*transition-property: none;*/
     /*transition-duration: 1000ms;*/
     /*transition-timing-function: ease-in-out;*/
@@ -119,13 +129,13 @@ a {
         margin-left: -284px;
     }
     40%,60%{
-        margin-left: -600px;
+        margin-left: -1136px;
     }
     70%,80%{
-        margin-left: -900px;
+        margin-left: -1988px;
     }
     90%,100%{
-        margin-left: -2000px;
+        margin-left: -2840px;
     }
 }
 
@@ -196,7 +206,7 @@ a {
 /* 高校展示 */
 
 .gxzs {
-    margin: 20px auto;
+    /*margin: 20px auto;*/
     text-align: center;
 }
 
@@ -215,10 +225,12 @@ a {
 }
 
 .item .img {
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
     overflow: hidden;
     float: left;
+    /* margin-top: 9px; */
+    padding: 10px 10px 10px 5px;
 }
 
 .item h1 {
@@ -230,8 +242,9 @@ a {
 .item .message {
     width: 150px;
     height: 180px;
-    float: right;
+    float: left;
     text-align: center;
+    margin-left: 32px;
 }
 
 .item_name {

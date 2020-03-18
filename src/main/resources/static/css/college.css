@@ -20,9 +20,8 @@ body {
 
 .box_ {
     width: 1200px;
-    margin: 0 auto;
-    height: 700px;
-    padding-left: 20px;
+    margin: 40px auto;
+    /*height: 700px;*/
 }
 
 .white_ {
@@ -33,12 +32,19 @@ body {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.contain_li {
-    /*width: 1160px;*/
-    height: 215px;
+.contain_{
+    height: 100%;
+}
+.contain_>ul{
+    height: 100%;
+}
+
+.contain_li{
+    height: 400px;
     background: white;
     list-style: none;
     margin-bottom: 16px;
+    padding-top: 30px;
 }
 
 .col_1 {
@@ -116,4 +122,32 @@ body {
     padding-right: 28px;
     line-height: 26px;
     font-weight: 300;
+}
+
+/*
+分页*/
+.paging{
+    /*padding: 50px 0 50px 0;*/
+    text-align: center;
+}
+
+.pagination>li{
+    display: inline;
+    cursor: pointer;
+}
+.pagination>li>.active{
+    background-color: #337ab7;
+    color: white;
+}
+
+.pagination>li>a:hover{
+    background-color: #337ab7;
+    color: white;
+}
+.pagination>li>a{
+    font-size: 13px;
+    padding: 6px 12px;
+    color: #337ab7;
+    background-color: #fff;
+    border: 1px solid #ddd;
 }
