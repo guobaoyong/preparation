@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="downloadDate"    column="download_date"    />
         <result property="downloadArticleId"    column="download_article_id"    />
         <result property="downloadUserId"    column="download_user_id"    />
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <resultMap type="User" id="UserResult">
@@ -22,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectUserDownloadVo">
-        select download_id, download_date, download_article_id, download_user_id from sys_user_download
+        select download_id, download_date, download_article_id, download_user_id,dept_id from sys_user_download
     </sql>
 
     <select id="selectUserDownloadList" parameterType="UserDownload" resultMap="UserDownloadResult">
@@ -37,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.endDownloadDate != null and params.endDownloadDate != ''"><!-- 下载结束时间检索 -->
                 AND date_format(download_date,'%y%m%d') &lt;= date_format(#{params.endDownloadDate},'%y%m%d')
             </if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
         </where>
     </select>
     
@@ -51,12 +53,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="downloadDate != null ">download_date,</if>
             <if test="downloadArticleId != null ">download_article_id,</if>
             <if test="downloadUserId != null ">download_user_id,</if>
-         </trim>
+            <if test="deptId != null ">dept_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="downloadDate != null ">#{downloadDate},</if>
             <if test="downloadArticleId != null ">#{downloadArticleId},</if>
             <if test="downloadUserId != null ">#{downloadUserId},</if>
-         </trim>
+            <if test="deptId != null ">#{deptId},</if>
+        </trim>
     </insert>
 
     <update id="updateUserDownload" parameterType="UserDownload">
@@ -65,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="downloadDate != null ">download_date = #{downloadDate},</if>
             <if test="downloadArticleId != null ">download_article_id = #{downloadArticleId},</if>
             <if test="downloadUserId != null ">download_user_id = #{downloadUserId},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
         </trim>
         where download_id = #{downloadId}
     </update>
@@ -95,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDownloadDate != null and endDownloadDate != ''"><!-- 评论结束时间检索 -->
                 AND date_format(download_date,'%y%m%d') &lt;= date_format(#{endDownloadDate},'%y%m%d')
             </if>
+            <if test="deptId != null">and dept_id = #{deptId}</if>
         </where>
     </select>
 </mapper>

@@ -52,6 +52,10 @@ public class Logininfor extends BaseEntity
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
+    /** 高校 */
+    @Excel(name = "高校")
+    private String deptName;
+
     public Long getInfoId()
     {
         return infoId;
@@ -140,6 +144,14 @@ public class Logininfor extends BaseEntity
     public void setLoginTime(Date loginTime)
     {
         this.loginTime = loginTime;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
     @Override

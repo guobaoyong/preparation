@@ -74,5 +74,5 @@ public interface IUserDownloadService
      * @param loginName
      * @return
      */
-    List<UserDownload> selectJoint(String articleName, String loginName, String beginDownloadDate, String endDownloadDate);
+    List<UserDownload> selectJoint(String articleName, String loginName, String beginDownloadDate, String endDownloadDate,Long deptId);
 }

@@ -72,5 +72,5 @@ public interface IMessageService
      * @param loginName
      * @return
      */
-    List<Message> selectJoint(String content,String loginName, String beginPublishDate, String endPublishDate);
+    List<Message> selectJoint(String content,String loginName, String beginPublishDate, String endPublishDate,Long deptId);
 }

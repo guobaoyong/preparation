@@ -48,4 +48,6 @@ public class Comment extends BaseEntity {
     /** 前台搜索用 */
     private String articleName;
     private String loginName;
+
+    private Long deptId;
 }

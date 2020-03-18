@@ -406,6 +406,7 @@ public class UserServiceImpl implements IUserService
         if (sysUser.getUserId().equals(user.getUserId())){
             return;
         }
+        user = userMapper.selectUserById(user.getUserId());
         if (StringUtils.isNotNull(user.getUserId()) && ShiroUtils.isAdmin(user)) {
             throw new BusinessException("不允许操作超级管理员用户");
         }

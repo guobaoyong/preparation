@@ -23,6 +23,9 @@ import qqzsh.top.preparation.project.monitor.online.service.IUserOnlineService;
 import qqzsh.top.preparation.project.monitor.online.domain.OnlineSession;
 import qqzsh.top.preparation.project.monitor.online.domain.UserOnline;
 import qqzsh.top.preparation.project.monitor.online.service.IUserOnlineService;
+import qqzsh.top.preparation.project.system.dept.domain.Dept;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
+import qqzsh.top.preparation.project.system.user.domain.User;
 
 /**
  * 在线用户监控
@@ -41,6 +44,9 @@ public class UserOnlineController extends BaseController
     @Autowired
     private OnlineSessionDAO onlineSessionDAO;
 
+    @Autowired
+    private IDeptService deptService;
+
     @RequiresPermissions("monitor:online:view")
     @GetMapping()
     public String online()
@@ -51,8 +57,17 @@ public class UserOnlineController extends BaseController
     @RequiresPermissions("monitor:online:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(UserOnline userOnline)
-    {
+    public TableDataInfo list(UserOnline userOnline) {
+        // 高校管理员只能查看自己高校的数据
+        User sysUser = ShiroUtils.getSysUser();
+        boolean collegeAdmin = ShiroUtils.isCollegeAdmin(sysUser);
+        if (collegeAdmin){
+            // 找到高校名称
+            Dept dept = deptService.selectDeptById(sysUser.getDeptId());
+            if (dept != null){
+                userOnline.setDeptName(dept.getDeptName());
+            }
+        }
         startPage();
         List<UserOnline> list = userOnlineService.selectUserOnlineList(userOnline);
         return getDataTable(list);

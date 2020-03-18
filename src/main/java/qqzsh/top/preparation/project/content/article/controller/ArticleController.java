@@ -103,6 +103,10 @@ public class ArticleController extends BaseController {
         if (ShiroUtils.isOrdinary(sysUser)){
             article.setArticleUserId(sysUser.getUserId());
         }
+        // 判断是否是高校管理员
+        if (ShiroUtils.isCollegeAdmin(sysUser)){
+            article.setArticleDeptId(sysUser.getDeptId());
+        }
         startPage();
         List<Article> list = articleService.selectArticleList(article);
         list.forEach(article1 -> {

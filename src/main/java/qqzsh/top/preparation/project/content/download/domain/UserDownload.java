@@ -41,4 +41,7 @@ public class UserDownload extends BaseEntity {
     /** 前台搜索用 */
     private String articleName;
     private String loginName;
+
+    /** 资源所属高校ID */
+    private Long deptId;
 }

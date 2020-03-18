@@ -9,7 +9,10 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import qqzsh.top.preparation.common.utils.StringUtils;
 import qqzsh.top.preparation.common.utils.bean.BeanUtils;
 import qqzsh.top.preparation.framework.shiro.realm.UserRealm;
+import qqzsh.top.preparation.project.system.role.domain.Role;
 import qqzsh.top.preparation.project.system.user.domain.User;
+
+import java.util.List;
 
 /**
  * shiro 工具类
@@ -44,21 +47,45 @@ public class ShiroUtils
     }
 
     /**
-     * 判断当前User是否是普通会员
+     * 判断当前User是否是普通用户
      * @param user
      * @return
      */
     public static boolean isOrdinary(User user){
-        return user.getDept().getDeptName().contains("用户组");
+        List<Role> roles = user.getRoles();
+        if (roles.size() != 0){
+            return "common".equalsIgnoreCase(roles.get(0).getRoleKey());
+        }else {
+            return false;
+        }
     }
 
     /**
-     * 判断当前用户是否是管理员
+     * 判断是否是高校管理员
+     * @param user
+     * @return
+     */
+    public static boolean isCollegeAdmin(User user){
+        List<Role> roles = user.getRoles();
+        if (roles.size() != 0){
+            return "college_administrator".equalsIgnoreCase(roles.get(0).getRoleKey());
+        }else {
+            return false;
+        }
+    }
+
+    /**
+     * 判断当前用户是否是超级管理员
      * @param user
      * @return
      */
     public static boolean isAdmin(User user) {
-        return user != null && 1L == user.getUserId();
+        List<Role> roles = user.getRoles();
+        if (roles.size() != 0){
+            return "admin".equalsIgnoreCase(roles.get(0).getRoleKey());
+        }else {
+            return false;
+        }
     }
 
     public static void setSysUser(User user)

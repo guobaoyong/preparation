@@ -11,6 +11,7 @@ import qqzsh.top.preparation.project.content.download.domain.UserDownload;
 import qqzsh.top.preparation.project.content.download.service.IUserDownloadService;
 import qqzsh.top.preparation.common.utils.text.Convert;
 import qqzsh.top.preparation.project.content.download.service.IUserDownloadService;
+import qqzsh.top.preparation.project.system.user.service.IUserService;
 
 /**
  * 用户已下载Service业务层处理
@@ -23,6 +24,9 @@ public class UserDownloadServiceImpl implements IUserDownloadService
 {
     @Autowired
     private UserDownloadMapper userDownloadMapper;
+
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -58,6 +62,8 @@ public class UserDownloadServiceImpl implements IUserDownloadService
      */
     @Override
     public int insertUserDownload(UserDownload userDownload) {
+        // 插入高校ID
+        userDownload.setDeptId(userService.selectUserById(userDownload.getDownloadUserId()).getDeptId());
         int row = userDownloadMapper.insertUserDownload(userDownload);
         if (redisUtil.hasKey("downloadNums")){
             Integer downloadNums = (Integer) redisUtil.get("downloadNums");
@@ -130,7 +136,7 @@ public class UserDownloadServiceImpl implements IUserDownloadService
     }
 
     @Override
-    public List<UserDownload> selectJoint(String articleName, String loginName, String beginDownloadDate, String endDownloadDate) {
-        return userDownloadMapper.selectJoint(articleName, loginName, beginDownloadDate, endDownloadDate);
+    public List<UserDownload> selectJoint(String articleName, String loginName, String beginDownloadDate, String endDownloadDate, Long deptId) {
+        return userDownloadMapper.selectJoint(articleName, loginName, beginDownloadDate, endDownloadDate, deptId);
     }
 }

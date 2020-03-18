@@ -10,6 +10,7 @@ import qqzsh.top.preparation.project.content.order.domain.Order;
 import qqzsh.top.preparation.project.content.order.service.IOrderService;
 import qqzsh.top.preparation.common.utils.text.Convert;
 import qqzsh.top.preparation.project.content.order.service.IOrderService;
+import qqzsh.top.preparation.project.system.user.service.IUserService;
 
 /**
  * 订单Service业务层处理
@@ -22,6 +23,8 @@ public class OrderServiceImpl implements IOrderService
 {
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -59,6 +62,7 @@ public class OrderServiceImpl implements IOrderService
     @Override
     public int insertOrder(Order order) {
         order.setCreateTime(DateUtils.getNowDate());
+        order.setDeptId(userService.selectUserById(order.getUserId()).getDeptId());
         int row = orderMapper.insertOrder(order);
         if (redisUtil.hasKey("orderNums")){
             Integer orderNums = (Integer) redisUtil.get("orderNums");

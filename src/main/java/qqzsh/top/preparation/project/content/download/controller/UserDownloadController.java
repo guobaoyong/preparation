@@ -71,12 +71,17 @@ public class UserDownloadController extends BaseController
         if (ShiroUtils.isOrdinary(sysUser)){
             list = userDownloadService.selectJoint(userDownload.getArticleName(),sysUser.getLoginName(),
                     String.valueOf(userDownload.getParams().get("beginDownloadDate")),
-                    String.valueOf(userDownload.getParams().get("endDownloadDate")));
+                    String.valueOf(userDownload.getParams().get("endDownloadDate")),null);
         }else {
+            Long deptId = null;
+            // 判断是否是高校管理员
+            if (ShiroUtils.isCollegeAdmin(sysUser)){
+                deptId = sysUser.getDeptId();
+            }
             // 管理员
             list = userDownloadService.selectJoint(userDownload.getArticleName(),userDownload.getLoginName(),
                     String.valueOf(userDownload.getParams().get("beginDownloadDate")),
-                    String.valueOf(userDownload.getParams().get("endDownloadDate")));
+                    String.valueOf(userDownload.getParams().get("endDownloadDate")),deptId);
         }
         list.forEach(userDownload1 -> {
             userDownload1.setUser(userService.selectUserById(userDownload1.getDownloadUserId()));

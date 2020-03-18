@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="see"    column="see"    />
         <result property="publishDate"    column="publish_date"    />
         <result property="userId"    column="user_id"    />
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <resultMap type="User" id="UserResult">
@@ -18,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMessageVo">
-        select id, content, see, publish_date, user_id from sys_message
+        select id, content, see, publish_date, user_id,dept_id from sys_message
     </sql>
 
     <select id="selectMessageList" parameterType="Message" resultMap="MessageResult">
@@ -28,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="see != null"> and see = #{see}</if>
             <if test="publishDate != null "> and publish_date = #{publishDate}</if>
             <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="deptId != null"> and dept_id = #{deptId}</if>
         </where>
     </select>
     
@@ -43,13 +45,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="see != null ">see,</if>
             <if test="publishDate != null ">publish_date,</if>
             <if test="userId != null ">user_id,</if>
+            <if test="deptId != null ">dept_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="content != null  and content != ''">#{content},</if>
             <if test="see != null ">#{see},</if>
             <if test="publishDate != null ">#{publishDate},</if>
             <if test="userId != null ">#{userId},</if>
-         </trim>
+            <if test="deptId != null ">#{deptId},</if>
+        </trim>
     </insert>
 
     <update id="updateMessage" parameterType="Message">
@@ -59,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="see != null ">see = #{see},</if>
             <if test="publishDate != null ">publish_date = #{publishDate},</if>
             <if test="userId != null ">user_id = #{userId},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
         </trim>
         where id = #{id}
     </update>
@@ -91,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endPublishDate != null and endPublishDate != ''"><!-- 发布结束时间检索 -->
                 AND date_format(publish_date,'%y%m%d') &lt;= date_format(#{endPublishDate},'%y%m%d')
             </if>
+            <if test="deptId != null">and dept_id = #{deptId}</if>
         </where>
     </select>
 

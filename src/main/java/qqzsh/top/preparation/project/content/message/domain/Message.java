@@ -44,4 +44,6 @@ public class Message extends BaseEntity {
 
     private User user;
     private String loginName;
+
+    private Long deptId;
 }

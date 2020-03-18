@@ -7,6 +7,7 @@ import qqzsh.top.preparation.project.content.change.mapper.PointChangeMapper;
 import qqzsh.top.preparation.project.content.change.domain.PointChange;
 import qqzsh.top.preparation.project.content.change.service.IPointChangeService;
 import qqzsh.top.preparation.common.utils.text.Convert;
+import qqzsh.top.preparation.project.system.user.service.IUserService;
 
 /**
  * 积分变更记录Service业务层处理
@@ -19,6 +20,9 @@ public class PointChangeServiceImpl implements IPointChangeService
 {
     @Autowired
     private PointChangeMapper pointChangeMapper;
+
+    @Autowired
+    private IUserService userService;
 
     /**
      * 查询积分变更记录
@@ -53,6 +57,7 @@ public class PointChangeServiceImpl implements IPointChangeService
     @Override
     public int insertPointChange(PointChange pointChange)
     {
+        pointChange.setDeptId(userService.selectUserById(pointChange.getPointUserId()).getDeptId());
         return pointChangeMapper.insertPointChange(pointChange);
     }
 

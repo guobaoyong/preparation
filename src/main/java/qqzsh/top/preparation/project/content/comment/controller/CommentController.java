@@ -72,12 +72,16 @@ public class CommentController extends BaseController {
         if (ShiroUtils.isOrdinary(sysUser)){
             list = commentService.selectJoint(comment.getArticleName(),sysUser.getLoginName(),
                     String.valueOf(comment.getParams().get("beginCommentDate")) ,String.valueOf(comment.getParams().get("endCommentDate")),
-                    String.valueOf(comment.getCommentState()));
+                    String.valueOf(comment.getCommentState()),null);
         }else {
+            Long deptId = null;
+            if (ShiroUtils.isCollegeAdmin(sysUser)){
+                deptId = sysUser.getDeptId();
+            }
             // 管理员
             list = commentService.selectJoint(comment.getArticleName(),comment.getLoginName(),
                     String.valueOf(comment.getParams().get("beginCommentDate")),String.valueOf(comment.getParams().get("endCommentDate")),
-                    String.valueOf(comment.getCommentState()));
+                    String.valueOf(comment.getCommentState()),deptId);
         }
         list.forEach(comment1 -> {
             comment1.setUser(userService.selectUserById(comment1.getCommentUserId()));

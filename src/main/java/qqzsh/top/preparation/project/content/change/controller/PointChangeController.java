@@ -62,8 +62,13 @@ public class PointChangeController extends BaseController
     @ResponseBody
     public TableDataInfo list(PointChange pointChange) {
         User sysUser = ShiroUtils.getSysUser();
+        // 普通用户
         if (ShiroUtils.isOrdinary(sysUser)){
             pointChange.setPointUserId(sysUser.getUserId());
+        }
+        // 院系管理员
+        if (ShiroUtils.isCollegeAdmin(sysUser)){
+            pointChange.setDeptId(sysUser.getDeptId());
         }
         startPage();
         List<PointChange> list = pointChangeService.selectPointChangeList(pointChange);

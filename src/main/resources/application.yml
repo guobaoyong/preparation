@@ -44,7 +44,7 @@ user:
 spring:
   # 启动环境
   profiles:
-    active: brn
+    active: dev
   # 模板引擎
   thymeleaf:
     mode: HTML

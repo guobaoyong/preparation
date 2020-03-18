@@ -63,4 +63,7 @@ public class Order extends BaseEntity {
 
     private User user;
     private String loginName;
+
+    /** 订单所属高校ID */
+    private Long deptId;
 }

@@ -14,10 +14,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userId"    column="user_id"    />
         <result property="aliNo"    column="ali_no"    />
         <result property="orderNo"    column="order_no"    />
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <sql id="selectOrderVo">
-        select id, create_time, detail, money, status, type, user_id, ali_no, order_no from sys_order
+        select id, create_time, detail, money, status, type, user_id, ali_no, order_no,dept_id from sys_order
     </sql>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
@@ -30,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="aliNo != null  and aliNo != ''"> and ali_no = #{aliNo}</if>
             <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
         </where>
     </select>
     
@@ -49,7 +51,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null ">user_id,</if>
             <if test="aliNo != null  and aliNo != ''">ali_no,</if>
             <if test="orderNo != null  and orderNo != ''">order_no,</if>
-         </trim>
+            <if test="deptId != null ">dept_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="createTime != null ">#{createTime},</if>
             <if test="detail != null  and detail != ''">#{detail},</if>
@@ -59,7 +62,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null ">#{userId},</if>
             <if test="aliNo != null  and aliNo != ''">#{aliNo},</if>
             <if test="orderNo != null  and orderNo != ''">#{orderNo},</if>
-         </trim>
+            <if test="deptId != null ">#{deptId},</if>
+        </trim>
     </insert>
 
     <update id="updateOrder" parameterType="Order">
@@ -73,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null ">user_id = #{userId},</if>
             <if test="aliNo != null  and aliNo != ''">ali_no = #{aliNo},</if>
             <if test="orderNo != null  and orderNo != ''">order_no = #{orderNo},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
         </trim>
         where id = #{id}
     </update>

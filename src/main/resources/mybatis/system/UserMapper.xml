@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="signTime"   column="sign_time"  />
 		<result property="signSort"   column="sign_sort"  />
 		<result property="total"   column="total"  />
+		<result property="post"   column="post"  />
 		<association property="dept"    column="dept_id" javaType="Dept" resultMap="deptResult" />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
 	</resultMap>
@@ -53,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<sql id="selectUserVo">
-        select  u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.password, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_time, u.remark,u.vip_time,u.point,u.sign,u.sign_sort,u.sign_time,
+        select  u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.password, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_time, u.remark,u.vip_time,u.point,u.sign,u.sign_sort,u.sign_time,u.post,
        		    d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
        		    r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
 		from sys_user u
@@ -63,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 	
 	<select id="selectUserList" parameterType="User" resultMap="UserResult">
-		select u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader,u.vip_time,u.point,u.sign,u.sign_sort,u.sign_time from sys_user u
+		select u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader,u.vip_time,u.point,u.sign,u.sign_sort,u.sign_time,u.post from sys_user u
 		left join sys_dept d on u.dept_id = d.dept_id
 		where u.del_flag = '0'
 		<if test="loginName != null and loginName != ''">
@@ -111,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectUnallocatedList" parameterType="User" resultMap="UserResult">
-	    select distinct u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber, u.status, u.create_time
+	    select distinct u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber, u.status, u.create_time,u.post
 	    from sys_user u
 			 left join sys_dept d on u.dept_id = d.dept_id
 			 left join sys_user_role ur on u.user_id = ur.user_id
@@ -193,6 +194,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="sign != null and sign != ''">sign = #{sign},</if>
 			<if test="signTime != null">sign_time = #{signTime},</if>
 			<if test="signSort != null and signSort != ''">sign_sort = #{signSort},</if>
+			<if test="post != null and post != ''">post = #{post},</if>
 			update_time = sysdate()
  		</set>
  		where user_id = #{userId}
@@ -217,7 +219,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="point != null and point != ''">point,</if>
 			<if test="sign != null and sign != ''">sign,</if>
 			<if test="signTime != null">sign_time,</if>
-			<if test="signSort != null and signSort != ''">sign_sort</if>
+		<if test="post != null and post != ''">post,</if>
+		<if test="signSort != null and signSort != ''">sign_sort</if>
 			create_time
 		)values(
  			<if test="userId != null and userId != ''">#{userId},</if>
@@ -237,7 +240,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="point != null and point != ''">#{point},</if>
 			<if test="sign != null and sign != ''">#{sign},</if>
 			<if test="signTime != null">#{signTime},</if>
-			<if test="signSort != null and signSort != ''">#{signSort}</if>
+		<if test="post != null and post != ''">#{post},</if>
+		<if test="signSort != null and signSort != ''">#{signSort}</if>
 			sysdate()
  		)
 	</insert>

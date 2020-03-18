@@ -3,6 +3,8 @@ package qqzsh.top.preparation.project.monitor.operlog.controller;
 import java.util.List;
 
 import qqzsh.top.preparation.common.utils.security.ShiroUtils;
+import qqzsh.top.preparation.project.system.dept.domain.Dept;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class OperlogController extends BaseController
     @Autowired
     private IOperLogService operLogService;
 
+    @Autowired
+    private IDeptService deptService;
+
     @RequiresPermissions("monitor:operlog:view")
     @GetMapping()
     public String operlog()
@@ -48,10 +53,16 @@ public class OperlogController extends BaseController
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(OperLog operLog) {
-        // 如果是会员操作，只允许看自己的操作日志
+        // 如果是普通用户操作，只允许看自己的操作日志
         User sysUser = ShiroUtils.getSysUser();
         if (ShiroUtils.isOrdinary(sysUser)){
             operLog.setOperName(sysUser.getLoginName());
+        }else if (ShiroUtils.isCollegeAdmin(sysUser)){
+            // 如果是高校管理员操作，只允许看自己高校的操作日志
+            Dept dept = deptService.selectDeptById(sysUser.getDeptId());
+            if (dept != null){
+                operLog.setDeptName(dept.getDeptName());
+            }
         }
         startPage();
         List<OperLog> list = operLogService.selectOperLogList(operLog);

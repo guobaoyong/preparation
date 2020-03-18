@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="pointAccount"    column="point_account"    />
         <result property="pointReason"    column="point_reason"    />
         <result property="pointSymbol"    column="point_symbol"    />
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <sql id="selectPointChangeVo">
-        select point_id, point_content, point_front, point_end, point_change, point_user_id, point_status, point_login_name, point_create_time, point_update_time, point_type, point_account, point_reason,point_symbol from sys_point_change
+        select point_id, point_content, point_front, point_end, point_change, point_user_id, point_status, point_login_name, point_create_time, point_update_time, point_type, point_account, point_reason,point_symbol,dept_id from sys_point_change
     </sql>
 
     <select id="selectPointChangeList" parameterType="PointChange" resultMap="PointChangeResult">
@@ -49,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND date_format(point_create_time,'%y%m%d') &lt;= date_format(#{params.endPointCreateTime},'%y%m%d')
             </if>
             <if test="pointSymbol != null  and pointSymbol != ''"> and point_symbol = #{pointSymbol}</if>
+            <if test="deptId != null"> and dept_id = #{deptId}</if>
         </where>
     </select>
     
@@ -73,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pointAccount != null  and pointAccount != ''">point_account,</if>
             <if test="pointReason != null  and pointReason != ''">point_reason,</if>
             <if test="pointSymbol != null  and pointSymbol != ''">point_symbol,</if>
+            <if test="deptId != null ">dept_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pointContent != null  and pointContent != ''">#{pointContent},</if>
@@ -88,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pointAccount != null  and pointAccount != ''">#{pointAccount},</if>
             <if test="pointReason != null  and pointReason != ''">#{pointReason},</if>
             <if test="pointSymbol != null  and pointSymbol != ''">#{pointSymbol},</if>
+            <if test="deptId != null">#{deptId},</if>
         </trim>
     </insert>
 
@@ -107,6 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pointAccount != null  and pointAccount != ''">point_account = #{pointAccount},</if>
             <if test="pointReason != null  and pointReason != ''">point_reason = #{pointReason},</if>
             <if test="pointSymbol != null  and pointSymbol != ''">point_symbol = #{pointSymbol},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
         </trim>
         where point_id = #{pointId}
     </update>

@@ -9,6 +9,7 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePayModel;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import qqzsh.top.preparation.common.utils.security.ShiroUtils;
 import qqzsh.top.preparation.framework.config.AliPayConfig;
 import qqzsh.top.preparation.framework.web.service.ConfigService;
 import qqzsh.top.preparation.project.system.user.domain.User;
@@ -80,6 +81,15 @@ public class OrderController extends BaseController
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Order order) {
+        User sysUser = ShiroUtils.getSysUser();
+        //普通用户
+        if (ShiroUtils.isOrdinary(sysUser)){
+            order.setUserId(sysUser.getUserId());
+        }
+        //高校管理员
+        if (ShiroUtils.isCollegeAdmin(sysUser)){
+            order.setDeptId(sysUser.getDeptId());
+        }
         startPage();
         List<Order> list = orderService.selectOrderList(order);
         list.forEach(order1 -> {

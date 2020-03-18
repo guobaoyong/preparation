@@ -72,4 +72,6 @@ public class PointChange extends BaseEntity {
     /** 正负号 */
     @Excel(name = "符号")
     private String pointSymbol;
+
+    private Long deptId;
 }

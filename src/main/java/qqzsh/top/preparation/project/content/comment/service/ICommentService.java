@@ -72,5 +72,5 @@ public interface ICommentService {
      * @param loginName
      * @return
      */
-    List<Comment> selectJoint(String articleName, String loginName,String beginCommentDate,String endCommentDate,String commentState);
+    List<Comment> selectJoint(String articleName, String loginName,String beginCommentDate,String endCommentDate,String commentState,Long deptId);
 }

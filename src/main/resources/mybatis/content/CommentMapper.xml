@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="commentState"    column="comment_state"    />
         <result property="commentArticleId"    column="comment_article_id"    />
         <result property="commentUserId"    column="comment_user_id"    />
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <resultMap type="User" id="UserResult">
@@ -24,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCommentVo">
-        select comment_id, comment_date, comment_content, comment_state, comment_article_id, comment_user_id from sys_comment
+        select comment_id, comment_date, comment_content, comment_state, comment_article_id, comment_user_id,dept_id from sys_comment
     </sql>
 
     <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
@@ -41,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.endDownloadDate != null and params.endDownloadDate != ''"><!-- 评论结束时间检索 -->
                 AND date_format(comment_date,'%y%m%d') &lt;= date_format(#{params.endCommentDate},'%y%m%d')
             </if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
         </where>
     </select>
     
@@ -57,14 +59,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="commentState != null ">comment_state,</if>
             <if test="commentArticleId != null ">comment_article_id,</if>
             <if test="commentUserId != null ">comment_user_id,</if>
-         </trim>
+            <if test="deptId != null ">dept_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="commentDate != null ">#{commentDate},</if>
             <if test="commentContent != null  and commentContent != ''">#{commentContent},</if>
             <if test="commentState != null ">#{commentState},</if>
             <if test="commentArticleId != null ">#{commentArticleId},</if>
             <if test="commentUserId != null ">#{commentUserId},</if>
-         </trim>
+            <if test="deptId != null ">#{deptId},</if>
+        </trim>
     </insert>
 
     <update id="updateComment" parameterType="Comment">
@@ -75,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="commentState != null ">comment_state = #{commentState},</if>
             <if test="commentArticleId != null ">comment_article_id = #{commentArticleId},</if>
             <if test="commentUserId != null ">comment_user_id = #{commentUserId},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
         </trim>
         where comment_id = #{commentId}
     </update>
@@ -106,6 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND date_format(comment_date,'%y%m%d') &lt;= date_format(#{endCommentDate},'%y%m%d')
             </if>
             <if test="commentState != null and commentState != 'null'"> and comment_state = #{commentState}</if>
+            <if test="deptId != null">and dept_id = #{deptId}</if>
         </where>
     </select>
     

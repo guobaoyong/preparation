@@ -249,7 +249,6 @@ public class FrontIndexController {
     protected void startPage(Integer pageNum,Integer pageSize,String orderBy) {
         if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize)) {
             PageHelper.startPage(pageNum, pageSize, orderBy);
-
         }
     }
 

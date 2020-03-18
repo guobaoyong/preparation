@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!--获取资源数最多的10个高校-->
 	<select id="selectTop10" resultMap="DeptResult">
-		SELECT sys_article.article_dept_id as dept_id,count(*) as total FROM sys_article GROUP BY sys_article.article_dept_id ORDER BY total desc limit 10
+		SELECT sys_article.article_dept_id as dept_id,count(*) as total FROM sys_article GROUP BY sys_article.article_dept_id ORDER BY total desc limit 6
 	</select>
 
 	<!--获取高校用户数-->

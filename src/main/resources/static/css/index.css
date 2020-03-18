@@ -94,20 +94,43 @@ a {
     clear: both;
     position: relative;
     overflow: hidden;
-    margin: 0;
+    //margin: 0;
     height: 333px;
     width: 1200px;
     margin: 0 auto;
+    
 }
 
 .carousel_box {
     position: absolute;
     /*left: -1168px;*/
-    width: 17520px;
-    transition-property: none;
-    transition-duration: 500ms;
-    transition-timing-function: ease-in-out;
+    width: 2100px;
+    /*transition-property: none;*/
+    /*transition-duration: 1000ms;*/
+    /*transition-timing-function: ease-in-out;*/
+    animation: image 20s infinite linear;
 }
+
+@keyframes image {
+    0%,10%{
+        margin-left: 0px;
+    }
+    10%,30%{
+        margin-left: -284px;
+    }
+    40%,60%{
+        margin-left: -600px;
+    }
+    70%,80%{
+        margin-left: -900px;
+    }
+    90%,100%{
+        margin-left: -2000px;
+    }
+}
+
+
+
 
 .carousel_box a {
     float: left;
@@ -218,7 +241,7 @@ a {
 .message div {
     display: inline-block;
     width: 100%;
-    line-height: 60px;
+    line-height: 30px;
     text-align: left;
 }
 
@@ -327,12 +350,17 @@ a {
     color: rgb(0, 122, 255);
 }
 
-
+.friendBox{
+    border: 1px solid #ddd;
+    margin-bottom: 30px;
+    background-color: white;
+}
 /* 版权声明 */
 
 .bqsm {
     background-color: #393D49;
     color: #fff;
+    padding: 20px;
 }
 
 .sInfo {

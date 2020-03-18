@@ -11,6 +11,7 @@ import qqzsh.top.preparation.common.utils.text.Convert;
 import qqzsh.top.preparation.project.content.message.domain.Message;
 import qqzsh.top.preparation.project.content.message.mapper.MessageMapper;
 import qqzsh.top.preparation.project.content.message.service.IMessageService;
+import qqzsh.top.preparation.project.system.user.service.IUserService;
 
 /**
  * 消息Service业务层处理
@@ -23,6 +24,9 @@ public class MessageServiceImpl implements IMessageService
 {
     @Autowired
     private MessageMapper messageMapper;
+
+    @Autowired
+    private IUserService userService;
 
     /**
      * 查询消息
@@ -57,6 +61,7 @@ public class MessageServiceImpl implements IMessageService
     @Override
     public int insertMessage(Message message)
     {
+        message.setDeptId(userService.selectUserById(message.getUserId()).getDeptId());
         return messageMapper.insertMessage(message);
     }
 
@@ -102,7 +107,7 @@ public class MessageServiceImpl implements IMessageService
     }
 
     @Override
-    public List<Message> selectJoint(String content,String loginName, String beginPublishDate, String endPublishDate) {
-        return messageMapper.selectJoint(content,loginName, beginPublishDate, endPublishDate);
+    public List<Message> selectJoint(String content,String loginName, String beginPublishDate, String endPublishDate,Long deptId) {
+        return messageMapper.selectJoint(content,loginName, beginPublishDate, endPublishDate,deptId);
     }
 }

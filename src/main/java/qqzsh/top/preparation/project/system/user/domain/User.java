@@ -129,6 +129,9 @@ public class User extends BaseEntity {
     /** 岗位字符串 */
     private String postStr;
 
+    /** 职务 */
+    private String post;
+
     public User(Long userId) {
         this.userId = userId;
     }

@@ -7,6 +7,7 @@ import qqzsh.top.preparation.project.content.comment.mapper.CommentMapper;
 import qqzsh.top.preparation.project.content.comment.domain.Comment;
 import qqzsh.top.preparation.project.content.comment.service.ICommentService;
 import qqzsh.top.preparation.common.utils.text.Convert;
+import qqzsh.top.preparation.project.system.user.service.IUserService;
 
 /**
  * 评论Service业务层处理
@@ -19,6 +20,9 @@ public class CommentServiceImpl implements ICommentService
 {
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private IUserService userService;
 
     /**
      * 查询评论
@@ -53,6 +57,7 @@ public class CommentServiceImpl implements ICommentService
     @Override
     public int insertComment(Comment comment)
     {
+        comment.setDeptId(userService.selectUserById(comment.getCommentUserId()).getDeptId());
         return commentMapper.insertComment(comment);
     }
 
@@ -98,7 +103,7 @@ public class CommentServiceImpl implements ICommentService
     }
 
     @Override
-    public List<Comment> selectJoint(String articleName, String loginName, String beginCommentDate, String endCommentDate,String commentState) {
-        return commentMapper.selectJoint(articleName,loginName,beginCommentDate,endCommentDate,commentState);
+    public List<Comment> selectJoint(String articleName, String loginName, String beginCommentDate, String endCommentDate,String commentState,Long deptId) {
+        return commentMapper.selectJoint(articleName,loginName,beginCommentDate,endCommentDate,commentState,deptId);
     }
 }

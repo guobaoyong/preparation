@@ -132,6 +132,8 @@ public class ProfileController extends BaseController
         currentUser.setEmail(user.getEmail());
         currentUser.setPhonenumber(user.getPhonenumber());
         currentUser.setSex(user.getSex());
+        currentUser.setRemark(user.getRemark());
+        currentUser.setPost(user.getPost());
         if (userService.updateUserInfo(currentUser) > 0)
         {
             setSysUser(userService.selectUserById(currentUser.getUserId()));

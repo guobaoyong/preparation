@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${@config.getKey('site.name')}"></title>
+    <title th:text="'首页-'+${@config.getKey('site.name')}"></title>
     <link th:href="@{/css/index.css}" rel="stylesheet"/>
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 </head>
@@ -21,10 +21,16 @@
     </div>
     <!-- 顶部导航 -->
     <div class="dbdh nav">
-        <div class="left">logo</div>
+        <div class="left">
+            <h3 th:text="${@config.getKey('site.name')}"></h3>
+            <h3 th:text="${@config.getKey('site.ename')}"></h3>
+        </div>
         <div class="right">
             <ul>
                 <li><a href="" class="active">首页</a></li>
+                <li><a th:href="@{/front/college}">高校</a></li>
+                <li><a href="">教师</a></li>
+                <li><a href="">学科资源</a></li>
                 <li><a href="">精品资源</a></li>
                 <li><a href="">通知公告</a></li>
                 <li><a href="">平台介绍</a></li>
@@ -61,14 +67,14 @@
         <span th:each="college:${collegeList}">
             <a class="item">
                 <div class="img">
-                    <img th:src="${college.badge}" alt="">
+                    <img th:src="${college.badge}" alt="" class="img">
                 </div>
                 <div class="message">
                     <div class="item_name"><span th:text="${college.deptName}"></span></div>
                     <!--英文名要调整个样式-->
-                    <div class=""><span th:text="${college.ename}"></span></div>
-                    <div class="xuezhe">注册教师数：<span th:text="${college.totalUser}"></span></div>
-                    <div class="fezl">已发布资源数：<span th:text="${college.total}"></span></div>
+                    <div><span th:text="${college.ename}"></span></div>
+                    <div>注册教师数：<span th:text="${college.totalUser}"></span></div>
+                    <div>已发布资源数：<span th:text="${college.total}"></span></div>
                 </div>
             </a>
         </span>
@@ -130,11 +136,13 @@
     <!-- 友情链接 -->
     <div class="yqlj nav">
         <h3 class="tip">友情链接</h3>
-        <span th:each="link:${allLinkList}">
+        <div class="friendBox">
+            <span th:each="link:${allLinkList}">
             <a target="_blank" th:href="${link.linkUrl}" th:title="${link.linkName}">
                 <span th:text="${link.linkName}"></span>
             </a>
         </span>
+        </div>
     </div>
     <!-- 版权声明 -->
     <div class="bqsm">

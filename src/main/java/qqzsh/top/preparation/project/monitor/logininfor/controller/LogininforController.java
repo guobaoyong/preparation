@@ -3,6 +3,8 @@ package qqzsh.top.preparation.project.monitor.logininfor.controller;
 import java.util.List;
 
 import qqzsh.top.preparation.common.utils.security.ShiroUtils;
+import qqzsh.top.preparation.project.system.dept.domain.Dept;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class LogininforController extends BaseController
     @Autowired
     private PasswordService passwordService;
 
+    @Autowired
+    private IDeptService deptService;
+
     @RequiresPermissions("monitor:logininfor:view")
     @GetMapping()
     public String logininfor()
@@ -52,8 +57,14 @@ public class LogininforController extends BaseController
     {
         // 如果是会员操作，只允许看自己的登录日志
         User sysUser = ShiroUtils.getSysUser();
-        if (ShiroUtils.isOrdinary(sysUser)){
+        if (ShiroUtils.isAdmin(sysUser)){
             logininfor.setLoginName(sysUser.getLoginName());
+        }else if (ShiroUtils.isCollegeAdmin(sysUser)){
+            // 如果是高校管理员操作，只允许看自己高校的登录日志
+            Dept dept = deptService.selectDeptById(sysUser.getDeptId());
+            if (dept != null){
+                logininfor.setDeptName(dept.getDeptName());
+            }
         }
         startPage();
         List<Logininfor> list = logininforService.selectLogininforList(logininfor);

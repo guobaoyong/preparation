@@ -1,5 +1,6 @@
 package qqzsh.top.preparation.project.system.user.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,9 @@ import qqzsh.top.preparation.framework.aspectj.lang.enums.BusinessType;
 import qqzsh.top.preparation.framework.web.controller.BaseController;
 import qqzsh.top.preparation.framework.web.domain.AjaxResult;
 import qqzsh.top.preparation.framework.web.page.TableDataInfo;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.post.service.IPostService;
+import qqzsh.top.preparation.project.system.role.domain.Role;
 import qqzsh.top.preparation.project.system.role.service.IRoleService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
@@ -69,6 +72,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private IPointChangeService pointChangeService;
+
+    @Autowired
+    private IDeptService deptService;
 
     @RequiresPermissions("system:user:view")
     @GetMapping()
@@ -123,7 +129,15 @@ public class UserController extends BaseController {
      */
     @GetMapping("/add")
     public String add(ModelMap mmap) {
-        mmap.put("roles", roleService.selectRoleAll());
+        // 院系管理员 只显示院系管理员和普通用户
+        List<Role> roles = roleService.selectRoleAll();
+        List<Role> result = new ArrayList<>();
+        roles.forEach(role -> {
+            if (!role.getRoleKey().equalsIgnoreCase("admin")){
+                result.add(role);
+            }
+        });
+        mmap.put("roles", result);
         mmap.put("posts", postService.selectPostAll());
         return prefix + "/add";
     }
@@ -155,7 +169,15 @@ public class UserController extends BaseController {
     public String edit(@PathVariable("userId") Long userId, ModelMap mmap)
     {
         mmap.put("user", userService.selectUserById(userId));
-        mmap.put("roles", roleService.selectRolesByUserId(userId));
+        // 院系管理员 只显示院系管理员和普通用户
+        List<Role> roles = roleService.selectRolesByUserId(userId);
+        List<Role> result = new ArrayList<>();
+        roles.forEach(role -> {
+            if (!role.getRoleKey().equalsIgnoreCase("admin")){
+                result.add(role);
+            }
+        });
+        mmap.put("roles", result);
         mmap.put("posts", postService.selectPostsByUserId(userId));
         return prefix + "/edit";
     }

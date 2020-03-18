@@ -73,12 +73,16 @@ public class MessageController extends BaseController
         if (ShiroUtils.isOrdinary(sysUser)){
             list = messageService.selectJoint(message.getContent(),sysUser.getLoginName(),
                     String.valueOf(message.getParams().get("beginPublishDate")),
-                    String.valueOf(message.getParams().get("endPublishDate")));
+                    String.valueOf(message.getParams().get("endPublishDate")),null);
         }else {
+            Long deptId = null;
+            if (ShiroUtils.isCollegeAdmin(sysUser)){
+                deptId = sysUser.getDeptId();
+            }
             // 管理员
             list = messageService.selectJoint(message.getContent(),message.getLoginName(),
                     String.valueOf(message.getParams().get("beginPublishDate")),
-                    String.valueOf(message.getParams().get("endPublishDate")));
+                    String.valueOf(message.getParams().get("endPublishDate")),deptId);
         }
         list.forEach(message1 -> {
             message1.setUser(userService.selectUserById(message1.getUserId()));
