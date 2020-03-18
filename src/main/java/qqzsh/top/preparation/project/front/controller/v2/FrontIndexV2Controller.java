@@ -234,7 +234,6 @@ public class FrontIndexV2Controller {
      * 获取友情链接
      * @return
      */
-    @GetMapping("/links")
     public List<Link> links(){
         if (redisUtil.hasKey("link_list")){
             return (List<Link>) redisUtil.get("link_list");

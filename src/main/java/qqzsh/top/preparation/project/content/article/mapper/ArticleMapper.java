@@ -28,6 +28,13 @@ public interface ArticleMapper
     public List<Article> selectArticleList(Article article);
 
     /**
+     * 查询资源列表数量
+     * @param article
+     * @return
+     */
+    int selectArticleListCount(Article article);
+
+    /**
      * 新增资源
      * 
      * @param article 资源

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <title th:text="'高校-'+${@config.getKey('site.name')}"></title>
-    <link th:href="@{/css/college.css}" rel="stylesheet"/>
+    <meta charset="utf-8"/>
+    <title th:text="'教师/学生-'+${@config.getKey('site.name')}"></title>
+    <link th:href="@{/css/scholars.css}" rel="stylesheet"/>
     <link th:href="@{/css/index.css}" rel="stylesheet"/>
-    <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet"/>
 </head>
-
 <body>
 <!-- 注册登录 -->
 <div class="zcdl">
@@ -20,8 +19,8 @@
         <div class="right">
             <ul>
                 <li><a th:href="@{/}">首页</a></li>
-                <li><a th:href="@{/front/college}" class="active">高校</a></li>
-                <li><a th:href="@{/front/scholar}">教师</a></li>
+                <li><a th:href="@{/front/college}">高校</a></li>
+                <li><a th:href="@{/front/scholar}" class="active">教师</a></li>
                 <li><a href="">学科资源</a></li>
                 <li><a href="">精品资源</a></li>
                 <li><a href="">通知公告</a></li>
@@ -39,63 +38,76 @@
         </div>
     </div>
 </div>
-
-<!--高校数据-->
-<div class="box_">
-        <div class="title_">
-            <h2 class="tip">高校</h2>
+<!--教师数据展示-->
+<div class="scholars">
+    <div class="scholars_item">
+        <div class="scholars_item_head">
+            <a><i class="fa fa-user"> </i> 高校</a>
         </div>
-        <div class="contain_">
-            <ul>
-                <li class="contain_li" th:each="dept:${deptsList}">
-                    <div class="col_1">
-                        <img th:src="(${dept.badge} == '') ? @{/img/profile.jpg} : @{${dept.badge}}" >
-                    </div>
-                    <div class="col_2">
-                        <h4 th:text="${dept.deptName}"></h4>
-                        <h4 th:text="${dept.ename}"></h4>
-                        <ul class="nav_">
-                            <li class="nav_item">
-                                <a class="OAI" href="JavaScript:;">资源总数: <span class="OAIs nav_item_span" th:text="${dept.total}"></span></a>
-                            </li>
-                            <li class="nav_item">
-                                <a class="user" href="JavaScript:;">用户数 : <span class="users nav_item_span" th:text="${dept.totalUser}"></span></a>
-                            </li>
-                            <li class="nav_item">
-                                官网 : <a target="_blank" th:href="${dept.url}" th:text="${dept.url}"></a>
-                            </li>
-                        </ul>
-                        <p class="p_14">
-                            <b>简介 : </b><span th:text="${dept.introduction}"/></p>
-                    </div>
-                    <div style="clear: both"></div>
-                </li>
+        <div class="scholars_item_list">
+            <ul class="treeDemoAUTHOR">
+                <li class="treeDemoAUTHOR_li" th:each="dept:${deptsList}"><a th:href="@{/front/scholar(deptId=${dept.deptId},name=${name})}"><span class="treeDemoAUTHOR_li_1" th:text="${dept.deptName}" /></a>
+                    <span class="treeDemoAUTHOR_li_2" th:text="${dept.totalUser}"></span></li>
             </ul>
         </div>
     </div>
+    <div class="scholars_contain">
+        <div class="search">
+            <form th:action="@{/front/scholar}" method="get">
+                <input type="text" name="name" class="search_content" placeholder="输入姓名" th:value="${name}" autocomplete="off">
+                <input name="deptId" th:value="${deptId}" type="hidden">
+                <input type="submit" value="搜索" class="search_submit">
+            </form>
+        </div>
+        <table class="table_author">
+            <tr class="author_tbody" th:each="user:${usersList}">
+                <td><img th:src="(${user.avatar} == '') ? @{/img/profile.jpg} : @{${user.avatar}}"></td>
+                <td class="oddRowOddCol">
+                    <ul class="author_ul">
+                        <li>
+                            <a class="author_a1" th:text="${user.userName}"></a>
+                            <a class="author_a3" th:text="${user.post}"></a>
+                        </li>
+                        <li>
+                            <a class="author_a2" th:text="${user.remark}"></a>
+                        </li>
+                        <li>
+                            所属机构：<a class="a3" target="_blank" href="javascript:;" th:text="${user.dept.deptName}"></a>
+                        </li>
+                        <li>
+                            <a>资源量：</a>
+                            <a class="Results badge" th:text="${user.total}"></a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 <!--分页-->
 <div class="paging">
     <ul class="pagination" id="pagination1">
         <!--//如果当前页等于1，总页数大于1（不显示上一页）   orderDara.current&ndash;&gt;当前页-->
         <li id="first">
-            <a th:href="@{/front/college(page=1,size=${size})}">首页</a>
+            <a th:href="@{/front/scholar(page=1,size=${size},deptId=${deptId},name=${name})}">首页</a>
         </li>
         <li th:if="${page != 1}">
-            <a th:href="@{/front/college(page=${page}-1,size=${size})}">上一页</a>
+            <a th:href="@{/front/scholar(page=${page}-1,size=${size},deptId=${deptId},name=${name})}">上一页</a>
         </li>
 
-        <li  th:each="i:${#numbers.sequence(1,totalPage)}">
+        <li th:each="i:${#numbers.sequence(1,totalPage)}">
             <!--//从1到总页数遍历，并赋值给i    orderDara.pages&ndash;&gt;总页数-->
-            <a class="active" th:if="${i > page-3} and ${i <page+3} and ${i == page}" href="javascript:void(0);" th:text="${i}">#</a>
+            <a class="active" th:if="${i > page-3} and ${i <page+3} and ${i == page}" href="javascript:void(0);"
+               th:text="${i}">#</a>
             <!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
             <a th:if="${i > page -3} and ${i < page+3} and ${i != page}"
-            th:href="@{/front/college(page=${i},size=${size})}" th:text="${i}">#</a><!--//限制显示页数的条数  4到6个页数-->
+               th:href="@{/front/scholar(page=${i},size=${size},deptId=${deptId},name=${name})}" th:text="${i}">#</a><!--//限制显示页数的条数  4到6个页数-->
         </li>
         <li th:if="${page != totalPage}">
-            <a th:href="@{/front/college(page=${page}+1,size=${size})}">下一页</a>
+            <a th:href="@{/front/scholar(page=${page}+1,size=${size},deptId=${deptId},name=${name})}">下一页</a>
         </li>
         <li id="last">
-            <a th:href="@{/front/college(page=${totalPage},size=${size})}">尾页</a>
+            <a th:href="@{/front/scholar(page=${totalPage},size=${size},deptId=${deptId},name=${name})}">尾页</a>
         </li><!--//跳转至第orderDara.current页-->
         <li>
             <a href="#" th:text="'共'+${totalPage}+'页'"></a>

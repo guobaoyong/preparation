@@ -53,6 +53,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="selectArticleListCount" parameterType="Article" resultType="int">
+        select count(1) from sys_article
+        <where>
+            <if test="articleCheckDate != null "> and article_check_date = #{articleCheckDate}</if>
+            <if test="articleContent != null  and articleContent != ''"> and article_content = #{articleContent}</if>
+            <if test="articleDownload1 != null  and articleDownload1 != ''"> and article_download1 = #{articleDownload1}</if>
+            <if test="articleIsHot != null  and articleIsHot != ''"> and article_is_hot = #{articleIsHot}</if>
+            <if test="articleName != null  and articleName != ''"> and article_name like concat('%', #{articleName}, '%')</if>
+            <if test="articlePassword1 != null  and articlePassword1 != ''"> and article_password1 = #{articlePassword1}</if>
+            <if test="articlePoints != null "> and article_points = #{articlePoints}</if>
+            <if test="articlePublishDate != null "> and article_publish_date = #{articlePublishDate}</if>
+            <if test="articleReason != null  and articleReason != ''"> and article_reason = #{articleReason}</if>
+            <if test="articleState != null "> and article_state = #{articleState}</if>
+            <if test="articleView != null "> and article_view = #{articleView}</if>
+            <if test="articleTypeId != null "> and article_type_id = #{articleTypeId}</if>
+            <if test="articleUserId != null "> and article_user_id = #{articleUserId}</if>
+            <if test="articleDeptId != null "> and article_dept_id = #{articleDeptId}</if>
+            <if test="params.beginArticlePublishDate != null and params.beginArticlePublishDate != ''"><!-- 开始时间检索 -->
+                and date_format(article_publish_date,'%y%m%d') &gt;= date_format(#{params.beginArticlePublishDate},'%y%m%d')
+            </if>
+            <if test="params.endArticlePublishDate != null and params.endArticlePublishDate != ''"><!-- 结束时间检索 -->
+                and date_format(article_publish_date,'%y%m%d') &lt;= date_format(#{params.endArticlePublishDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
     <!--获取最新10条资源-->
     <select id="selectNew10" resultMap="ArticleResult">
         <include refid="selectArticleVo"/>

@@ -14,10 +14,9 @@ a {
 }
 
 .nav {
-    /*width: 1200px;*/
+    width: 1200px;
     margin: 0px auto;
     /* border: 1px #000 solid; */
-    padding: 10px 20px 10px 20px;
 }
 
 .tip {
@@ -36,6 +35,10 @@ a {
 .zcdl {
     background-color: #393D49;
     overflow: hidden;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 999;
 }
 
 .zcdl ul {
@@ -55,6 +58,7 @@ a {
 .dbdh {
     overflow: hidden;
     color: white;
+    padding: 20px;
 }
 
 .dbdh .left {
@@ -392,4 +396,32 @@ a {
 
 .sInfo span {
     margin: 0 3px;
+}
+
+/*
+分页*/
+.paging{
+    /*padding: 50px 0 50px 0;*/
+    text-align: center;
+}
+
+.pagination>li{
+    display: inline;
+    cursor: pointer;
+}
+.pagination>li>.active{
+    background-color: rgb(0, 122, 255);
+    color: white;
+}
+
+.pagination>li>a:hover{
+    background-color: rgb(0, 122, 255);
+    color: white;
+}
+.pagination>li>a{
+    font-size: 13px;
+    padding: 6px 12px;
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #ddd;
 }

@@ -70,6 +70,11 @@ public class ArticleServiceImpl implements IArticleService {
         return articleMapper.selectArticleList(article);
     }
 
+    @Override
+    public int selectArticleListCount(Article article) {
+        return articleMapper.selectArticleListCount(article);
+    }
+
     /**
      * 新增资源
      * 

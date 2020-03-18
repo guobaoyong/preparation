@@ -64,7 +64,7 @@ public class Dept extends BaseEntity
     private Integer total;
 
     /** 教师总数 */
-    private Integer totalUser;
+    private Integer totalUser = 0;
 
     public Long getDeptId()
     {

@@ -70,7 +70,7 @@ public class CollegeController extends BaseController {
             tempDept.setTotalUser(deptService.selectUserCount(tempDept.getDeptId()).getTotalUser());
             Article article = new Article();
             article.setArticleDeptId(tempDept.getDeptId());
-            tempDept.setTotal(articleService.selectArticleList(article).size());
+            tempDept.setTotal(articleService.selectArticleListCount(article));
         });
         long total = getDataTable(depts).getTotal();
         int totalPage = new Double(Math.ceil((double) total / size)).intValue();
@@ -101,7 +101,6 @@ public class CollegeController extends BaseController {
      * 获取友情链接
      * @return
      */
-    @GetMapping("/links")
     public List<Link> links(){
         if (redisUtil.hasKey("link_list")){
             return (List<Link>) redisUtil.get("link_list");
@@ -138,10 +137,5 @@ public class CollegeController extends BaseController {
         }
         modelAndView.addObject("downloadNums", redisUtil.get("downloadNums"));
         return modelAndView;
-    }
-
-    @GetMapping("/test")
-    public AjaxResult test(){
-        return AjaxResult.success();
     }
 }
