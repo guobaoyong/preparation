@@ -382,6 +382,14 @@
 			<artifactId>blog-hunter</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+
+		<!-- HTML解析 -->
+		<dependency>
+			<groupId>org.htmlparser</groupId>
+			<artifactId>htmlparser</artifactId>
+			<version>2.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

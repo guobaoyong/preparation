@@ -1,6 +1,7 @@
 package qqzsh.top.preparation.project.front.lucene;
 
 import com.github.pagehelper.util.StringUtil;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import qqzsh.top.preparation.common.utils.DateUtils;
 import qqzsh.top.preparation.common.utils.StringUtils;
 import qqzsh.top.preparation.framework.config.PreparationConfig;
@@ -67,10 +68,18 @@ public class ArticleIndex {
         try {
             IndexWriter writer = getWriter();
             Document doc = new Document();
+            // 资源ID
             doc.add(new StringField("articleId", String.valueOf(article.getArticleId()), Field.Store.YES));
+            // 资源名称
             doc.add(new TextField("articleName", article.getArticleName(), Field.Store.YES));
+            // 发布时间
             doc.add(new StringField("articlePublishDate", DateUtils.formatDate(article.getArticlePublishDate()), Field.Store.YES));
+            // 资源内容
             doc.add(new TextField("articleContent", article.getArticleContent(), Field.Store.YES));
+            // 所属高校
+            doc.add(new TextField("deptName", article.getDept().getDeptName(), Field.Store.YES));
+            // 资源类别
+            doc.add(new TextField("arcType", article.getArcType().getSrcTypeName(), Field.Store.YES));
             writer.addDocument(doc);
             writer.close();
         } catch (Exception e) {
@@ -94,10 +103,18 @@ public class ArticleIndex {
         try {
             IndexWriter writer = getWriter();
             Document doc = new Document();
+            // 资源ID
             doc.add(new StringField("articleId", String.valueOf(article.getArticleId()), Field.Store.YES));
+            // 资源名称
             doc.add(new TextField("articleName", article.getArticleName(), Field.Store.YES));
+            // 发布时间
             doc.add(new StringField("articlePublishDate", DateUtils.formatDate(article.getArticlePublishDate()), Field.Store.YES));
+            // 资源内容
             doc.add(new TextField("articleContent", article.getArticleContent(), Field.Store.YES));
+            // 所属高校
+            doc.add(new TextField("deptName", article.getDept().getDeptName(), Field.Store.YES));
+            // 资源类别
+            doc.add(new TextField("arcType", article.getArcType().getSrcTypeName(), Field.Store.YES));
             writer.updateDocument(new Term("articleId", String.valueOf(article.getArticleId())), doc);
             writer.close();
         } catch (Exception e) {
@@ -139,18 +156,30 @@ public class ArticleIndex {
      * @return
      * @throws Exception
      */
-    public List<Article> search(String q) throws Exception {
+    public List<Article> search(String q,String deptName,String arcType) throws Exception {
         dir = FSDirectory.open(Paths.get(lucenePath));
         IndexReader reader = DirectoryReader.open(dir);
         IndexSearcher is = new IndexSearcher(reader);
-        BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
         SmartChineseAnalyzer analyzer = new SmartChineseAnalyzer();
+        BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
         QueryParser parser = new QueryParser("articleName", analyzer);
         Query query = parser.parse(q);
         QueryParser parser2 = new QueryParser("articleContent", analyzer);
         Query query2 = parser2.parse(q);
         booleanQuery.add(query, BooleanClause.Occur.SHOULD);
         booleanQuery.add(query2, BooleanClause.Occur.SHOULD);
+        if (StringUtils.isNotBlank(deptName) || StringUtils.isNotBlank(arcType)){
+            if (StringUtils.isNotBlank(deptName)){
+                QueryParser parser3 = new QueryParser("deptName", analyzer);
+                Query query3 = parser3.parse(deptName);
+                booleanQuery.add(query3, BooleanClause.Occur.MUST);
+            }
+            if (StringUtils.isNotBlank(arcType)){
+                QueryParser parser4 = new QueryParser("arcType", analyzer);
+                Query query4 = parser4.parse(arcType);
+                booleanQuery.add(query4, BooleanClause.Occur.MUST);
+            }
+        }
         TopDocs hits = is.search(booleanQuery.build(), 100);
         QueryScorer scorer = new QueryScorer(query);
         Fragmenter fragmenter = new SimpleSpanFragmenter(scorer);

@@ -425,3 +425,13 @@ a {
     background-color: #fff;
     border: 1px solid #ddd;
 }
+/*平台介绍页面*/
+.introduct{
+    width: 1200px;
+    margin: 140px auto 50px auto;
+    font-size: 30px;
+}
+.introDetails{
+    background-color: white;
+    padding: 30px 20px 20px;
+}

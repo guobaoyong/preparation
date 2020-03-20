@@ -97,6 +97,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectDownloadTop10" resultMap="ArticleResult">
         SELECT sys_user_download.download_article_id as article_id,count(*) as total FROM sys_user_download GROUP BY sys_user_download.download_article_id ORDER BY total desc limit 10
     </select>
+
+    <!--获取资源被下载量-->
+    <select id="selectDownloadCount" parameterType="Long" resultType="int">
+        select count(*) FROM sys_user_download WHERE download_article_id = #{articleId}
+    </select>
     
     <select id="selectArticleById" parameterType="Long" resultMap="ArticleResult">
         <include refid="selectArticleVo"/>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="'平台简介-'+${@config.getKey('site.name')}"></title>
+    <link th:href="@{/css/index.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- 注册登录 -->
+<div class="zcdl">
+    <!-- 顶部导航 -->
+    <div class="dbdh">
+        <div class="left">
+            <h3 th:text="${@config.getKey('site.name')}"></h3>
+            <h3 th:text="${@config.getKey('site.ename')}"></h3>
+        </div>
+        <div class="right">
+            <ul>
+                <li><a th:href="@{/}">首页</a></li>
+                <li><a th:href="@{/front/college}">高校</a></li>
+                <li><a th:href="@{/front/scholar}">教师</a></li>
+                <li><a th:href="@{/front/article}">学科资源</a></li>
+                <li><a th:href="@{/front/boutique}">精品资源</a></li>
+                <li><a href="">通知公告</a></li>
+                <li><a th:href="@{/front/about}" class="active">平台介绍</a></li>
+                <li>
+                    <a>|</a>
+                </li>
+                <li>
+                    <a>注册</a>
+                </li>
+                <li>
+                    <a>登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--内容待填充-->
+<div  class="introduct">
+    <h3 class="tip">平台介绍</h3>
+    <div class="introDetails">
+        <p th:utext="${about}" ></p>
+    </div>
+</div>
+
+
+
+<!-- 友情链接 -->
+<div class="yqlj nav">
+    <h3 class="tip">友情链接</h3>
+    <div class="friendBox">
+        <span th:each="link:${allLinkList}">
+            <a target="_blank" th:href="${link.linkUrl}" th:title="${link.linkName}">
+                <span th:text="${link.linkName}"></span>
+            </a>
+        </span>
+    </div>
+
+</div>
+<!-- 版权声明 -->
+<div class="bqsm">
+    <div class="sInfo">
+        <a href="">Powered by <a href="/"><span th:text="${@config.getKey('site.name')}"></span></a></a>
+        <a href="/tomzPage">免责申明</a>
+        <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=admin@qqzsh.top" class="qqjb" style="color: #f40;">侵权举报</a>
+        <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=admin@qqzsh.top" style="border-color: transparent;">广告合作</a>
+    </div>
+    <div class="sInfo">
+        <span>资源总数 : <span th:text="${articleNums}"></span></span>
+        <span>用户总数 ：<span th:text="${userNum}"></span></span>
+        <span>下载量 ：<span th:text="${downloadNums}"></span>
+    </div>
+    <div class="sInfo" style="border-color: transparent;">
+        Copyright © <span th:text="${@config.getKey('site.copyrightyear')}"/> <a th:href="${@config.getKey('site.url')}"><span th:text="${@config.getKey('site.url')}"></span></a> 版权所有
+    </div>
+    <div class="sInfo">
+        <a href="http://www.beian.miit.gov.cn" target="_blank" style="border-color: transparent;"><span th:text="${@config.getKey('site.record')}"></span></a>
+    </div>
+</div>
+</body>
+</html>

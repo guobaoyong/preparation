@@ -1,12 +1,19 @@
 package qqzsh.top.preparation.project.front.controller.v2;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import qqzsh.top.preparation.common.utils.PageUtil;
 import qqzsh.top.preparation.common.utils.RedisUtil;
+import qqzsh.top.preparation.common.utils.StringUtils;
+import qqzsh.top.preparation.framework.web.controller.BaseController;
 import qqzsh.top.preparation.framework.web.domain.AjaxResult;
 import qqzsh.top.preparation.project.content.article.domain.Article;
 import qqzsh.top.preparation.project.content.article.service.IArticleService;
@@ -34,7 +41,7 @@ import java.util.List;
  * @Description
  */
 @RestController
-public class FrontIndexV2Controller {
+public class FrontIndexV2Controller extends BaseController {
 
     @Autowired
     private RedisUtil redisUtil;
@@ -272,4 +279,70 @@ public class FrontIndexV2Controller {
         return modelAndView;
     }
 
+    /**
+     * 平台简介
+     */
+    @GetMapping("/front/about")
+    public ModelAndView about(){
+        // 获取平台数据量
+        ModelAndView modelAndView = data();
+        //获取友情链接
+        modelAndView.addObject("allLinkList",links());
+        Notice notice = new Notice();
+        // 状态正常
+        notice.setStatus("0");
+        // 类型为平台简介
+        notice.setNoticeType("3");
+        startPage(1,20,"create_time desc");
+        List<Notice> list = noticeService.selectNoticeList(notice);
+        if (list.size() != 0){
+            modelAndView.addObject("about", list.get(0).getNoticeContent());
+        }else {
+            modelAndView.addObject("about", "暂无简介");
+        }
+        modelAndView.setViewName("front/v2/about");
+        return modelAndView;
+    }
+
+    /**
+     * 设置请求分页数据
+     */
+    protected void startPage(Integer pageNum,Integer pageSize,String orderBy) {
+        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize)) {
+            PageHelper.startPage(pageNum, pageSize, orderBy);
+        }
+    }
+
+    /**
+     * 新闻公告页
+     */
+    @GetMapping("/front/notice")
+    public ModelAndView notice(@RequestParam(value = "page", required = false,defaultValue = "1") Integer page,
+                               @RequestParam(value = "size", required = false,defaultValue = "10") Integer size){
+        // 获取平台数据量
+        ModelAndView modelAndView = data();
+        //获取友情链接
+        modelAndView.addObject("allLinkList",links());
+        Notice notice = new Notice();
+        // 状态正常
+        notice.setStatus("0");
+        // 类型为通知
+        notice.setNoticeType("1");
+        startPage(page,size,"create_time desc");
+        List<Notice> list = noticeService.selectNoticeList(notice);
+        // 结果集合
+        modelAndView.addObject("noticeList", list);
+        long total = getDataTable(list).getTotal();
+        int totalPage = new Double(Math.ceil((double) total / size)).intValue();
+        // 总记录数
+        modelAndView.addObject("total",total);
+        // 当前页
+        modelAndView.addObject("page",page);
+        // 页面大小
+        modelAndView.addObject("size",size);
+        // 总页数
+        modelAndView.addObject("totalPage",totalPage);
+        modelAndView.setViewName("front/v2/notice");
+        return modelAndView;
+    }
 }

@@ -19,6 +19,7 @@ import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import qqzsh.top.preparation.project.content.type.domain.ArcType;
 import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
 import qqzsh.top.preparation.project.front.lucene.ArticleIndex;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -82,6 +83,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private IPointChangeService pointChangeService;
+
+    @Autowired
+    private IDeptService deptService;
 
     @RequiresPermissions("content:article:view")
     @GetMapping()
@@ -220,6 +224,10 @@ public class ArticleController extends BaseController {
                     // 消息模块添加
                     message.setContent("【审核通过】您发布的【" + article.getArticleName() + "】帖子审核成功！审核人："+ShiroUtils.getSysUser().getUserName());
                     messageService.insertMessage(message);
+                    // 高校
+                    article.setDept(deptService.selectDeptById(article.getArticleDeptId()));
+                    // 资源类别
+                    article.setArcType(arcTypeService.selectArcTypeById(article.getArticleTypeId()));
                     // 帖子加入索引
                     try {
                         articleIndex.addIndex(article);

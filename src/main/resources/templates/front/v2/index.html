@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'首页-'+${@config.getKey('site.name')}"></title>
     <link th:href="@{/css/index.css}" rel="stylesheet"/>
-    <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet"/>
+    <link th:href="@{/css/layui.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -22,10 +23,10 @@
                     <li><a href="" class="active">首页</a></li>
                     <li><a th:href="@{/front/college}">高校</a></li>
                     <li><a th:href="@{/front/scholar}">教师</a></li>
-                    <li><a href="">学科资源</a></li>
-                    <li><a href="">精品资源</a></li>
+                    <li><a th:href="@{/front/article}">学科资源</a></li>
+                    <li><a th:href="@{/front/boutique}">精品资源</a></li>
                     <li><a href="">通知公告</a></li>
-                    <li><a href="">平台介绍</a></li>
+                    <li><a th:href="@{/front/about}">平台介绍</a></li>
                     <li><span>|</span></li>
                     <li>
                         <a class="register">注册</a>

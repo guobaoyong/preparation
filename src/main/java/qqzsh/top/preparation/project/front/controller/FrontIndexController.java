@@ -27,6 +27,7 @@ import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import qqzsh.top.preparation.project.content.type.domain.ArcType;
 import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
 import qqzsh.top.preparation.project.front.lucene.ArticleIndex;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.notice.domain.Notice;
 import qqzsh.top.preparation.project.system.notice.service.INoticeService;
 import qqzsh.top.preparation.project.system.user.domain.User;
@@ -108,6 +109,9 @@ public class FrontIndexController {
 
     @Autowired
     private IPointChangeService pointChangeService;
+
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 默认lucene的地址
@@ -774,6 +778,10 @@ public class FrontIndexController {
         int i = 1;
         for (Article article : articleList) {
             log.info("索引写入进度："+((double) (i++) / articleList.size()*100)+"%");
+            // 高校
+            article.setDept(deptService.selectDeptById(article.getArticleDeptId()));
+            // 资源类别
+            article.setArcType(arcTypeService.selectArcTypeById(article.getArticleTypeId()));
             if (!articleIndex.addIndex(article)) {
                 modelAndView.addObject("status",false);
             }
@@ -945,12 +953,15 @@ public class FrontIndexController {
      * @return
      */
     @RequestMapping("/article/search")
-    public ModelAndView search(String q, @RequestParam(value = "page", required = false) String page, HttpServletRequest request) throws Exception {
+    public ModelAndView search(String q,
+                               @RequestParam(value = "deptName", required = false,defaultValue = "") String deptName,
+                               @RequestParam(value = "arcTypeStr", required = false,defaultValue = "") String arcTypeStr,
+                               @RequestParam(value = "page", required = false) String page, HttpServletRequest request) throws Exception {
         request.getSession().setAttribute("tMenu", "t_0");
         if (StringUtil.isEmpty(page)) {
             page = "1";
         }
-        List<Article> articleList = articleIndex.search(q);
+        List<Article> articleList = articleIndex.search(q,deptName,arcTypeStr);
         Integer toIndex = articleList.size() >= Integer.parseInt(page) * 10 ? Integer.parseInt(page) * 10 : articleList.size();
         ModelAndView mav = new ModelAndView();
         // 热门资源

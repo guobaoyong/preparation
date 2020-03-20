@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="'学科资源-'+${@config.getKey('site.name')}"></title>
+    <link th:href="@{/css/index.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet"/>
+    <link th:href="@{/css/seastyle.css}" rel="stylesheet"/>
+    <link th:href="@{/css/article.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- 注册登录 -->
+<div class="zcdl">
+    <!-- 顶部导航 -->
+    <div class="dbdh">
+        <div class="left">
+            <h3 th:text="${@config.getKey('site.name')}"></h3>
+            <h3 th:text="${@config.getKey('site.ename')}"></h3>
+        </div>
+        <div class="right">
+            <ul>
+                <li><a th:href="@{/}">首页</a></li>
+                <li><a th:href="@{/front/college}">高校</a></li>
+                <li><a th:href="@{/front/scholar}">教师</a></li>
+                <li><a th:href="@{/front/article}" class="active">学科资源</a></li>
+                <li><a th:href="@{/front/boutique}">精品资源</a></li>
+                <li><a href="">通知公告</a></li>
+                <li><a th:href="@{/front/about}">平台介绍</a></li>
+                <li>
+                    <a>|</a>
+                </li>
+                <li>
+                    <a>注册</a>
+                </li>
+                <li>
+                    <a>登录</a>
+                </li>
+            </ul>
+        </div>
+        <div style="clear: both"></div>
+    </div>
+
+</div>
+<!--<div style="clear: both"></div>-->
+<!--商品选择框-->
+<div class="theme-popover nav">
+    <ul class="select">
+        <div class="clear"></div>
+        <!--已选择的商品-->
+        <li class="select-result" th:if="${deptName}!=''or ${arcType}!=''">
+            <dl>
+                <dt>已选</dt>
+                <dd class="select-no"></dd>
+                <p class="eliminateCriteria">清除</p>
+                <!--  高校    -->
+                <dd class="selected" id="selectB" th:data-listnumber="${deptName}">
+                    <a  class="clone closeTwo" href="#" th:if="${deptName}!=''" th:text="${deptNameStr}" th:value="${deptName}"></a>
+                </dd>
+                <!--  类别-->
+                <dd class="selected" id="selectC" th:data-itemnumber="${arcType}">
+                    <a  class="close closeThree" href="#" th:if="${arcType}!=''" th:text="${arcTypeStr}" th:value="${arcType}"></a>
+                </dd>
+            </dl>
+        </li>
+        <li class="select-result" style="display: none" th:if="${deptName}==''and ${arcType}==''">
+            <dl>
+                <dt>已选</dt>
+                <dd class="select-no"></dd>
+                <p class="eliminateCriteria">清除</p>
+                <!--  高校    -->
+                <dd class="selected" id="selectB" th:data-listnumber="${deptName}">
+                    <a  class="clone closeTwo" href="#" th:if="${deptName}!=''" th:text="${deptNameStr}" th:value="${deptName}"></a>
+                </dd>
+                <!--  类别-->
+                <dd class="selected" id="selectC" th:data-itemnumber="${arcType}">
+                    <a  class="close closeThree" href="#" th:if="${arcType}!=''" th:text="${arcTypeStr}" th:value="${arcType}"></a>
+                </dd>
+            </dl>
+        </li>
+        <div class="clear"></div>
+        <!-- 高校-->
+        <li class="select-list">
+            <dl id="select2">
+                <dt class="am-badge am-round">高校</dt>
+                <div class="dd-conent">
+                    <dd class="select-all selected"><a href="#" class="all">全部</a></dd>
+                    <dd th:each="dept:${deptsList}">
+                        <a  class="Item2" href="#" th:data-listsnumber="${dept.deptId}" th:data-deptname="${dept.deptName}" th:title="${dept.total}">
+                            <p th:text="${dept.deptName}"></p>
+                        </a>
+                    </dd>
+                </div>
+            </dl>
+        </li>
+        <!-- 资源类别-->
+        <li class="select-list">
+            <dl id="select3">
+                <dt class="am-badge am-round">类别</dt>
+                <div class="dd-conent">
+                    <dd class="select-all selected"><a href="#" class="allC">全部</a></dd>
+                    <dd th:each="arcType:${arcTypesList}">
+                        <a class="Item3" href="#" th:data-listsnumber="${arcType.srcTypeId}" th:data-srctypename="${arcType.srcTypeName}" th:title="${arcType.allSize}">
+                            <p th:text="${arcType.srcTypeName}"></p>
+                        </a>
+                    </dd>
+                </div>
+            </dl>
+        </li>
+<!--        //搜索框-->
+        <li class="select-list">
+            <dl >
+                <dt class="am-badge am-round">关键词</dt>
+                <div class="dd-conent">
+                    <div class="mainPart">
+                        <!--搜索框-->
+                        <div class="inputProduct">
+                            <form type="GET">
+                                <input type="text" id="q" placeholder="请输入关键词信息" name="q" th:value="${q}" />
+                                <div class="submitProduct">
+                                    <input onclick="formSubmit()" type="text" value="提交" />
+                                </div>
+                            </form>
+                            <div style="clear: both"></div>
+                        </div>
+                        <div style="clear: both"></div>
+                    </div>
+                </div>
+            </dl>
+        </li>
+    </ul>
+    <div class="clear"></div>
+
+</div>
+
+<!--资源列表-->
+<div class="sourceList">
+    <ul>
+        <li th:each="article:${resultList}">
+            <p>
+                <span>名称：</span>
+                <span th:utext="${article.articleName}"></span>
+            </p>
+            <p>
+            <span>所属高校：</span>
+            <a th:href="@{/front/article(deptName=${article.dept.deptId})}"><span th:text="${article.dept.deptName}"></span></a>
+        </p>
+            <p>
+                <span>作者：</span>
+                <a th:href="@{/front/article(q=${article.user.userName})}"><span th:text="${article.user.userName}"></span></a>
+            </p>
+            <p>
+                <span>类别：</span>
+                <a th:href="@{/front/article(arcType=${article.arcType.srcTypeId})}"><span th:text="${article.arcType.srcTypeName}"/></a>
+            </p>
+            <p>
+                <span>发布时间：</span>
+                <span th:text="${#dates.format(article.articlePublishDate,'yyyy-MM-dd')}"/>
+            </p>
+            <p>
+                <span>浏览量：</span>
+                <span th:text="${article.articleView}"/>
+            </p>
+            <p>
+                <span>下载量：</span>
+                <span th:text="${article.total}"/>
+            </p>
+            <p>
+                <span>摘要：</span>    <span th:utext="${article.articleContent}" />
+            </p>
+        </li>
+    </ul>
+</div>
+
+<!--分页-->
+<div class="paging">
+    <ul class="pagination" id="pagination1">
+        <!--//如果当前页等于1，总页数大于1（不显示上一页）   orderDara.current&ndash;&gt;当前页-->
+        <li id="first">
+            <a th:href="@{/front/article(page=1,size=${size},deptName=${deptName},arcType=${arcType},q=${q})}">首页</a>
+        </li>
+        <li th:if="${page != 1}">
+            <a th:href="@{/front/article(page=${page}-1,size=${size},deptName=${deptName},arcType=${arcType},q=${q})}">上一页</a>
+        </li>
+
+        <li  th:each="i:${#numbers.sequence(1,totalPage)}">
+            <!--//从1到总页数遍历，并赋值给i    orderDara.pages&ndash;&gt;总页数-->
+            <a class="active" th:if="${i > page-3} and ${i <page+3} and ${i == page}" href="javascript:void(0);" th:text="${i}">#</a>
+            <!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
+            <a th:if="${i > page -3} and ${i < page+3} and ${i != page}"
+               th:href="@{/front/article(page=${i},size=${size},deptName=${deptName},arcType=${arcType},q=${q})}" th:text="${i}">#</a><!--//限制显示页数的条数  4到6个页数-->
+        </li>
+        <li th:if="${page != totalPage}">
+            <a th:href="@{/front/article(page=${page}+1,size=${size},deptName=${deptName},arcType=${arcType},q=${q})}">下一页</a>
+        </li>
+        <li id="last">
+            <a th:href="@{/front/article(page=${totalPage},size=${size},deptName=${deptName},arcType=${arcType},q=${q})}">尾页</a>
+        </li><!--//跳转至第orderDara.current页-->
+        <li>
+            <a href="#" th:text="'共'+${totalPage}+'页'"></a>
+        </li>
+    </ul>
+</div>
+
+<!-- 友情链接 -->
+<div class="yqlj nav">
+    <h3 class="tip">友情链接</h3>
+    <div class="friendBox">
+        <span th:each="link:${allLinkList}">
+            <a target="_blank" th:href="${link.linkUrl}" th:title="${link.linkName}">
+                <span th:text="${link.linkName}"></span>
+            </a>
+        </span>
+    </div>
+
+</div>
+<!-- 版权声明 -->
+<div class="bqsm">
+    <div class="sInfo">
+        <a href="">Powered by <a href="/"><span th:text="${@config.getKey('site.name')}"></span></a></a>
+        <a href="/tomzPage">免责申明</a>
+        <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=admin@qqzsh.top" class="qqjb" style="color: #f40;">侵权举报</a>
+        <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=admin@qqzsh.top" style="border-color: transparent;">广告合作</a>
+    </div>
+    <div class="sInfo">
+        <span>资源总数 : <span th:text="${articleNums}"></span></span>
+        <span>用户总数 ：<span th:text="${userNum}"></span></span>
+        <span>下载量 ：<span th:text="${downloadNums}"></span>
+    </div>
+    <div class="sInfo" style="border-color: transparent;">
+        Copyright © <span th:text="${@config.getKey('site.copyrightyear')}"/> <a th:href="${@config.getKey('site.url')}"><span th:text="${@config.getKey('site.url')}"></span></a> 版权所有
+    </div>
+    <div class="sInfo">
+        <a href="http://www.beian.miit.gov.cn" target="_blank" style="border-color: transparent;"><span th:text="${@config.getKey('site.record')}"></span></a>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/jquery.min.js}" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/js/jquery.multi-select.js}" type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/js/article.js}" type="text/javascript" charset="utf-8"></script>
+</html>

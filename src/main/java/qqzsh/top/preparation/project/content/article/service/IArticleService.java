@@ -37,6 +37,13 @@ public interface IArticleService {
     int selectArticleListCount(Article article);
 
     /**
+     * 通过资源ID获取下载量
+     * @param articleId
+     * @return
+     */
+    Integer selectDownloadCount(Long articleId);
+
+    /**
      * 新增资源
      * 
      * @param article 资源

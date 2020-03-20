@@ -20,7 +20,9 @@ import qqzsh.top.preparation.project.content.article.mapper.ArticleMapper;
 import qqzsh.top.preparation.project.content.article.service.IArticleService;
 import qqzsh.top.preparation.project.content.message.domain.Message;
 import qqzsh.top.preparation.project.content.message.service.IMessageService;
+import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
 import qqzsh.top.preparation.project.front.lucene.ArticleIndex;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 
 /**
  * 资源Service业务层处理
@@ -45,6 +47,12 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Autowired
     private ArticleIndex articleIndex;
+
+    @Autowired
+    private IDeptService deptService;
+
+    @Autowired
+    private IArcTypeService arcTypeService;
 
     /**
      * 查询资源
@@ -73,6 +81,11 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public int selectArticleListCount(Article article) {
         return articleMapper.selectArticleListCount(article);
+    }
+
+    @Override
+    public Integer selectDownloadCount(Long articleId) {
+        return articleMapper.selectDownloadCount(articleId);
     }
 
     /**
@@ -127,6 +140,10 @@ public class ArticleServiceImpl implements IArticleService {
             // 消息模块添加
             message.setContent("【审核通过】您发布的【" + article.getArticleName() + "】帖子审核成功！审核人：阿里AI审核员");
             messageService.insertMessage(message);
+            // 高校
+            article.setDept(deptService.selectDeptById(article.getArticleDeptId()));
+            // 资源类别
+            article.setArcType(arcTypeService.selectArcTypeById(article.getArticleTypeId()));
             // 帖子加入索引
             try {
                 articleIndex.addIndex(article);

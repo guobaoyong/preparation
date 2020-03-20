@@ -83,4 +83,11 @@ public interface ArticleMapper
      * @return
      */
     List<Article> selectDownloadTop10();
+
+    /**
+     * 通过资源ID获取下载量
+     * @param articleId
+     * @return
+     */
+    Integer selectDownloadCount(Long articleId);
 }
