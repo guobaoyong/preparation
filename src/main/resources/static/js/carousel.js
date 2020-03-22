@@ -1,5 +1,12 @@
-// 高校展示轮播
+// 教师展示轮播
 $(function() {
+    var width_ = $(".switchable_triggers>li").length * 20 + "px";
+    $(".switchable_triggers").css("width", width_);
+    $(".switchable_triggers").css("margin", "10px auto")
+    $(".carousel_box>a").eq(0).clone().appendTo($(".carousel_box"))
+    $(".carousel_box>a").eq(1).clone().appendTo($(".carousel_box"))
+    $(".carousel_box>a").eq(2).clone().appendTo($(".carousel_box"))
+    $(".carousel_box>a").eq(3).clone().appendTo($(".carousel_box"))
     var current_index = 0;
     var total = $(".carousel_box>a").length - 4;
 
@@ -22,7 +29,6 @@ $(function() {
         $(".switchable_triggers>li").eq(current_index).siblings().css("background-position", "-80px -10px");
     }
     var timer = setInterval(carousel_play, 2000)
-
     $(".switchable_triggers>li").hover(function() {
         switchable_triggers_index = $(this).index();
         clearInterval(timer);

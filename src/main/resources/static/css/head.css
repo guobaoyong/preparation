@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(241, 241, 241);
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.nav {
+    width: 1200px;
+    margin: 0px auto;
+    /* border: 1px #000 solid; */
+}
+
+.tip {
+    text-align: left;
+    margin: 30px auto;
+    padding: 0 15px;
+    border-left: 5px solid rgb(0, 122, 255);
+    font-size: 25px;
+    display: block;
+    font-weight: 600;
+}
+
+
+/* 注册登录 */
+
+.zcdl {
+    background-color: #393D49;
+}
+
+.zcdl::after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+.zcdl ul {
+    float: right;
+    margin: 11px 0;
+}
+
+.zcdl li {
+    list-style: none;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 10px;
+}
+
+.logged_out li {
+    cursor: pointer;
+}
+
+.logged_in li {
+    vertical-align: top;
+}
+
+.logged_in a {
+    color: #fff;
+}
+
+.number {
+    background: rgb(0, 122, 255);
+    border-radius: 3px;
+    padding: 3px;
+    margin: 0 7px;
+}
+
+.head_img {
+    display: block;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.head_img img {
+    width: 100%;
+}
+
+.menu {
+    position: absolute;
+    top: 40px;
+    width: 80px;
+    margin-left: -40px;
+    left: 50%;
+    background: #fff;
+    border-radius: 5px;
+    display: none;
+    z-index: 999;
+}
+
+.menu a {
+    color: #000;
+    display: block;
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+.menu a:nth-child(3) {
+    border-bottom: 0px solid #f1f1f1;
+}
+
+
+/* 顶部导航 */
+
+.dbdh {
+    overflow: hidden;
+    height: 80px;
+}
+
+.dbdh .left {
+    float: left;
+    height: 50px;
+    margin-top: 15px;
+}
+
+.logo_name {
+    line-height: 30px;
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: 4px;
+    font-family: "隶书";
+    color: #000;
+}
+
+.logo_en {
+    color: #777;
+    line-height: 30px;
+    letter-spacing: 1px;
+}
+
+.dbdh .right {
+    float: right;
+    height: 80px;
+}
+
+.dbdh li {
+    list-style: none;
+    display: inline-block;
+    padding: 30px 15px;
+    color: #000;
+}
+
+.dbdh a {
+    color: #000;
+    font-size: 16px;
+}
+
+.active {
+    border-bottom: 5px solid rgb(0, 122, 255);
+}
+
+.dbdh a:hover {
+    border-bottom: 5px solid rgb(0, 122, 255);
+}

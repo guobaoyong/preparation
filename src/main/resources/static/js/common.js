@@ -15,7 +15,7 @@ function showRegister(){
 	layer.open({
 		  type: 2,
 		  title: '用户注册',
-		  area: ['480px', '500px'],
+		  area: ['500px', '620px'],
 		  content: '/toRegister' //iframe的url
 		}); 
 }

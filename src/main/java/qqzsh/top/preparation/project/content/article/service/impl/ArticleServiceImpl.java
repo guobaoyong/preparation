@@ -23,6 +23,7 @@ import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
 import qqzsh.top.preparation.project.front.lucene.ArticleIndex;
 import qqzsh.top.preparation.project.system.dept.service.IDeptService;
+import qqzsh.top.preparation.project.system.user.service.IUserService;
 
 /**
  * 资源Service业务层处理
@@ -53,6 +54,9 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Autowired
     private IArcTypeService arcTypeService;
+
+    @Autowired
+    private IUserService userService;
 
     /**
      * 查询资源
@@ -105,6 +109,10 @@ public class ArticleServiceImpl implements IArticleService {
         // 设置资源所属用户ID
         if (article.getArticleUserId() == null){
             article.setArticleUserId(ShiroUtils.getSysUser().getUserId());
+        }
+        // 设置资源所属高校
+        if (article.getArticleDeptId() == null){
+            article.setArticleDeptId(userService.selectUserById(article.getArticleUserId()).getDeptId());
         }
         int row = articleMapper.insertArticle(article);
         if (redisUtil.hasKey("articleNums")){

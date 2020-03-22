@@ -27,9 +27,11 @@ import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import qqzsh.top.preparation.project.content.type.domain.ArcType;
 import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
 import qqzsh.top.preparation.project.front.lucene.ArticleIndex;
+import qqzsh.top.preparation.project.system.dept.domain.Dept;
 import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.notice.domain.Notice;
 import qqzsh.top.preparation.project.system.notice.service.INoticeService;
+import qqzsh.top.preparation.project.system.post.service.IPostService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -112,6 +114,9 @@ public class FrontIndexController {
 
     @Autowired
     private IDeptService deptService;
+
+    @Autowired
+    private IPostService postService;
 
     /**
      * 默认lucene的地址
@@ -284,7 +289,23 @@ public class FrontIndexController {
      */
     @GetMapping("/toRegister")
     public ModelAndView toRegister() {
-        return new ModelAndView("front/register");
+        ModelAndView modelAndView = new ModelAndView("front/register");
+        // 放入高校
+        modelAndView.addObject("depts",depts());
+        // 放入职称
+        modelAndView.addObject("posts",postService.selectPostAll());
+        return modelAndView;
+    }
+
+    /**
+     * 获取顶层所有高校
+     */
+    public List<Dept> depts(){
+        Dept dept = new Dept();
+        // 顶层高校
+        dept.setParentId(100L);
+        List<Dept> depts = deptService.selectDeptList(dept);
+        return depts;
     }
 
     /**
@@ -307,6 +328,7 @@ public class FrontIndexController {
     @ResponseBody
     @RequestMapping("/register")
     public Map<String, Object> register(@Valid User user,
+                                        Long postId,
                                         BindingResult bindingResult,
                                         String vaptcha_token,
                                         HttpServletRequest request) throws Exception {
@@ -324,10 +346,13 @@ public class FrontIndexController {
             map.put("success", false);
             map.put("errorInfo", "人机验证失败！");
         } else {
+            // 普通用户
             user.setRoleIds(new Long[]{2L});
             user.setVipTime(new Date());
-            user.setDeptId(105L);
-            user.setUserName("注册用户_"+user.getVipTime().getTime());
+            if (StringUtils.isBlank(user.getUserName())){
+                user.setUserName("注册用户_"+user.getVipTime().getTime());
+            }
+            user.setPostIds(new Long[]{postId});
             userService.insertUser(user);
             map.put("success", true);
         }
@@ -497,19 +522,6 @@ public class FrontIndexController {
     }
 
     /**
-     * 免责声明页面
-     *
-     * @return
-     */
-    @GetMapping("/tomzPage")
-    public ModelAndView tomzPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("title", "免责声明");
-        modelAndView.setViewName("front/mzPage");
-        return modelAndView;
-    }
-
-    /**
      * 根据id查询帖子详细信息
      *
      * @param id
@@ -530,6 +542,10 @@ public class FrontIndexController {
         article.setUser(userService.selectUserById(article.getArticleUserId()));
         //查看次数由数据库获取
         article.setArticleView(articleService.selectArticleById(id).getArticleView());
+        // 下载次数
+        article.setTotal(articleService.selectDownloadCount(article.getArticleId()));
+        // 来源
+        article.setRemark(deptService.selectDeptById(article.getUser().getDeptId()).getDeptName());
         data.addObject("article", article);
         data.addObject("title", article.getArticleName());
         Comment s_comment = new Comment();
@@ -809,7 +825,7 @@ public class FrontIndexController {
             return map;
         }
         User user = ShiroUtils.getSysUser();
-        if (user.isSign()) {
+        if (userService.selectUserById(user.getUserId()).isSign()) {
             map.put("success", false);
             map.put("errorInfo", "尊敬的会员，你已经签到了，不能重复签到;");
             return map;

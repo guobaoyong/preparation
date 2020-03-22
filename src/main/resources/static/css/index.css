@@ -34,22 +34,81 @@ a {
 
 .zcdl {
     background-color: #393D49;
-    overflow: hidden;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    z-index: 999;
+    height: 50px;
+}
+
+.zcdl::after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
 }
 
 .zcdl ul {
     float: right;
+    margin: 11px 0;
 }
 
 .zcdl li {
     list-style: none;
     display: inline-block;
     color: #fff;
-    padding: 5px 5px;
+    padding: 5px 10px;
+}
+
+.logged_out li {
+    cursor: pointer;
+}
+
+.logged_in li {
+    vertical-align: top;
+}
+
+.logged_in a {
+    color: #fff;
+}
+
+.number {
+    background: rgb(0, 122, 255);
+    border-radius: 3px;
+    padding: 3px;
+    margin: 0 7px;
+}
+
+.head_img {
+    display: block;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.head_img img {
+    width: 100%;
+}
+
+.menu {
+    position: absolute;
+    top: 40px;
+    width: 80px;
+    margin-left: -40px;
+    left: 50%;
+    background: #fff;
+    border-radius: 5px;
+    display: none;
+    z-index: 999;
+}
+
+.menu a {
+    color: #000;
+    display: block;
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+.menu a:nth-child(3) {
+    border-bottom: 0px solid #f1f1f1;
 }
 
 
@@ -57,32 +116,46 @@ a {
 
 .dbdh {
     overflow: hidden;
-    color: white;
-    padding: 20px;
+    height: 80px;
+    margin-top: 40px;
 }
 
 .dbdh .left {
     float: left;
+    height: 50px;
+    margin-top: 15px;
+}
+
+.logo_name {
+    line-height: 30px;
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: 4px;
+    font-family: "隶书";
+    color: #000;
+}
+
+.logo_en {
+    color: #777;
+    line-height: 30px;
+    letter-spacing: 1px;
 }
 
 .dbdh .right {
     float: right;
-    padding-top: 15px;
+    height: 80px;
 }
 
 .dbdh li {
     list-style: none;
     display: inline-block;
-    /*padding: 35px 20px;*/
-    /*color: #000;*/
+    padding: 30px 15px;
+    color: #000;
 }
 
-/*.register{*/
-/*    color: #007AFF;!important;*/
-/*}*/
 .dbdh a {
-    color: white;
-    padding: 2px 3px 3px 5px;
+    color: #000;
+    font-size: 16px;
 }
 
 .active {
@@ -93,12 +166,8 @@ a {
     border-bottom: 5px solid rgb(0, 122, 255);
 }
 
-
 /*教师展示 */
 
-.jszs{
-    margin-top: 40px;
-}
 .carousel {
     position: relative;
     height: 374px;
@@ -108,43 +177,20 @@ a {
     clear: both;
     position: relative;
     overflow: hidden;
-    //margin: 0;
+    margin: 0;
     height: 333px;
     width: 1200px;
     margin: 0 auto;
-    
 }
 
 .carousel_box {
     position: absolute;
     /*left: -1168px;*/
-    width: 2840px;
-    /*transition-property: none;*/
-    /*transition-duration: 1000ms;*/
-    /*transition-timing-function: ease-in-out;*/
-    animation: image 20s infinite linear;
+    width: 17520px;
+    transition-property: none;
+    transition-duration: 500ms;
+    transition-timing-function: ease-in-out;
 }
-
-@keyframes image {
-    0%,10%{
-        margin-left: 0px;
-    }
-    10%,30%{
-        margin-left: -284px;
-    }
-    40%,60%{
-        margin-left: -1136px;
-    }
-    70%,80%{
-        margin-left: -1988px;
-    }
-    90%,100%{
-        margin-left: -2840px;
-    }
-}
-
-
-
 
 .carousel_box a {
     float: left;
@@ -156,10 +202,7 @@ a {
     background: #f7f7f7;
     box-shadow: 0 0 2px 2px #e0dfdf;
     background-image: url(../img/home_poeple_bg.png);
-}
-
-.carousel_box a:hover {
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12);
+    text-decoration: none;
 }
 
 .carousel_box a img {
@@ -173,11 +216,9 @@ a {
 }
 
 .switchable_triggers {
-    float: left;
-    position: absolute;
-    left: 50%;
-    margin-left: -294px;
-    top: 349px;
+    display: block;
+    height: 20px;
+    text-align: center;
 }
 
 .switchable_triggers li {
@@ -201,9 +242,23 @@ a {
 }
 
 .grade_ {
-    color: #444;
+    font-size: 14px;
+    color: #333;
     font-weight: normal;
+}
+
+.content_ {
+    color: #000;
     font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-align: left;
+    margin: 5px 15px;
+    text-indent: 2em;
+    line-height: 20px;
 }
 
 
@@ -401,7 +456,7 @@ a {
 /*
 分页*/
 .paging{
-    /*padding: 50px 0 50px 0;*/
+    padding: 50px 0 50px 0;
     text-align: center;
 }
 
@@ -428,10 +483,11 @@ a {
 /*平台介绍页面*/
 .introduct{
     width: 1200px;
-    margin: 140px auto 50px auto;
+    margin: 0 auto;
     font-size: 30px;
 }
 .introDetails{
     background-color: white;
-    padding: 30px 20px 20px;
+    padding: 15px;
+    font-size: 15px;
 }

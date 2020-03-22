@@ -9,6 +9,7 @@ import qqzsh.top.preparation.common.utils.VaptchaMessage;
 import qqzsh.top.preparation.common.utils.security.ShiroUtils;
 import qqzsh.top.preparation.project.content.message.domain.Message;
 import qqzsh.top.preparation.project.content.message.service.IMessageService;
+import qqzsh.top.preparation.project.system.dept.service.IDeptService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -58,6 +59,9 @@ public class LoginController extends BaseController {
     @Autowired
     private IMessageService messageService;
 
+    @Autowired
+    private IDeptService deptService;
+
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response)
     {
@@ -100,6 +104,7 @@ public class LoginController extends BaseController {
             }catch (Exception e){
                 sysUser.setVipTimeStr(null);
             }
+            sysUser.setDept(deptService.selectDeptById(sysUser.getDeptId()));
             request.getSession().setAttribute("currentUser", sysUser);
             return success();
         }

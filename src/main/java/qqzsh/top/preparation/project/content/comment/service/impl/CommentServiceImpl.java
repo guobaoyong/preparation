@@ -1,12 +1,19 @@
 package qqzsh.top.preparation.project.content.comment.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import qqzsh.top.preparation.common.utils.aliyun.AliyunTextScanRequest;
+import qqzsh.top.preparation.framework.web.service.ConfigService;
+import qqzsh.top.preparation.project.content.article.domain.Article;
 import qqzsh.top.preparation.project.content.comment.mapper.CommentMapper;
 import qqzsh.top.preparation.project.content.comment.domain.Comment;
 import qqzsh.top.preparation.project.content.comment.service.ICommentService;
 import qqzsh.top.preparation.common.utils.text.Convert;
+import qqzsh.top.preparation.project.content.message.domain.Message;
+import qqzsh.top.preparation.project.content.message.service.IMessageService;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
 
 /**
@@ -23,6 +30,12 @@ public class CommentServiceImpl implements ICommentService
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private ConfigService configService;
+
+    @Autowired
+    private IMessageService messageService;
 
     /**
      * 查询评论
@@ -58,7 +71,38 @@ public class CommentServiceImpl implements ICommentService
     public int insertComment(Comment comment)
     {
         comment.setDeptId(userService.selectUserById(comment.getCommentUserId()).getDeptId());
-        return commentMapper.insertComment(comment);
+        int row = commentMapper.insertComment(comment);
+        try {
+            review(comment);
+        } catch (Exception e) { }
+        return row;
+    }
+
+    /**
+     * 调用阿里接口审核
+     * @param comment
+     */
+    @Async
+    public void review(Comment comment) throws Exception {
+        String[] split = configService.getKey("aliyun.ai.content").split(";");
+        String result = AliyunTextScanRequest.textScanRequest(comment.getCommentContent(), split[0], split[1]);
+        Message message = new Message();
+        message.setUserId(comment.getCommentUserId());
+        message.setSee(0);
+        message.setPublishDate(new Date());
+        //审核通过
+        if("pass".equals(result)){
+            comment.setCommentState(1L);
+            // 消息模块添加
+            message.setContent("【审核通过】您评论的【" + comment.getCommentContent() + "】审核成功！审核人：阿里AI审核员，快去查看吧！");
+            messageService.insertMessage(message);
+        }else if("block".equals(result)){
+            //审核失败
+            // 消息模块添加
+            message.setContent("【审核失败】您评论的【" + comment.getCommentContent() + "】帖子审核未成功，原因是：内容审核不通过！审核人：阿里AI审核员");
+            messageService.insertMessage(message);
+        }
+        commentMapper.updateComment(comment);
     }
 
     /**

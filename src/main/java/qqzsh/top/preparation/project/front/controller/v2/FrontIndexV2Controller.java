@@ -3,6 +3,8 @@ package qqzsh.top.preparation.project.front.controller.v2;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.htmlparser.Parser;
+import org.htmlparser.visitors.TextExtractingVisitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,6 +85,8 @@ public class FrontIndexV2Controller extends BaseController {
         modelAndView.addObject("collegeList",getCollegeTop10());
         //获取资源数最多的10个用户
         modelAndView.addObject("userList",getUserTop10());
+        //获取最新通知
+        modelAndView.addObject("newOneNotice",getNewNotice());
         modelAndView.setViewName("front/v2/index");
         return modelAndView;
     }
@@ -301,6 +305,23 @@ public class FrontIndexV2Controller extends BaseController {
             modelAndView.addObject("about", "暂无简介");
         }
         modelAndView.setViewName("front/v2/about");
+        modelAndView.addObject("newOneNotice",getNewNotice());
+        return modelAndView;
+    }
+
+    /**
+     * 免责声明页面
+     *
+     * @return
+     */
+    @GetMapping("/tomzPage")
+    public ModelAndView tomzPage() {
+        // 获取平台数据量
+        ModelAndView modelAndView = data();
+        //获取友情链接
+        modelAndView.addObject("allLinkList",links());
+        modelAndView.addObject("newOneNotice",getNewNotice());
+        modelAndView.setViewName("front/mzPage");
         return modelAndView;
     }
 
@@ -318,7 +339,7 @@ public class FrontIndexV2Controller extends BaseController {
      */
     @GetMapping("/front/notice")
     public ModelAndView notice(@RequestParam(value = "page", required = false,defaultValue = "1") Integer page,
-                               @RequestParam(value = "size", required = false,defaultValue = "10") Integer size){
+                               @RequestParam(value = "size", required = false,defaultValue = "5") Integer size){
         // 获取平台数据量
         ModelAndView modelAndView = data();
         //获取友情链接
@@ -330,6 +351,27 @@ public class FrontIndexV2Controller extends BaseController {
         notice.setNoticeType("1");
         startPage(page,size,"create_time desc");
         List<Notice> list = noticeService.selectNoticeList(notice);
+        list.forEach(no -> {
+            // 取create_by获得高校信息放在remark、发布人放在create_by
+            try {
+                no.setRemark(deptService.selectDeptById(userService.selectUserByLoginName(no.getCreateBy()).getDeptId()).getDeptName());
+                no.setCreateBy(userService.selectUserByLoginName(no.getCreateBy()).getUserName());
+            }catch (Exception e){
+                no.setRemark("未知高校");
+                no.setCreateBy("未知");
+            }
+            String content = no.getNoticeContent();
+            try {
+                Parser parser = new Parser(content);
+                TextExtractingVisitor visitor = new TextExtractingVisitor();
+                parser.visitAllNodesWith(visitor);
+                content = visitor.getExtractedText().replaceAll("\\s*|\t|\r|\n","");
+            } catch (Exception e) {
+                content = "暂无摘要";
+            }
+            content = content.length() > 150 ? content.substring(0,151) + "..." : content;
+            no.setNoticeContent(content);
+        });
         // 结果集合
         modelAndView.addObject("noticeList", list);
         long total = getDataTable(list).getTotal();

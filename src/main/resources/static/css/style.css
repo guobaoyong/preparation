@@ -724,58 +724,70 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     background-color: #1c84c6;
     border-color: #1c84c6;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-success:hover, .btn-success:focus, .btn-success:active,  .btn-success.active, .open .dropdown-toggle.btn-success {
     background-color: #1a7bb9;
     border-color: #1a7bb9;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
     background-image: none;
+    margin: 5px;
 }
 
 .btn-success.disabled, .btn-success.disabled:hover, .btn-success.disabled:focus,  .btn-success.disabled:active, .btn-success.disabled.active,  .btn-success[disabled], .btn-success[disabled]:hover, .btn-success[disabled]:focus,  .btn-success[disabled]:active, .btn-success.active[disabled], fieldset[disabled] .btn-success,  fieldset[disabled] .btn-success:hover, fieldset[disabled] .btn-success:focus,  fieldset[disabled] .btn-success:active, fieldset[disabled] .btn-success.active {
     background-color: #1f90d8;
     border-color: #1f90d8;
+    margin: 5px;
 }
 
 .btn-info {
     background-color: #23c6c8;
     border-color: #23c6c8;
     color: #FFFFFF;
+    margin: 5px;
+    margin: 3px;
 }
 
 .btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active,  .open .dropdown-toggle.btn-info {
     background-color: #21b9bb;
     border-color: #21b9bb;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-info:active, .btn-info.active, .open .dropdown-toggle.btn-info {
     background-image: none;
+    margin: 5px;
 }
 
 .btn-info.disabled, .btn-info.disabled:hover, .btn-info.disabled:focus,  .btn-info.disabled:active, .btn-info.disabled.active, .btn-info[disabled],  .btn-info[disabled]:hover, .btn-info[disabled]:focus, .btn-info[disabled]:active,  .btn-info.active[disabled], fieldset[disabled] .btn-info, fieldset[disabled] .btn-info:hover,  fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info:active,  fieldset[disabled] .btn-info.active {
     background-color: #26d7d9;
     border-color: #26d7d9;
+    margin: 5px;
 }
 
 .btn-default {
     background-color: #c2c2c2;
     border-color: #c2c2c2;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active,  .btn-default.active, .open .dropdown-toggle.btn-default {
     background-color: #bababa;
     border-color: #bababa;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
     background-image: none;
+    margin: 5px;
 }
 
 .btn-default.disabled, .btn-default.disabled:hover, .btn-default.disabled:focus,  .btn-default.disabled:active, .btn-default.disabled.active,  .btn-default[disabled], .btn-default[disabled]:hover, .btn-default[disabled]:focus,  .btn-default[disabled]:active, .btn-default.active[disabled], fieldset[disabled] .btn-default,  fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus,  fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default.active {
@@ -787,86 +799,104 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     background-color: #f8ac59;
     border-color: #f8ac59;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-warning:hover, .btn-warning:focus, .btn-warning:active,  .btn-warning.active, .open .dropdown-toggle.btn-warning {
     background-color: #f7a54a;
     border-color: #f7a54a;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-warning:active, .btn-warning.active, .open .dropdown-toggle.btn-warning {
     background-image: none;
+    margin: 5px;
 }
 
 .btn-warning.disabled, .btn-warning.disabled:hover, .btn-warning.disabled:focus,  .btn-warning.disabled:active, .btn-warning.disabled.active,  .btn-warning[disabled], .btn-warning[disabled]:hover, .btn-warning[disabled]:focus,  .btn-warning[disabled]:active, .btn-warning.active[disabled], fieldset[disabled] .btn-warning,  fieldset[disabled] .btn-warning:hover, fieldset[disabled] .btn-warning:focus,  fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning.active {
     background-color: #f9b66d;
     border-color: #f9b66d;
+    margin: 5px;
 }
 
 .btn-danger {
     background-color: #ed5565;
     border-color: #ed5565;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active,  .open .dropdown-toggle.btn-danger {
     background-color: #ec4758;
     border-color: #ec4758;
     color: #FFFFFF;
+    margin: 5px;
 }
 
 .btn-danger:active, .btn-danger.active, .open .dropdown-toggle.btn-danger {
     background-image: none;
+    margin: 5px;
 }
 
 .btn-danger.disabled, .btn-danger.disabled:hover, .btn-danger.disabled:focus,  .btn-danger.disabled:active, .btn-danger.disabled.active, .btn-danger[disabled],  .btn-danger[disabled]:hover, .btn-danger[disabled]:focus, .btn-danger[disabled]:active,  .btn-danger.active[disabled], fieldset[disabled] .btn-danger, fieldset[disabled] .btn-danger:hover,  fieldset[disabled] .btn-danger:focus, fieldset[disabled] .btn-danger:active,  fieldset[disabled] .btn-danger.active {
     background-color: #ef6776;
     border-color: #ef6776;
+    margin: 5px;
 }
 
 .btn-link {
     color: inherit;
+    margin: 5px;
 }
 
 .btn-link:hover, .btn-link:focus, .btn-link:active, .btn-link.active,  .open .dropdown-toggle.btn-link {
     color: #1ab394;
     text-decoration: none;
+    margin: 5px;
 }
 
 .btn-link:active, .btn-link.active, .open .dropdown-toggle.btn-link {
     background-image: none;
+    margin: 5px;
 }
 
 .btn-link.disabled, .btn-link.disabled:hover, .btn-link.disabled:focus,  .btn-link.disabled:active, .btn-link.disabled.active, .btn-link[disabled],  .btn-link[disabled]:hover, .btn-link[disabled]:focus, .btn-link[disabled]:active,  .btn-link.active[disabled], fieldset[disabled] .btn-link, fieldset[disabled] .btn-link:hover,  fieldset[disabled] .btn-link:focus, fieldset[disabled] .btn-link:active,  fieldset[disabled] .btn-link.active {
     color: #cacaca;
+    margin: 5px;
 }
 
 .btn-white {
     color: inherit;
     background: white;
     border: 1px solid #e7eaec;
+    margin: 5px;
 }
 
 .btn-white:hover, .btn-white:focus, .btn-white:active, .btn-white.active,  .open .dropdown-toggle.btn-white {
     color: inherit;
     border: 1px solid #d2d2d2;
+    margin: 5px;
 }
 
 .btn-white:active, .btn-white.active {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15) inset;
+    margin: 5px;
 }
 
 .btn-white:active, .btn-white.active, .open .dropdown-toggle.btn-white {
     background-image: none;
+    margin: 5px;
 }
 
 .btn-white.disabled, .btn-white.disabled:hover, .btn-white.disabled:focus,  .btn-white.disabled:active, .btn-white.disabled.active, .btn-white[disabled],  .btn-white[disabled]:hover, .btn-white[disabled]:focus, .btn-white[disabled]:active,  .btn-white.active[disabled], fieldset[disabled] .btn-white, fieldset[disabled] .btn-white:hover,  fieldset[disabled] .btn-white:focus, fieldset[disabled] .btn-white:active,  fieldset[disabled] .btn-white.active {
     color: #cacaca;
+    margin: 5px;
 }
 
 .form-control, .form-control:focus, .has-error .form-control:focus,  .has-success .form-control:focus, .has-warning .form-control:focus,  .navbar-collapse, .navbar-form, .navbar-form-custom .form-control:focus,  .navbar-form-custom .form-control:hover, .open .btn.dropdown-toggle,  .panel, .popover, .progress, .progress-bar {
     box-shadow: none;
+    margin: 5px;
 }
 
 .btn-outline {
@@ -874,10 +904,12 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     background-color: transparent;
     -webkit-transition: all .5s;
     transition: all .5s;
+    margin: 5px;
 }
 
 .btn-rounded {
     border-radius: 50px;
+    margin: 5px;
 }
 
 .btn-large-dim {

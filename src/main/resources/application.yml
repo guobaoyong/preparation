@@ -3,20 +3,20 @@ preparation:
   # 名称
   name: preparation
   # 版本
-  version: 2.0
+  version: 3.0
   # 版权年份
   copyrightYear: 2019-2020
   # 实例演示开关
   demoEnabled: false
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath） /home/preparation/uploadPath
-  profile: D:/ruoyi/uploadPath
+  profile: /home/preparation/uploadPath
   # 获取ip地址开关
   addressEnabled: true
 
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 10086
+  port: 10010
   servlet:
     # 应用的访问路径
     context-path: /
@@ -44,7 +44,7 @@ user:
 spring:
   # 启动环境
   profiles:
-    active: dev
+    active: test
   # 模板引擎
   thymeleaf:
     mode: HTML

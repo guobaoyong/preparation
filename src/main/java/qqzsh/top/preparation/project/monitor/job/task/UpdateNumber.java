@@ -38,7 +38,7 @@ public class UpdateNumber {
                 Article article1 = new Article();
                 article1.setArticleState(1L);
                 article1.setArticleTypeId(arcType.getSrcTypeId());
-                arcType.setAllSize(articleService.selectArticleList(article1).size());
+                arcType.setAllSize(articleService.selectArticleListCount(article1));
             });
             redisUtil.delete("arc_type_list");
             redisUtil.set("arc_type_list",arc_type_list);
@@ -50,7 +50,7 @@ public class UpdateNumber {
                 Article article1 = new Article();
                 article1.setArticleState(1L);
                 article1.setArticleTypeId(arcType.getSrcTypeId());
-                arcType.setAllSize(articleService.selectArticleList(article1).size());
+                arcType.setAllSize(articleService.selectArticleListCount(article1));
             });
             redisUtil.set("arc_type_list",arcTypes);
         }

@@ -23,6 +23,8 @@ import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
 import qqzsh.top.preparation.project.front.lucene.ArticleIndex;
 import qqzsh.top.preparation.project.system.dept.domain.Dept;
 import qqzsh.top.preparation.project.system.dept.service.IDeptService;
+import qqzsh.top.preparation.project.system.notice.domain.Notice;
+import qqzsh.top.preparation.project.system.notice.service.INoticeService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
 
@@ -55,6 +57,8 @@ public class BoutiqueV2Controller extends BaseController {
     private IArcTypeService arcTypeService;
     @Autowired
     private ArticleIndex articleIndex;
+    @Autowired
+    private INoticeService noticeService;
 
     /**
      * 精品资源页面
@@ -181,7 +185,42 @@ public class BoutiqueV2Controller extends BaseController {
         // 返回前台关键词
         modelAndView.addObject("q",q);
         modelAndView.setViewName("front/v2/boutique");
+        //获取最新通知+广告
+        modelAndView.addObject("newOneNotice",getNewNotice());
+        modelAndView.addObject("newOneAD",getNewAD());
         return modelAndView;
+    }
+
+    /**
+     * 获取最新一条通知
+     * @return
+     */
+    public Notice getNewNotice(){
+        // 获取最新一条通知
+        Notice newOne = null;
+        if (redisUtil.hasKey("notice")){
+            newOne = (Notice) redisUtil.get("notice");
+        }else {
+            newOne = noticeService.getNewOne();
+            redisUtil.set("notice",newOne);
+        }
+        return newOne;
+    }
+
+    /**
+     * 获取最新一条广告
+     * @return
+     */
+    public Notice getNewAD(){
+        // 获取最新一条广告
+        Notice newOneAD = null;
+        if (redisUtil.hasKey("ad")){
+            newOneAD = (Notice) redisUtil.get("ad");
+        }else {
+            newOneAD = noticeService.getNewOneAD();
+            redisUtil.set("ad",newOneAD);
+        }
+        return newOneAD;
     }
 
     /**

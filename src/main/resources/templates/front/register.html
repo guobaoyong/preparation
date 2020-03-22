@@ -18,7 +18,29 @@
     <form name="myForm" method="post">
         <table>
             <tr>
-                <td>用户名：</td>
+                <td>高校：</td>
+                <td>
+                    <select id="deptId" class="layui-input">
+                        <option value="">请选择一个高校</option>
+                        <option th:value="${dept.deptId}" th:text="${dept.deptName}" th:each="dept:${depts}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>职称/身份：</td>
+                <td>
+                    <select id="postId" class="layui-input">
+                        <option value="">请选择一个职称</option>
+                        <option th:value="${post.postId}" th:text="${post.postName}" th:each="post:${posts}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>姓名：</td>
+                <td><input type="text" id="name" name="name" class="layui-input"/></td>
+            </tr>
+            <tr>
+                <td>用户名/账号：</td>
                 <td><input type="text" id="userName" name="userName" class="layui-input"/></td>
             </tr>
             <tr>
@@ -75,6 +97,19 @@
         var password = $("#password").val().trim();
         var password2 = $("#password2").val().trim();
         var email = $("#email").val().trim();
+        var name = $("#name").val().trim();
+        var deptId = $("#deptId").val().trim();
+        var postId = $("#postId").val().trim();
+
+        if (deptId == '') {
+            $("#errorInfo").text("请选择一个高校！");
+            return false;
+        }
+
+        if (postId == '') {
+            $("#errorInfo").text("请选择一个职称！");
+            return false;
+        }
 
         if (username == '') {
             $("#errorInfo").text("请输入用户名！");
@@ -117,6 +152,9 @@
             loginName: $("#userName").val().trim(),
             password: $("#password").val().trim(),
             email: $("#email").val().trim(),
+            userName: name,
+            deptId: deptId,
+            postId: postId,
             vaptcha_token: myForm.vaptcha_token.value
         }, function (result) {
             layer.close(index);

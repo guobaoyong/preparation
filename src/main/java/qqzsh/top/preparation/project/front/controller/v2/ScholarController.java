@@ -18,6 +18,8 @@ import qqzsh.top.preparation.project.content.link.domain.Link;
 import qqzsh.top.preparation.project.content.link.service.ILinkService;
 import qqzsh.top.preparation.project.system.dept.domain.Dept;
 import qqzsh.top.preparation.project.system.dept.service.IDeptService;
+import qqzsh.top.preparation.project.system.notice.domain.Notice;
+import qqzsh.top.preparation.project.system.notice.service.INoticeService;
 import qqzsh.top.preparation.project.system.user.domain.User;
 import qqzsh.top.preparation.project.system.user.service.IUserService;
 
@@ -45,6 +47,8 @@ public class ScholarController extends BaseController {
     private IArticleService articleService;
     @Autowired
     private IUserDownloadService userDownloadService;
+    @Autowired
+    private INoticeService noticeService;
 
     /**
      * 教师学者页面
@@ -144,7 +148,25 @@ public class ScholarController extends BaseController {
         // 学者姓名、高校ID返回前台
         modelAndView.addObject("name",name);
         modelAndView.addObject("deptId",deptId);
+        //获取最新通知
+        modelAndView.addObject("newOneNotice",getNewNotice());
         return modelAndView;
+    }
+
+    /**
+     * 获取最新一条通知
+     * @return
+     */
+    public Notice getNewNotice(){
+        // 获取最新一条通知
+        Notice newOne = null;
+        if (redisUtil.hasKey("notice")){
+            newOne = (Notice) redisUtil.get("notice");
+        }else {
+            newOne = noticeService.getNewOne();
+            redisUtil.set("notice",newOne);
+        }
+        return newOne;
     }
 
     /**

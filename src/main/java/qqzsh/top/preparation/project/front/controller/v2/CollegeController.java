@@ -18,6 +18,7 @@ import qqzsh.top.preparation.project.content.type.service.IArcTypeService;
 import qqzsh.top.preparation.project.system.dept.controller.DeptController;
 import qqzsh.top.preparation.project.system.dept.domain.Dept;
 import qqzsh.top.preparation.project.system.dept.service.IDeptService;
+import qqzsh.top.preparation.project.system.notice.domain.Notice;
 import qqzsh.top.preparation.project.system.notice.service.INoticeService;
 import qqzsh.top.preparation.project.system.post.service.IPostService;
 import qqzsh.top.preparation.project.system.user.domain.User;
@@ -47,6 +48,8 @@ public class CollegeController extends BaseController {
     private IArticleService articleService;
     @Autowired
     private IUserDownloadService userDownloadService;
+    @Autowired
+    private INoticeService noticeService;
 
     /**
      * 高校页面
@@ -84,8 +87,26 @@ public class CollegeController extends BaseController {
         modelAndView.addObject("size",size);
         // 总页数
         modelAndView.addObject("totalPage",totalPage);
+        //获取最新通知
+        modelAndView.addObject("newOneNotice",getNewNotice());
         modelAndView.setViewName("front/v2/college");
         return modelAndView;
+    }
+
+    /**
+     * 获取最新一条通知
+     * @return
+     */
+    public Notice getNewNotice(){
+        // 获取最新一条通知
+        Notice newOne = null;
+        if (redisUtil.hasKey("notice")){
+            newOne = (Notice) redisUtil.get("notice");
+        }else {
+            newOne = noticeService.getNewOne();
+            redisUtil.set("notice",newOne);
+        }
+        return newOne;
     }
 
     /**

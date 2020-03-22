@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高校学科资源互助平台头部</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/css/head.css}"/>
+</head>
+
+<body th:fragment="head">
+    <!-- 注册登录或用户显示 -->
+    <div class="zcdl">
+        <div class="nav">
+            <!-- 注册登录 -->
+            <ul class="logged_out" th:if="${session.currentUser==null}">
+                <li class="register" onclick="showRegister()">注册</li>
+                <li class="register" onclick="showLogin()">登陆</li>
+            </ul>
+            <!-- 用户显示 -->
+            <ul class="logged_in" th:if="${session.currentUser!=null}">
+                <li th:if="${session.currentUser.messageCount!=0}"><a href="" title="请进入个人中心-评论消息模块查看未读消息">系统消息<span th:text="${session.currentUser.messageCount}" class="number"></span></a></li>
+                <li><a href="/index">个人中心</a></li>
+                <li><a th:text="${session.currentUser.loginName}"></a></li>
+                <li class="head_menu" style="padding: 0;position: relative;margin: 0 20px;" onmouseover="onMenu()">
+                    <a class="head_img" href=""><img th:src="(${session.currentUser.avatar} == '') ? @{/img/profile.jpg} : @{${session.currentUser.avatar}}"
+                                                     alt=""></a>
+                    <div class="menu" onmouseout="offMenu()">
+                        <a onclick="sign()">签到</a>
+                        <a onclick="showModifyPassword()">修改密码</a>
+                        <a href="/logout">安全退出</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+    <!-- 顶部导航 -->
+    <div class="dbdh nav">
+        <div class="left">
+            <div class="logo_name">
+                高校学科资源互助平台
+            </div>
+            <div class="logo_en">
+                University subject resource mutual aid platform
+            </div>
+        </div>
+        <div class="right">
+            <ul>
+                <li><a th:href="@{/}" id="index">首页</a></li>
+                <li><a th:href="@{/front/college}" id="college">高校</a></li>
+                <li><a th:href="@{/front/scholar}" id="scholar">教师</a></li>
+                <li><a th:href="@{/front/article}" id="article">学科资源</a></li>
+                <li><a th:href="@{/front/boutique}" id="boutique">精品资源</a></li>
+                <li><a th:href="@{/front/notice}" id="notice">通知公告</a></li>
+                <li><a th:href="@{/front/about}" id="about">平台介绍</a></li>
+            </ul>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        function onMenu() {
+            var menu = document.getElementsByClassName("menu")[0]
+            menu.style.display = "block";
+        }
+
+        function offMenu() {
+            var menu = document.getElementsByClassName("menu")[0]
+            menu.style.display = "none";
+        }
+    </script>
+</body>
+<script th:src="@{/js/common.js}" type="text/javascript"></script>
+</html>
