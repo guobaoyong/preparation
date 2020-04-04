@@ -61,4 +61,14 @@ public interface NoticeMapper
      * @return
      */
     Notice getNewOneAD();
+
+    /**
+     * 获取上一条通知
+     */
+    Notice getFront(Long id);
+
+    /**
+     * 获取下一条通知
+     */
+    Notice getBack(Long id);
 }

@@ -2,11 +2,9 @@
 <html  lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
-    <title th:text="'通知公告-'+${@config.getKey('site.name')}"></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'通知详情-'+${@config.getKey('site.name')}"></title>
     <link th:href="@{/css/index.css}" rel="stylesheet"/>
     <link th:href="@{/css/font-awesome.css}" rel="stylesheet"/>
-    <link th:href="@{/css/notice.css}" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
 </head>
 <!--在线客服-->
@@ -28,50 +26,26 @@
 <!-- 注册登录 -->
 <div th:include="common/v2/head :: head"></div>
 
-<!-- 通知公告 -->
-<div class="tzgg nav">
-    <a class="tip" style="margin-top: 0">通知公告</a>
-    <div class="notices">
-        <a class="notice" th:href="'/front/notice/detail/'+${notice.noticeId}" th:each="notice:${noticeList}">
-            <ul>
-                <li>发布时间：<span th:text="${#dates.format(notice.createTime,'yyyy-MM-dd')}"></span></li>
-                <li>发布高校：<span th:text="${notice.remark}"></span></li>
-                <li>发布人：<span th:text="${notice.createBy}"></span> </li>
-            </ul>
-            <h3 class="notice_title" th:text="${notice.noticeTitle}"></h3>
-            <p class="notice_content" th:utext="${notice.noticeContent}"></p>
-        </a>
+<!--内容-->
+<div  class="introduct">
+    <h3 class="tip" style="margin-top: 0" th:text="${notice.noticeTitle}"></h3>
+    <div class="introDetails">
+        <ul>
+            <li>发布时间：<span th:text="${#dates.format(notice.createTime,'yyyy-MM-dd')}"></span></li>
+            <li>发布高校：<span th:text="${notice.remark}"></span></li>
+            <li>发布人：<span th:text="${notice.createBy}"></span> </li>
+        </ul>
+        <br>
+        <p th:utext="${notice.noticeContent}" ></p>
+    </div>
+    <div class="introDetails">
+        <p th:if="${front != null}">上一条：<a th:href="'/front/notice/detail/'+${front.noticeId}" th:text="${front.noticeTitle}"></a></p>
+        <p th:if="${front == null}">上一条：没有啦!!</p>
+        <p th:if="${back != null}">下一条：<a th:href="'/front/notice/detail/'+${back.noticeId}" th:text="${back.noticeTitle}"></a></p>
+        <p th:if="${back == null}">下一条：没有啦!!</p>
     </div>
 </div>
-<!--分页-->
-<div class="paging">
-    <ul class="pagination" id="pagination1">
-        <!--//如果当前页等于1，总页数大于1（不显示上一页）   orderDara.current&ndash;&gt;当前页-->
-        <li id="first">
-            <a th:href="@{/front/notice(page=1,size=${size})}">首页</a>
-        </li>
-        <li th:if="${page != 1}">
-            <a th:href="@{/front/notice(page=${page}-1,size=${size})}">上一页</a>
-        </li>
 
-        <li  th:each="i:${#numbers.sequence(1,totalPage)}">
-            <!--//从1到总页数遍历，并赋值给i    orderDara.pages&ndash;&gt;总页数-->
-            <a class="active" th:if="${i > page-3} and ${i <page+3} and ${i == page}" href="javascript:void(0);" th:text="${i}">#</a>
-            <!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
-            <a th:if="${i > page -3} and ${i < page+3} and ${i != page}"
-               th:href="@{/front/notice(page=${i},size=${size})}" th:text="${i}">#</a><!--//限制显示页数的条数  4到6个页数-->
-        </li>
-        <li th:if="${page != totalPage}">
-            <a th:href="@{/front/notice(page=${page}+1,size=${size})}">下一页</a>
-        </li>
-        <li id="last">
-            <a th:href="@{/front/notice(page=${totalPage},size=${size})}">尾页</a>
-        </li><!--//跳转至第orderDara.current页-->
-        <li>
-            <a href="#" th:text="'共'+${totalPage}+'页'"></a>
-        </li>
-    </ul>
-</div>
 
 <!-- 友情链接 -->
 <div class="yqlj nav">

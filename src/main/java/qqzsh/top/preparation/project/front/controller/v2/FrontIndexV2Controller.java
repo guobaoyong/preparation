@@ -7,10 +7,7 @@ import org.htmlparser.Parser;
 import org.htmlparser.visitors.TextExtractingVisitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import qqzsh.top.preparation.common.utils.PageUtil;
 import qqzsh.top.preparation.common.utils.RedisUtil;
@@ -19,6 +16,7 @@ import qqzsh.top.preparation.framework.web.controller.BaseController;
 import qqzsh.top.preparation.framework.web.domain.AjaxResult;
 import qqzsh.top.preparation.project.content.article.domain.Article;
 import qqzsh.top.preparation.project.content.article.service.IArticleService;
+import qqzsh.top.preparation.project.content.comment.domain.Comment;
 import qqzsh.top.preparation.project.content.download.domain.UserDownload;
 import qqzsh.top.preparation.project.content.download.service.IUserDownloadService;
 import qqzsh.top.preparation.project.content.link.domain.Link;
@@ -385,6 +383,33 @@ public class FrontIndexV2Controller extends BaseController {
         // 总页数
         modelAndView.addObject("totalPage",totalPage);
         modelAndView.setViewName("front/v2/notice");
+        return modelAndView;
+    }
+
+    /**
+     * 新闻公告详情页
+     */
+    @RequestMapping("/front/notice/detail/{id}")
+    public ModelAndView view(@PathVariable("id") Long id) throws Exception {
+        // 获取平台数据量
+        ModelAndView modelAndView = data();
+        //获取友情链接
+        modelAndView.addObject("allLinkList",links());
+        Notice notice = noticeService.selectNoticeById(id);
+        // 取create_by获得高校信息放在remark、发布人放在create_by
+        try {
+            notice.setRemark(deptService.selectDeptById(userService.selectUserByLoginName(notice.getCreateBy()).getDeptId()).getDeptName());
+            notice.setCreateBy(userService.selectUserByLoginName(notice.getCreateBy()).getUserName());
+        }catch (Exception e){
+            notice.setRemark("未知高校");
+            notice.setCreateBy("未知");
+        }
+        modelAndView.addObject("notice",notice);
+        // 上一条
+        modelAndView.addObject("front",noticeService.getFront(id));
+        // 下一条
+        modelAndView.addObject("back",noticeService.getBack(id));
+        modelAndView.setViewName("front/v2/noticedetail");
         return modelAndView;
     }
 }

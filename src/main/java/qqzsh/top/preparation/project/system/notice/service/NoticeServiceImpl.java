@@ -102,6 +102,16 @@ public class NoticeServiceImpl implements INoticeService {
         return noticeMapper.getNewOneAD();
     }
 
+    @Override
+    public Notice getFront(Long id) {
+        return noticeMapper.getFront(id);
+    }
+
+    @Override
+    public Notice getBack(Long id) {
+        return noticeMapper.getBack(id);
+    }
+
     /**
      * 更新redis数据
      */

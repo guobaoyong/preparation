@@ -93,5 +93,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{noticeId}
         </foreach>
     </delete>
-    
+
+    <!--获取上一条通知-->
+    <select id="getFront" parameterType="Long" resultMap="NoticeResult">
+        SELECT notice_id,notice_title FROM sys_notice where notice_id &gt; #{id} AND notice_type = 1 ORDER BY create_time desc limit 1
+    </select>
+
+    <!--获取下一条通知-->
+    <select id="getBack" parameterType="Long" resultMap="NoticeResult">
+        SELECT notice_id,notice_title FROM sys_notice where notice_id &lt; #{id} AND notice_type = 1 ORDER BY create_time desc limit 1
+    </select>
 </mapper>
