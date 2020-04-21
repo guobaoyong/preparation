@@ -45,7 +45,7 @@
                         <img th:src="(${dept.badge} == '') ? @{/img/profile.jpg} : @{${dept.badge}}" >
                     </div>
                     <div class="col_2">
-                        <h4 th:text="${dept.deptName}"></h4>
+                        <a th:href="@{/front/article(deptName=${dept.deptId})}"><h4 th:text="${dept.deptName}"></h4></a>
                         <h4 th:text="${dept.ename}"></h4>
                         <ul class="nav_">
                             <li class="nav_item">

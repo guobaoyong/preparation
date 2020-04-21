@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高校学科资源互助平台头部</title>
+    <title>平台头部</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link rel="stylesheet" th:href="@{/css/head.css}"/>
 </head>
@@ -39,11 +39,9 @@
     <!-- 顶部导航 -->
     <div class="dbdh nav">
         <div class="left">
-            <div class="logo_name">
-                高校学科资源互助平台
+            <div class="logo_name" th:text="${@config.getKey('site.name')}">
             </div>
-            <div class="logo_en">
-                University subject resource mutual aid platform
+            <div class="logo_en" th:text="${@config.getKey('site.ename')}">
             </div>
         </div>
         <div class="right">
@@ -51,7 +49,7 @@
                 <li><a th:href="@{/}" id="index">首页</a></li>
                 <li><a th:href="@{/front/college}" id="college">高校</a></li>
                 <li><a th:href="@{/front/scholar}" id="scholar">教师</a></li>
-                <li><a th:href="@{/front/article}" id="article">学科资源</a></li>
+                <li><a th:href="@{/front/article}" id="article">学习资源</a></li>
                 <li><a th:href="@{/front/boutique}" id="boutique">精品资源</a></li>
                 <li><a th:href="@{/front/notice}" id="notice">通知公告</a></li>
                 <li><a th:href="@{/front/about}" id="about">平台介绍</a></li>

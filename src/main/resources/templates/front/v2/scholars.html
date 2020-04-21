@@ -64,14 +64,14 @@
                 <td class="oddRowOddCol">
                     <ul class="author_ul">
                         <li>
-                            <a class="author_a1" th:text="${user.userName}"></a>
+                            <a class="author_a1" th:text="${user.userName}" th:href="@{/front/article(q=${user.userName})}"></a>
                             <a class="author_a3" th:text="${user.post}"></a>
                         </li>
                         <li>
                             <a class="author_a2" th:text="${user.remark}"></a>
                         </li>
                         <li>
-                            所属机构：<a class="a3" target="_blank" href="javascript:;" th:text="${user.dept.deptName}"></a>
+                            所属机构：<a class="a3" th:text="${user.dept.deptName}" th:href="@{/front/article(deptName=${user.dept.deptId})}"></a>
                         </li>
                         <li>
                             <a>资源量：</a>

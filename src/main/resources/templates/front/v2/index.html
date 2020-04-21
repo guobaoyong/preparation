@@ -61,7 +61,7 @@
         <div class="carousel">
             <div class="carousel_contain">
                 <div class="carousel_box">
-                    <a href="javascript:;" th:each="user:${userList}">
+                    <a th:href="@{/front/article(q=${user.userName})}" th:each="user:${userList}">
                         <img th:src="(${user.avatar} == '') ? @{/img/profile.jpg} : @{${user.avatar}}" />
                         <div class="names">
                             <h3 class="name_" th:text="${user.userName}"></h3>
@@ -82,13 +82,12 @@
     <div class="gxzs nav">
         <a class="tip">高校</a>
         <span th:each="college:${collegeList}">
-            <a class="item">
+            <a class="item" th:href="@{/front/article(deptName=${college.deptId})}">
                 <div class="img">
                     <img th:src="${college.badge}" alt="" class="img">
                 </div>
                 <div class="message">
                     <div class="item_name"><span th:text="${college.deptName}"></span></div>
-                    <!--英文名要调整个样式-->
                     <div><span th:text="${college.ename}"></span></div>
                     <div>注册教师数：<span th:text="${college.totalUser}"></span></div>
                     <div>已发布资源数：<span th:text="${college.total}"></span></div>

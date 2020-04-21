@@ -274,44 +274,32 @@
 
 
             } else {
-                layer.msg("sorry,您不是VIP用户，不能用此通道！");
+                layer.msg("很抱歉,您不是VIP用户，不能用此通道！");
             }
         }, "json");
     }
 
     function submitData() {
-        // 下载过这个资源才可以评论
-
+        // 登录后才能评论
         if ([[${session.currentUser}]] == null) {
             layer.msg("登录后才能评论！");
             return;
         }
-
-        // 判断是否下载过
         // 添加记录
-        $.post("/userDownload/exist", {"articleId": [[${article.articleId}]]}, function (result) {
-            if (result) { // 下载过
-
-                var content = $("#commentContent").val();
-                if (content == "") {
-                    layer.msg("请输入评论信息！");
-                    return;
-                }
-                $.post("/comment/save", {"commentArticleId": [[${article.articleId}]], "commentContent": content}, function (result) {
-                    if (result.success) {
-                        $("#commentContent").val("");
-                        layer.msg("评论成功，稍后显示！");
-                    }
-                }, "json");
-
-            } else {  // 未下载过
-                layer.msg("下载该资源后才能评论！");
+        var content = $("#commentContent").val();
+        if (content == "") {
+            layer.msg("请输入评论信息！");
+            return;
+        }
+        $.post("/comment/save", {"commentArticleId": [[${article.articleId}]], "commentContent": content}, function (result) {
+            if (result.success) {
+                $("#commentContent").val("");
+                layer.msg("评论成功，稍后显示！");
             }
         }, "json");
     }
 
     function download() {
-
         // 判断是否登录
         if ([[${session.currentUser}]] == null) {
             layer.msg("登录后才能下载资源！");
@@ -339,11 +327,9 @@
 
                 });
             } else {  // 未下载过
-
                 // 添加记录
                 $.post("/userDownload/enough", {"points": [[${article.articlePoints}]]}, function (result) {
                     if (result) {  // 积分足够
-
                         layer.confirm('该资源下载需要 <font color="red">[[${article.articlePoints}]]</font> 积分,您确定要下载这个资源吗？', {
                             title: "下载提示"
                             , btn: ['确定', '取消'] //按钮
@@ -361,14 +347,11 @@
                         }, function () {
 
                         });
-
                     } else { // 积分不够
-                        layer.msg("sorry，您的积分不够，不能下载该资源！");
+                        layer.msg("很抱歉，您的积分不够，不能下载该资源！");
                         return;
                     }
                 }, "json");
-
-
             }
         }, "json");
 
