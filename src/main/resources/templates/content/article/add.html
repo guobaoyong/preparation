@@ -68,13 +68,13 @@
             followingToolbar: false,
             callbacks: {
                 onImageUpload: function (files) {
-                    sendFile(files[0], this);
+                    sendFile(files[0], this,0);
                 }
             }
         });
 
         // 上传文件
-        function sendFile(file, obj) {
+        function sendFile(file, obj,flag) {
             var data = new FormData();
             data.append("file", file);
             $.ajax({
@@ -87,7 +87,11 @@
                 dataType: 'json',
                 success: function(result) {
                     if (result.code == web_status.SUCCESS) {
-                        $(obj).summernote('editor.insertImage', result.url, result.fileName);
+                        if (flag == 0){
+                            $(obj).summernote('editor.insertImage', result.url, result.fileName);
+                        }else if (flag == 1){
+                            $(".note-link-url").val(result.fileName);
+                        }
                     } else {
                         $.modal.alertError(result.msg);
                     }

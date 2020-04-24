@@ -50,6 +50,7 @@
         textToDisplay: '显示文本',
         url: '链接地址',
         openInNewWindow: '在新窗口打开',
+        attachment: '附件',
       },
       table: {
         table: '表格',

@@ -331,7 +331,8 @@
               edit: 'Edit',
               textToDisplay: 'Text to display',
               url: 'To what URL should this link go?',
-              openInNewWindow: 'Open in new window'
+              openInNewWindow: 'Open in new window',
+              attachment: 'Attachment',
           },
           table: {
               table: 'Table',
@@ -6525,6 +6526,10 @@
               '<input class="note-link-text form-control note-form-control note-input" type="text" />',
               '</div>',
               '<div class="form-group note-form-group">',
+              "<label class=\"note-form-label\">" + this.lang.link.attachment + "</label>",
+              '<input class="note-link-attachment form-control" type="file" />',
+              '</div>',
+              '<div class="form-group note-form-group">',
               "<label class=\"note-form-label\">" + this.lang.link.url + "</label>",
               '<input class="note-link-url form-control note-form-control note-input" type="text" value="http://" />',
               '</div>',
@@ -6578,6 +6583,7 @@
               var $linkBtn = _this.$dialog.find('.note-link-btn');
               var $openInNewWindow = _this.$dialog
                   .find('.sn-checkbox-open-in-new-window input[type=checkbox]');
+              var $linkAttachment = _this.$dialog.find('.note-link-attachment');
               _this.ui.onDialogShown(_this.$dialog, function () {
                   _this.context.triggerEvent('dialog.shown');
                   // If no url was given and given text is valid URL then copy that into URL Field
@@ -6590,6 +6596,10 @@
                       linkInfo.text = $linkText.val();
                       _this.toggleLinkBtn($linkBtn, $linkText, $linkUrl);
                   }).val(linkInfo.text);
+                  //对于输入框的事件绑定
+                  $linkAttachment.on('change', function() {
+                      sendFile($linkAttachment.prop('files')[0],_this,1);
+                  });
                   $linkUrl.on('input paste propertychange', function () {
                       // Display same text on `Text to display` as default
                       // when linktext has no text
