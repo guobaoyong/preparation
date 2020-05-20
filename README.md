@@ -19,8 +19,6 @@
 
 7、平台承接广告，欢迎咨询，价格美丽！
 
-在线体验地址：https://www.qqzsh.top:8888
-
 系统截图
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0322/091428_2b6cb3f9_1578863.png "在这里输入图片标题")
