@@ -1,5 +1,5 @@
 ## 平台简介
-校园学习资源共享云平台3.0版本，我的毕业设计
+校园学习资源共享云平台3.0版本，我的本科毕业设计
 
 基于Spring Boot2.x、MyBatis、Thymeleaf、Shiro、RuoYi4.0开发
 
